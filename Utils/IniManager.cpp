@@ -110,3 +110,15 @@ CString CIniManager::LoadRecentServerName( int iInd )
 	return m_IniReader.getKeyValue( sKey, "OPTIONS" );
 	
 }
+
+void CIniManager::SaveMaxLineNum( int iMaxLineNum )
+{
+	CString sKey;
+	sKey.Format( "%i", iMaxLineNum );
+	m_IniReader.setKey( sKey, "Max_Line_Num", "OPTIONS" );
+}
+
+int CIniManager::LoadMaxLineNum()
+{
+	return atoi( m_IniReader.getKeyValue( "Max_Line_Num", "OPTIONS" ) );	
+}

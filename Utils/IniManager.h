@@ -36,4 +36,7 @@ public:
 	enum { NUMRECENTLIST = 5 };	// Change this and this to change recent list count
 	void		SaveRecentServerName( CString sServerName );
 	CString		LoadRecentServerName( int iInd );  // maximum: NUMRECENTLIST
+	
+	void		SaveMaxLineNum( int iMaxLineNum );
+	int			LoadMaxLineNum();
 };

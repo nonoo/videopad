@@ -160,7 +160,7 @@ void CServer::OnOK()
 void CServer::AddText( CString strText )
 {
 
-	if ( m_editMessages.GetLineCount() > 600 )
+	if ( m_editMessages.GetLineCount() > theApp.GetIniManager()->LoadMaxLineNum() )
 	{
 		m_editMessages.SetSel( 0, -1 );
 	}
