@@ -1,19 +1,3 @@
-//  This file is part of VideoPad.
-//
-//  VideoPad is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; either version 2 of the License, or
-//  (at your option) any later version.
-//
-//  VideoPad is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with VideoPad; if not, write to the Free Software
-//  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
 // Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
@@ -104,6 +88,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 104
     END
+
+    IDD_DIALOG_SERVER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 389
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 151
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -165,6 +157,18 @@ BEGIN
                     WS_EX_STATICEDGE
     EDITTEXT        IDC_EDIT_MESSAGE,15,133,60,9,ES_AUTOHSCROLL | NOT 
                     WS_BORDER,WS_EX_STATICEDGE
+END
+
+IDD_DIALOG_SERVER DIALOGEX 0, 0, 396, 158
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_MESSAGES,7,7,382,121,ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_NOHIDESEL | 
+                    ES_READONLY | WS_VSCROLL
+    EDITTEXT        IDC_EDIT_MESSAGE,7,139,382,12,ES_AUTOHSCROLL
 END
 
 

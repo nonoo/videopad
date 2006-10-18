@@ -20,6 +20,10 @@
 
 CServer::CServer()
 {
+	m_dlgServer.Create( IDD_DIALOG_SERVER );
+	m_dlgServer.ShowWindow( SW_SHOW );
+	
+	m_dlgServer.AddText( "SERVER MESSAGES:\r\n" );
 }
 
 CServer::~CServer()

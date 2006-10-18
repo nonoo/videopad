@@ -26,6 +26,8 @@ protected:
 	CString					m_szNick;
 	CArray< CChannel* >		m_apChannels;
 	CTCPConnection*			m_pTCPConnection;
+	
+	CServerDialog			m_dlgServer;
 
 public:	
 	CServer();
