@@ -30,7 +30,6 @@ protected:
 //part of the status dialog
 	CEdit			m_editMessages;
 	CEdit			m_editMessage;
-	bool			m_bExist;
 	
 public:	
 	CServer();
