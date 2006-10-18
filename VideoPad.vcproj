@@ -197,12 +197,6 @@
 					RelativePath=".\Dialogs\ConnectingDialog.h">
 				</File>
 				<File
-					RelativePath=".\Dialogs\ServerDialog.cpp">
-				</File>
-				<File
-					RelativePath=".\Dialogs\ServerDialog.h">
-				</File>
-				<File
 					RelativePath=".\Dialogs\VideoDialog.cpp">
 				</File>
 				<File

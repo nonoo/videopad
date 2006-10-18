@@ -73,7 +73,6 @@ using namespace std;
 #include "Dialogs/ConnectingDialog.h"
 #include "Dialogs/VideoDialog.h"
 #include "Dialogs/ChatDialog.h"
-#include "Dialogs/ServerDialog.h"
 
 #include "Utils/Server.h"
 #include "Utils/Channel.h"

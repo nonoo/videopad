@@ -16,14 +16,10 @@
 
 #include "stdafx.h"
 #include "Server.h"
-
+#include "../VideoPad.h"
 
 CServer::CServer()
 {
-	m_dlgServer.Create( IDD_DIALOG_SERVER );
-	m_dlgServer.ShowWindow( SW_SHOW );
-	
-	m_dlgServer.AddText( "SERVER MESSAGES:\r\n" );
 }
 
 CServer::~CServer()
@@ -39,6 +35,12 @@ CServer::~CServer()
 
 void CServer::Create( CString szHost, CString szPort, CString szNick )
 {
+	CDialog::Create( IDD_DIALOG_SERVER );
+	
+	ShowWindow( SW_SHOW );
+
+	AddText( "SERVER MESSAGES:\r\n" );
+		
 	m_szHost = szHost;
 	m_szPort = szPort;
 	m_szNick = szNick;
@@ -105,4 +107,63 @@ bool CServer::JoinChannel( CString szChannelName )
 	}
 	
 	return false;
+}
+
+
+
+
+//part of the status dialog:
+
+BEGIN_MESSAGE_MAP( CServer, CDialog )
+	ON_WM_CLOSE()
+END_MESSAGE_MAP()
+
+BOOL CServer::PreTranslateMessage( MSG* pMsg )
+{
+	if ( pMsg->message == WM_KEYDOWN )
+	{
+		if ( pMsg->wParam == VK_RETURN )
+		{
+			CString sMessage;
+			m_editMessage.GetWindowText( sMessage );
+			sMessage += "\r\n";
+			m_editMessages.SetSel( -1, 0 );
+			m_editMessages.ReplaceSel( sMessage );
+			m_editMessage.SetSel( 0, -1 );
+			m_editMessage.ReplaceSel( "" );
+
+		}
+	}
+
+	return CDialog::PreTranslateMessage( pMsg );
+}
+
+
+void CServer::DoDataExchange( CDataExchange* pDX )
+{
+	CDialog::DoDataExchange( pDX );
+	DDX_Control( pDX, IDC_EDIT_MESSAGES, m_editMessages );	
+	DDX_Control( pDX, IDC_EDIT_MESSAGE, m_editMessage );	
+
+}
+
+void CServer::OnClose()
+{
+	ShowWindow( false );
+	theApp.SetConnected( false );	
+}
+
+void CServer::OnOK()
+{
+} 
+
+void CServer::AddText( CString strText )
+{
+
+	if ( m_editMessages.GetLineCount() > 600 )
+	{
+		m_editMessages.SetSel( 0, -1 );
+	}
+
+	m_editMessages.ReplaceSel( strText );
 }

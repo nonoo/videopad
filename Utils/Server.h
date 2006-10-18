@@ -18,7 +18,7 @@
 
 #include "Utils/Sockets/TCPConnection.h"
 
-class CServer
+class CServer : public CDialog
 {
 protected:
 	CString					m_szHost;
@@ -27,8 +27,11 @@ protected:
 	CArray< CChannel* >		m_apChannels;
 	CTCPConnection*			m_pTCPConnection;
 	
-	CServerDialog			m_dlgServer;
-
+//part of the status dialog
+	CEdit			m_editMessages;
+	CEdit			m_editMessage;
+	bool			m_bExist;
+	
 public:	
 	CServer();
 	~CServer();
@@ -41,4 +44,15 @@ public:
 
 	bool						JoinChannel( CChannel* pChannel );
 	bool						JoinChannel( CString szChannelName );
+	
+//part of the status dialog:
+	void			AddText( CString strText );  // sorvége: "\r\n"	
+	
+protected:
+	virtual void	DoDataExchange( CDataExchange* pDX );
+	virtual BOOL	PreTranslateMessage( MSG* pMsg );
+	virtual void	OnOK();
+
+	DECLARE_MESSAGE_MAP()
+	afx_msg void	OnClose();	
 };
