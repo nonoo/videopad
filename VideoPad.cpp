@@ -77,9 +77,21 @@ const bool& CVideoPadApp::GetConnected()
 	return m_bConnected;
 }
 
+void CVideoPadApp::SetConnected( bool bStatus )
+{
+	m_bConnected = bStatus;
+}
+
 void CVideoPadApp::OnPressConnect()
 {
-	SetConnected( !m_bConnected );
+	if( m_bConnected )
+	{
+		Disconnect();
+	}
+	else
+	{
+		Connect();
+	}
 }
 
 void CVideoPadApp::OnPressChannel()
@@ -90,31 +102,27 @@ void CVideoPadApp::OnPressChannel()
 	}
 }
 
-// called when the user clicks on the quick connect toolbar button
-void CVideoPadApp::SetConnected( bool bConnected )
+void CVideoPadApp::Connect()
 {
-	if ( bConnected )
+	// show connecting dialog. if OK then add channel names to Channel Dialog and show it.
+	CString szServerHost;
+	CString szServerPort;
+	CString szNick;
+	if ( m_dlgConnecting.DoModalGetServer( szServerHost, szServerPort, szNick ) == IDOK )
 	{
-		// show connecting dialog. if OK then add channel names to Channel Dialog and show it.
-		CString szServerHost;
-		CString szServerPort;
-		CString szNick;
-		if ( m_dlgConnecting.DoModalGetServer( szServerHost, szServerPort, szNick ) == IDOK )
-		{
-			SAFE_DELETE( m_pActiveServer );
-			m_pActiveServer = new CServer;
-
-			// trying to connect to the selected host:port
-			//
-			//m_pActiveServer->Connect( szServerHost, szServerPort, szNick );
-			m_pActiveServer->Connect( "hullahaz.hu", "62320", "TestNick" );
-		}
-	}
-	else
-	{
-		// disconnect
 		SAFE_DELETE( m_pActiveServer );
+		m_pActiveServer = new CServer;
+
+		// trying to connect to the selected host:port
+		//
+		//m_pActiveServer->Connect( szServerHost, szServerPort, szNick );
+		m_pActiveServer->Connect( "hullahaz.hu", "62320", "TestNick" );
 	}
+}
+
+void CVideoPadApp::Disconnect()
+{
+	SAFE_DELETE( m_pActiveServer );
 }
 
 CServer* CVideoPadApp::GetActiveServer()

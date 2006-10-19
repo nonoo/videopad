@@ -38,9 +38,10 @@ public:
 	CVideoPadApp();
 	~CVideoPadApp();
 	virtual BOOL	InitInstance();
-	
-					// if parameter is true, it tries to connect
-					// false - disconnects
+
+	void			Connect();
+	void			Disconnect();
+
 	void			SetConnected( bool bConnected );
 	const bool&		GetConnected();
 

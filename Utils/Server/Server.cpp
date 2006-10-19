@@ -16,6 +16,7 @@
 
 #include "stdafx.h"
 #include "Server.h"
+#include "../../VideoPad.h"
 
 CServer::CServer()
 {
@@ -126,6 +127,8 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 
 			// now we are connected to the server
 			//
+
+			theApp.SetConnected( true );
 
 			AddText( " connected\r\n\r\n" );
 			break;

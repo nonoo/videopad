@@ -20,11 +20,12 @@
 void CServer::ProcessServerMessage( CString szLine )
 {
 	// breaking up szLine to szCommand szParam and szText
-	// szParam is the second token, szText is the string after ':'
+	// szParam1 is the second token, szParam2 is the third, szText is the string after ':'
 	//
 	int nCurPos = 0;
 	CString szCommand = szLine.Tokenize( " ", nCurPos );
-	CString szParam = szLine.Tokenize( " ", nCurPos );
+	CString szParam1 = szLine.Tokenize( " ", nCurPos );
+	CString szParam2 = szLine.Tokenize( " ", nCurPos );
 	CString szText;
 
 	int nCommaPos = szLine.Find( ':', 0 );
@@ -83,15 +84,18 @@ void CServer::ProcessServerMessage( CString szLine )
 
 	if( szCommand == "008" ) // our unique video & audio stream serials
 	{
-		m_nVideoStreamSerial = atoi( szParam );
-		m_nAudioStreamSerial = atoi( szText );
+		m_nVideoStreamSerial = atoi( szParam1 );
+		m_nAudioStreamSerial = atoi( szParam2 );
 		return;
 	}
 
 	if( szCommand == "009" ) // login completed
 	{
-		AddText( szText + "\r\n" );
-		// TODO: show channel selection dialog here
+		AddText( szText + "\r\n\r\n" );
+
+		// requesting channel list
+		m_pTCPControlConnection->SendMessage( "chanlist\r\n" );
+
 		return;
 	}
 
@@ -101,9 +105,27 @@ void CServer::ProcessServerMessage( CString szLine )
 		return;
 	}
 
+	if( szCommand == "350" ) // listing channels
+	{
+		AddText( szText + "\r\n" );
+		return;
+	}
+
+	if( szCommand == "351" ) // channel
+	{
+		AddText( szText + "\r\n" );
+		return;
+	}
+
+	if( szCommand == "352" ) // end of channel list
+	{
+		AddText( szText + "\r\n" );
+		return;
+	}
+
 	if( szCommand == "502" ) // PING
 	{
-		m_szNick = szParam;
+		m_szNick = szParam1;
 		AddText( "Your nick is now " + m_szNick + "\r\n" );
 		return;
 	}
