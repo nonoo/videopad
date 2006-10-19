@@ -71,8 +71,8 @@
 // max length of one line sent to the control port
 #define MAXMESSAGELENGTH 1024
 
-//#include <vector>
-//using namespace std;
+#include <map>
+using namespace std;
 
 #include "CommonDefines.h"
 

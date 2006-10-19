@@ -36,10 +36,12 @@ public:
 	enum { IDD = IDD_DIALOG_CHANNEL };
 	
 public:
-	CChannelDialog( CWnd* pParent = NULL );   // standard constructor
+	CChannelDialog( CWnd* pParent = NULL );
 	virtual ~CChannelDialog();
 
-	INT_PTR				DoModalJoinChannel(); // in: Array from the existing chanels, return: the selected chanels pointer, or NULL if cancel.
+						// returns the selected channel's pointer
+						//
+	INT_PTR				DoModalJoinChannel();
 
 protected:
 	virtual void		DoDataExchange( CDataExchange* pDX );    // DDX/DDV support
@@ -50,5 +52,5 @@ public:
 	afx_msg void		OnLbnSelchangeListChannelChannels();
 	afx_msg	void		OnShowWindow( BOOL bShow, UINT /*nStatus*/ );
 	afx_msg void		OnBnClickedCancel();
-	afx_msg void OnBnClickedCheckChannelAutojoin();
+	afx_msg void		OnBnClickedCheckChannelAutojoin();
 };

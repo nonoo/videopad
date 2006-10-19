@@ -51,11 +51,6 @@ void CChannelDialog::OnBnClickedJoin()
 	{
 		this->EndModalLoop( 1 );
 	}
-	else
-	{
-		MessageBox( "Select a Channel", "ACHTUNG!", MB_ICONWARNING | MB_OK );
-	}
-
 }
 
 void CChannelDialog::OnShowWindow( BOOL bShow, UINT /*nStatus*/ )
@@ -111,8 +106,7 @@ INT_PTR CChannelDialog::DoModalJoinChannel()
 		if ( m_bReSaveAutoJoinChannelName )
 		{
 			theApp.GetIniManager()->SaveAutoJoinChannelName( m_pSelectedChannel->GetChannelName() );
-		}
-				
+		}		
 	}
 	
 	return iRet;
