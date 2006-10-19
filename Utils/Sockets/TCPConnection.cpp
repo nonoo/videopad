@@ -17,10 +17,11 @@
 #include "stdafx.h"
 #include "TCPConnection.h"
 
-CTCPConnection::CTCPConnection( HWND hParentWnd )
+CTCPConnection::CTCPConnection( HWND hParentWnd, WORD wMessage )
 {
 	m_sSocket = INVALID_SOCKET;
 	m_hParentWnd = hParentWnd;
+	m_wMessage = wMessage;
 }
 
 SOCKET CTCPConnection::Connect( CString szHost, CString szPort )
@@ -45,7 +46,7 @@ SOCKET CTCPConnection::Connect( CString szHost, CString szPort )
 	}
 
 	// requesting message-based notification
-	hr = WSAAsyncSelect( m_sSocket, m_hParentWnd, WU_SOCKET_EVENT, FD_READ|FD_CLOSE|FD_CONNECT );
+	hr = WSAAsyncSelect( m_sSocket, m_hParentWnd, m_wMessage, FD_READ|FD_CLOSE|FD_CONNECT );
 	if ( hr == SOCKET_ERROR )
 	{
 		throw( "failed: socket error\r\n" );

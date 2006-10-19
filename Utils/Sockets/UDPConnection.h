@@ -21,6 +21,6 @@
 class CUDPConnection : public CConnection
 {
 public:
-	CUDPConnection( HWND hParentWnd );
+	CUDPConnection( HWND hParentWnd, WORD wMessage );
 	SOCKET		Connect( CString szHost, CString szPort );
 };

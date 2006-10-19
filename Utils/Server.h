@@ -25,10 +25,8 @@ private:
 	CString					m_szPort;
 	CString					m_szNick;
 	CArray< CChannel* >		m_apChannels;
-	CTCPConnection*			m_pTCPConnection;
+	CTCPConnection*			m_pTCPControlConnection;
 	SOCKET					m_sSocket;
-	bool					m_bConnected;
-	char					m_pResolverBuf[MAXGETHOSTSTRUCT];
 
 public:	
 	CServer();
@@ -45,7 +43,7 @@ public:
 	bool						JoinChannel( CString szChannelName );
 
 private:
-	afx_msg	LRESULT			OnSocketEvent( WPARAM wParam, LPARAM lParam );
+	afx_msg	LRESULT				OnControlSocketEvent( WPARAM wParam, LPARAM lParam );
 
 
 	

@@ -65,8 +65,8 @@
 
 // user defined messages
 //
-#define WU_SOCKET_EVENT WM_APP+1
-#define WU_SOCKET_RESOLV WM_APP+2
+#define WU_CONTROLSOCKET_EVENT WM_APP+1
+#define WU_DATASOCKET_EVENT WM_APP+2
 
 #include <vector>
 using namespace std;

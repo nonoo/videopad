@@ -22,12 +22,12 @@ CServer::CServer()
 {
 	CDialog::Create( IDD_DIALOG_SERVER );
 
-	m_pTCPConnection = NULL;
+	m_pTCPControlConnection = NULL;
 }
 
 CServer::~CServer()
 {
-	SAFE_DELETE( m_pTCPConnection );
+	SAFE_DELETE( m_pTCPControlConnection );
 
 	for ( int i = 0; i < m_apChannels.GetCount(); i++ )
 	{
@@ -46,10 +46,11 @@ void CServer::Connect( CString szHost, CString szPort, CString szNick )
 	UpdateWindow();
 	AddText( "Connecting to " + m_szHost + ":" + m_szPort + "..." );
 
-	m_pTCPConnection = new CTCPConnection( GetSafeHwnd() );
+	// connecting the control socket
+	m_pTCPControlConnection = new CTCPConnection( GetSafeHwnd(), WU_CONTROLSOCKET_EVENT );
 	try
 	{
-		m_sSocket = m_pTCPConnection->Connect( szHost, szPort );
+		m_pTCPControlConnection->Connect( szHost, szPort );
 	}
 	catch ( char* pError )
 	{
@@ -105,26 +106,36 @@ bool CServer::JoinChannel( CString szChannelName )
 
 const SOCKET& CServer::GetSocket()
 {
-	return m_sSocket;
+	return m_pTCPControlConnection->GetSocket();
 }
 
-LRESULT CServer::OnSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
+LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 {
 	WORD wErrCode = WSAGETSELECTERROR( lParam );
 	WORD wEvent = WSAGETSELECTEVENT( lParam );
 
-	if( wEvent == FD_CONNECT )
+	switch( wEvent )
 	{
-		if( wErrCode == WSAECONNREFUSED )
+		case FD_CONNECT:
 		{
-			AddText( "failed: connection refused!\r\n" );
-			return 0;
+			if( wErrCode == WSAECONNREFUSED )
+			{
+				AddText( "failed: connection refused!\r\n" );
+				return 0;
+			}
+
+			// now we are connected to the server
+			//
+
+			AddText( " connected\r\n" );
+			break;
 		}
 
-		// now we are connected to the server
-		//
-
-		AddText( " connected\r\n" );
+		case FD_READ:
+		{
+			
+		}
+	}
 
 		//TODO: add channels to the array this way:
 
@@ -154,8 +165,6 @@ LRESULT CServer::OnSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			}				
 		}*/
 
-	}
-
 	return 0;
 }
 
@@ -163,7 +172,7 @@ LRESULT CServer::OnSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 
 BEGIN_MESSAGE_MAP( CServer, CDialog )
 	ON_WM_CLOSE()
-	ON_MESSAGE( WU_SOCKET_EVENT, OnSocketEvent )
+	ON_MESSAGE( WU_CONTROLSOCKET_EVENT, OnControlSocketEvent )
 END_MESSAGE_MAP()
 
 BOOL CServer::PreTranslateMessage( MSG* pMsg )

@@ -27,3 +27,8 @@ CConnection::~CConnection()
 	shutdown( m_sSocket, SD_BOTH );
 	closesocket( m_sSocket );
 }
+
+const SOCKET& CConnection::GetSocket()
+{
+	return m_sSocket;
+}

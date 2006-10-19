@@ -18,14 +18,17 @@
 
 class CConnection
 {
+public:
+	const SOCKET&		GetSocket();
+
 protected:
 	virtual ~CConnection();
 
-	virtual SOCKET		Connect( CString szHost, CString szPort);
-
+	virtual SOCKET		Connect( CString szHost, CString szPort );
 
 
 
 	SOCKET				m_sSocket;
 	HWND				m_hParentWnd;
+	WORD				m_wMessage;
 };

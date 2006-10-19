@@ -17,10 +17,11 @@
 #include "stdafx.h"
 #include "UDPConnection.h"
 
-CUDPConnection::CUDPConnection( HWND hParentWnd )
+CUDPConnection::CUDPConnection( HWND hParentWnd, WORD wMessage )
 {
 	m_sSocket = INVALID_SOCKET;
 	m_hParentWnd = hParentWnd;
+	m_wMessage = wMessage;
 }
 
 SOCKET CUDPConnection::Connect( CString szHost, CString szPort )
@@ -46,7 +47,7 @@ SOCKET CUDPConnection::Connect( CString szHost, CString szPort )
 	}
 
 	// requesting message-based notification
-	WSAAsyncSelect( m_sSocket, m_hParentWnd, WU_SOCKET_EVENT, FD_READ );
+	WSAAsyncSelect( m_sSocket, m_hParentWnd, m_wMessage, FD_READ );
 	if ( hr == SOCKET_ERROR )
 	{
 		FreeAddrInfo( result );
