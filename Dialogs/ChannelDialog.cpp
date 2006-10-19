@@ -89,20 +89,20 @@ void CChannelDialog::OnLbnSelchangeListChannelChannels()
 
 INT_PTR CChannelDialog::DoModalJoinChannel()
 {
-	CServer* pActualServer = theApp.GetActualServer();
-	if ( !pActualServer )
+	CServer* pActiveServer = theApp.GetActiveServer();
+	if ( !pActiveServer )
 	{
 		return IDCANCEL;
 	}
 	
-	m_pChannels = pActualServer->GetChannelsArray();
+	m_pChannels = pActiveServer->GetChannelsArray();
 
 	INT_PTR iRet = this->DoModal();
 	if ( iRet == IDOK )
 	{
 		// trying to join m_pSelectedChannel
 		//
-		if ( !pActualServer->JoinChannel( m_pSelectedChannel ) )
+		if ( !pActiveServer->JoinChannel( m_pSelectedChannel ) )
 		{
 			MessageBox( "Failed to join", "Warning", MB_ICONERROR | MB_OK );
 			return IDCANCEL;

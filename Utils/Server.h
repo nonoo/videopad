@@ -20,25 +20,32 @@
 
 class CServer : public CDialog
 {
-protected:
+private:
 	CString					m_szHost;
 	CString					m_szPort;
 	CString					m_szNick;
 	CArray< CChannel* >		m_apChannels;
 	CTCPConnection*			m_pTCPConnection;
-	
+	SOCKET					m_sSocket;
+	bool					m_bConnected;
+	char					m_pResolverBuf[MAXGETHOSTSTRUCT];
+
 public:	
 	CServer();
 	~CServer();
 
-	HRESULT						Create( CString szHost, CString szPort, CString szNick );
-	const CString&				GetServerHost() const;
-	const CString&				GetServerPort() const;
+	void						Connect( CString szHost, CString szPort, CString szNick );
+	const CString&				GetHost() const;
+	const CString&				GetPort() const;
 	const CString&				GetNick() const;
 	CArray< CChannel* >* const	GetChannelsArray();
+	const SOCKET&				GetSocket();
 
 	bool						JoinChannel( CChannel* pChannel );
 	bool						JoinChannel( CString szChannelName );
+
+private:
+	afx_msg	LRESULT			OnSocketEvent( WPARAM wParam, LPARAM lParam );
 
 
 	
@@ -50,11 +57,9 @@ public:
 public:
 	void			AddText( CString szText );  // add "\r\n" after szText
 	
-protected:
+private:
 	CEdit			m_editMessages;
 	CEdit			m_editMessage;
-
-
 
 	virtual void	DoDataExchange( CDataExchange* pDX );
 	virtual BOOL	PreTranslateMessage( MSG* pMsg );

@@ -52,7 +52,7 @@ BOOL CVideoPadApp::InitInstance()
 	CWinApp::InitInstance();
 
 	// initializing winsock
-	WSAStartup(MAKEWORD(2,2), &m_wsaData);
+	WSAStartup( MAKEWORD(2,2), &m_wsaData );
 
 	SetRegistryKey( _T("Local AppWizard-Generated Applications") );
 
@@ -90,11 +90,9 @@ void CVideoPadApp::OnPressChannel()
 	}
 }
 
-// the changes when the user connects or disconnects happen here
-bool CVideoPadApp::SetConnected( bool bConnected )
+// called when the user clicks on the quick connect toolbar button
+void CVideoPadApp::SetConnected( bool bConnected )
 {
-	CString szWindowText = "";
-
 	if ( bConnected )
 	{
 		// show connecting dialog. if OK then add channel names to Channel Dialog and show it.
@@ -102,51 +100,24 @@ bool CVideoPadApp::SetConnected( bool bConnected )
 		CString szServerPort;
 		CString szNick;
 		if ( m_dlgConnecting.DoModalGetServer( szServerHost, szServerPort, szNick ) == IDOK )
-		{		
+		{
+			SAFE_DELETE( m_pActiveServer );
 			m_pActiveServer = new CServer;
-			HRESULT hr = m_pActiveServer->Create( szServerHost, szServerPort, szNick );
-			if( FAILED( hr ) )
-			{
-				SAFE_DELETE( m_pActiveServer );
-				szWindowText.Format( " Server: no server  -  Channel: no channel" );
-				m_pMainWnd->SetWindowText( szWindowText );
-				return false;
-			}
-			
-			m_bConnected = true;
-			
-			szWindowText.Format( "Server: %s", m_pActiveServer->GetServerHost() );
 
-			m_pMainWnd->SetWindowText( szWindowText );			
-			
-			if ( m_iniManager.LoadAutoJoin() )
-			{
-				m_pActiveServer->JoinChannel( m_iniManager.LoadAutoJoinChannelName() );
-			}
-			else
-			{
-				if ( m_dlgChannel.DoModalJoinChannel() == IDOK )  // joining to the selected channel
-				{
-					szWindowText.Format( "Server: %s:%s, Nick: %s", m_pActiveServer->GetServerHost(),
-						m_pActiveServer->GetServerPort(), m_pActiveServer->GetNick );
-				}				
-			}
+			// trying to connect to the selected host:port
+			//
+			//m_pActiveServer->Connect( szServerHost, szServerPort, szNick );
+			m_pActiveServer->Connect( "hullahaz.hu", "62320", "TestNick" );
 		}
 	}
-	else																		//changes to Disconnect:
+	else
 	{
+		// disconnect
 		SAFE_DELETE( m_pActiveServer );
-		
-		m_bConnected = false;
-		
-		szWindowText.Format( " Server: no server  -  Channel: no channel" );
 	}
-	
-	m_pMainWnd->SetWindowText( szWindowText );
-	return m_bConnected;
 }
 
-CServer* CVideoPadApp::GetActualServer()
+CServer* CVideoPadApp::GetActiveServer()
 {
 	return m_pActiveServer;
 }

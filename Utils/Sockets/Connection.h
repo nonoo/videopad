@@ -21,10 +21,11 @@ class CConnection
 protected:
 	virtual ~CConnection();
 
-	virtual HRESULT		Connect( CString szHost, CString szPort, HWND hParentWnd );
+	virtual SOCKET		Connect( CString szHost, CString szPort);
 
 
 
 
-	SOCKET				m_Socket;
+	SOCKET				m_sSocket;
+	HWND				m_hParentWnd;
 };

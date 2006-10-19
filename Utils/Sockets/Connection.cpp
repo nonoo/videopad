@@ -17,13 +17,13 @@
 #include "stdafx.h"
 #include "Connection.h"
 
-HRESULT CConnection::Connect( CString /*szHost*/, CString /*szPort*/, HWND /*hParentWnd*/ )
+SOCKET CConnection::Connect( CString szHost, CString szPort )
 {
-	return 0;
+	return INVALID_SOCKET;
 }
 
 CConnection::~CConnection()
 {
-	shutdown( m_Socket, SD_BOTH );
-	closesocket( m_Socket );
+	shutdown( m_sSocket, SD_BOTH );
+	closesocket( m_sSocket );
 }

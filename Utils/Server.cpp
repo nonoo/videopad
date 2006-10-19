@@ -20,6 +20,9 @@
 
 CServer::CServer()
 {
+	CDialog::Create( IDD_DIALOG_SERVER );
+
+	m_pTCPConnection = NULL;
 }
 
 CServer::~CServer()
@@ -33,48 +36,33 @@ CServer::~CServer()
 	m_apChannels.RemoveAll();
 }
 
-HRESULT CServer::Create( CString szHost, CString szPort, CString szNick )
+void CServer::Connect( CString szHost, CString szPort, CString szNick )
 {
-	CDialog::Create( IDD_DIALOG_SERVER );
-	
-	ShowWindow( SW_SHOW );
-
-	AddText( "Connecting to " + szHost + ":" + szPort + "... " );
-		
 	m_szHost = szHost;
 	m_szPort = szPort;
 	m_szNick = szNick;
 
-	m_pTCPConnection = new CTCPConnection;
-	HRESULT hr = m_pTCPConnection->Connect( szHost, szPort, this->GetSafeHwnd() );
-	if( FAILED( hr ) )
+	ShowWindow( SW_SHOW );
+	UpdateWindow();
+	AddText( "Connecting to " + m_szHost + ":" + m_szPort + "..." );
+
+	m_pTCPConnection = new CTCPConnection( GetSafeHwnd() );
+	try
 	{
-		return -1;
+		m_sSocket = m_pTCPConnection->Connect( szHost, szPort );
 	}
-
-	//TODO: add channels to the array this way:
-		
-	CChannel* pChannel = new CChannel;
-	pChannel->Create( "XkakafosX" );
-	m_apChannels.Add( pChannel );
-	
-	pChannel = new CChannel;
-	pChannel->Create( "qka" );
-	m_apChannels.Add( pChannel );	
-	
-	pChannel = new CChannel;
-	pChannel->Create( "seggszor" );
-	m_apChannels.Add( pChannel );
-
-	return 0;
+	catch ( char* pError )
+	{
+		AddText( pError );
+	}
 }
 
-const CString& CServer::GetServerHost() const
+const CString& CServer::GetHost() const
 {
 	return m_szHost;
 }
 
-const CString& CServer::GetServerPort() const
+const CString& CServer::GetPort() const
 {
 	return m_szPort;
 }
@@ -96,7 +84,7 @@ bool CServer::JoinChannel( CChannel* pChannel )
 		return false;
 	}
 	
-	pChannel->Join(); // here we join to pChannel channel.
+	pChannel->Join(); // here we join to pChannel
 	
 	return true;
 }
@@ -115,13 +103,67 @@ bool CServer::JoinChannel( CString szChannelName )
 	return false;
 }
 
+const SOCKET& CServer::GetSocket()
+{
+	return m_sSocket;
+}
 
+LRESULT CServer::OnSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
+{
+	WORD wErrCode = WSAGETSELECTERROR( lParam );
+	WORD wEvent = WSAGETSELECTEVENT( lParam );
 
+	if( wEvent == FD_CONNECT )
+	{
+		if( wErrCode == WSAECONNREFUSED )
+		{
+			AddText( "failed: connection refused!\r\n" );
+			return 0;
+		}
+
+		// now we are connected to the server
+		//
+
+		AddText( " connected\r\n" );
+
+		//TODO: add channels to the array this way:
+
+		/*		CChannel* pChannel = new CChannel;
+		pChannel->Create( "XkakafosX" );
+		m_apChannels.Add( pChannel );
+
+		pChannel = new CChannel;
+		pChannel->Create( "qka" );
+		m_apChannels.Add( pChannel );	
+
+		pChannel = new CChannel;
+		pChannel->Create( "seggszor" );
+		m_apChannels.Add( pChannel );*/
+
+/*		m_bConnected = true;
+
+		if ( m_iniManager.LoadAutoJoin() )
+		{
+			m_pActiveServer->JoinChannel( m_iniManager.LoadAutoJoinChannelName() );
+		}
+		else
+		{
+			if ( m_dlgChannel.DoModalJoinChannel() == IDOK )  // joining to the selected channel
+			{
+
+			}				
+		}*/
+
+	}
+
+	return 0;
+}
 
 // STATUS DIALOG
 
 BEGIN_MESSAGE_MAP( CServer, CDialog )
 	ON_WM_CLOSE()
+	ON_MESSAGE( WU_SOCKET_EVENT, OnSocketEvent )
 END_MESSAGE_MAP()
 
 BOOL CServer::PreTranslateMessage( MSG* pMsg )

@@ -25,11 +25,14 @@ class CVideoPadApp : public CWinApp
 private:
 	CChannelDialog		m_dlgChannel;
 	CConnectingDialog	m_dlgConnecting;
-	
+
 	bool				m_bConnected;
 	CServer*			m_pActiveServer;
 	
 	CIniManager			m_iniManager;
+
+	// winsock
+	WSADATA				m_wsaData;
 
 public:
 	CVideoPadApp();
@@ -37,11 +40,11 @@ public:
 	virtual BOOL	InitInstance();
 	
 					// if parameter is true, it tries to connect
-					// false - disconnect
-	bool			SetConnected( bool fConnected );
+					// false - disconnects
+	void			SetConnected( bool bConnected );
 	const bool&		GetConnected();
 
-	CServer*		GetActualServer();						// get active server's pointer
+	CServer*		GetActiveServer();
 	CIniManager*	GetIniManager();
 	
 //	CMainFrame*		GetMainFrame();
@@ -49,9 +52,6 @@ public:
 private:
 	void			OnPressConnect();
 	void			OnPressChannel();
-
-					// winsock
-	WSADATA			m_wsaData;
 
 	DECLARE_MESSAGE_MAP()
 };

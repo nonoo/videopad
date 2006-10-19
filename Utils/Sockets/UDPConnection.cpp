@@ -17,7 +17,13 @@
 #include "stdafx.h"
 #include "UDPConnection.h"
 
-HRESULT CUDPConnection::Connect( CString szHost, CString szPort, HWND hParentWnd )
+CUDPConnection::CUDPConnection( HWND hParentWnd )
+{
+	m_sSocket = INVALID_SOCKET;
+	m_hParentWnd = hParentWnd;
+}
+
+SOCKET CUDPConnection::Connect( CString szHost, CString szPort )
 {
 	ADDRINFO hints;
 	ADDRINFO* result = NULL;
@@ -25,34 +31,31 @@ HRESULT CUDPConnection::Connect( CString szHost, CString szPort, HWND hParentWnd
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_protocol = IPPROTO_UDP;
-	HRESULT hr = GetAddrInfo( "0.0.0.0", szPort, &hints, &result );
+	HRESULT hr = GetAddrInfo( szHost, szPort, &hints, &result );
 
-	if( FAILED(hr) )
+	if( ( result == NULL ) || ( FAILED(hr) ) )
 	{
-		WSACleanup();
-		MessageBoxA( hParentWnd, "Can't bind to 0.0.0.0\n", "Error", MB_ICONERROR | MB_OK );
-		return -1;
+		throw( "failed: can't resolve host.\r\n" );
 	}
 
-	m_Socket = INVALID_SOCKET;
-	m_Socket = socket( result->ai_family, result->ai_socktype, result->ai_protocol);
+	m_sSocket = socket( result->ai_family, result->ai_socktype, result->ai_protocol);
 
-	if( m_Socket == INVALID_SOCKET ) {
-		MessageBoxA( hParentWnd, "Socket error\n", "Error", MB_ICONERROR | MB_OK );
+	if( m_sSocket == INVALID_SOCKET ) {
 		FreeAddrInfo( result );
-		return -1;
+		throw( "failed: socket error\r\n" );
 	}
 
-	hr = connect( m_Socket, result->ai_addr, (int)result->ai_addrlen);
+	// requesting message-based notification
+	WSAAsyncSelect( m_sSocket, m_hParentWnd, WU_SOCKET_EVENT, FD_READ );
 	if ( hr == SOCKET_ERROR )
 	{
-		CString szErr = "Can't connect to " + szHost + ":" + szPort;
-		MessageBoxA( hParentWnd, szErr, "Error", MB_ICONERROR | MB_OK );
 		FreeAddrInfo( result );
-		return -1;
+		throw( "failed: socket error\r\n" );
 	}
+
+	connect( m_sSocket, result->ai_addr, (int)result->ai_addrlen);
 
 	FreeAddrInfo( result );
 
-	return 0;
+	return m_sSocket;
 }

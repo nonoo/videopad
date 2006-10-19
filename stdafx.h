@@ -63,6 +63,11 @@
 #include <ws2tcpip.h>
 #include <wspiapi.h>
 
+// user defined messages
+//
+#define WU_SOCKET_EVENT WM_APP+1
+#define WU_SOCKET_RESOLV WM_APP+2
+
 #include <vector>
 using namespace std;
 

@@ -21,5 +21,6 @@
 class CTCPConnection : public CConnection
 {
 public:
-	HRESULT		Connect( CString szHost, CString szPort, HWND hParentWnd );
+	CTCPConnection( HWND hParentWnd );
+	SOCKET		Connect( CString szHost, CString szPort );
 };
