@@ -33,20 +33,24 @@ CServer::~CServer()
 	m_apChannels.RemoveAll();
 }
 
-void CServer::Create( CString szHost, CString szPort, CString szNick )
+HRESULT CServer::Create( CString szHost, CString szPort, CString szNick )
 {
 	CDialog::Create( IDD_DIALOG_SERVER );
 	
 	ShowWindow( SW_SHOW );
 
-	AddText( "SERVER MESSAGES:\r\n" );
+	AddText( "Connecting to " + szHost + ":" + szPort + "... " );
 		
 	m_szHost = szHost;
 	m_szPort = szPort;
 	m_szNick = szNick;
 
 	m_pTCPConnection = new CTCPConnection;
-	m_pTCPConnection->Connect( szHost, szPort, NULL ); // ide a NULL hejere kell majd a jelenlegi status ablak hwndje
+	HRESULT hr = m_pTCPConnection->Connect( szHost, szPort, this->GetSafeHwnd() );
+	if( FAILED( hr ) )
+	{
+		return -1;
+	}
 
 	//TODO: add channels to the array this way:
 		
@@ -60,7 +64,9 @@ void CServer::Create( CString szHost, CString szPort, CString szNick )
 	
 	pChannel = new CChannel;
 	pChannel->Create( "seggszor" );
-	m_apChannels.Add( pChannel );		
+	m_apChannels.Add( pChannel );
+
+	return 0;
 }
 
 const CString& CServer::GetServerHost() const
@@ -112,7 +118,7 @@ bool CServer::JoinChannel( CString szChannelName )
 
 
 
-//part of the status dialog:
+// STATUS DIALOG
 
 BEGIN_MESSAGE_MAP( CServer, CDialog )
 	ON_WM_CLOSE()
@@ -157,7 +163,7 @@ void CServer::OnOK()
 {
 } 
 
-void CServer::AddText( CString strText )
+void CServer::AddText( CString szText )
 {
 
 	if ( m_editMessages.GetLineCount() > theApp.GetIniManager()->LoadMaxLineNum() )
@@ -165,5 +171,5 @@ void CServer::AddText( CString strText )
 		m_editMessages.SetSel( 0, -1 );
 	}
 
-	m_editMessages.ReplaceSel( strText );
+	m_editMessages.ReplaceSel( szText );
 }

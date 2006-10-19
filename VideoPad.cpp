@@ -32,7 +32,7 @@ END_MESSAGE_MAP()
 
 CVideoPadApp::CVideoPadApp()
 {
-	m_fConnected = false;
+	m_bConnected = false;
 	m_pActiveServer = NULL;
 }
 
@@ -74,12 +74,12 @@ BOOL CVideoPadApp::InitInstance()
 
 const bool& CVideoPadApp::GetConnected()
 {
-	return m_fConnected;
+	return m_bConnected;
 }
 
 void CVideoPadApp::OnPressConnect()
 {
-	SetConnected( !m_fConnected );
+	SetConnected( !m_bConnected );
 }
 
 void CVideoPadApp::OnPressChannel()
@@ -104,9 +104,16 @@ bool CVideoPadApp::SetConnected( bool bConnected )
 		if ( m_dlgConnecting.DoModalGetServer( szServerHost, szServerPort, szNick ) == IDOK )
 		{		
 			m_pActiveServer = new CServer;
-			m_pActiveServer->Create( szServerHost, szServerPort, szNick );
+			HRESULT hr = m_pActiveServer->Create( szServerHost, szServerPort, szNick );
+			if( FAILED( hr ) )
+			{
+				SAFE_DELETE( m_pActiveServer );
+				szWindowText.Format( " Server: no server  -  Channel: no channel" );
+				m_pMainWnd->SetWindowText( szWindowText );
+				return false;
+			}
 			
-			m_fConnected = true;
+			m_bConnected = true;
 			
 			szWindowText.Format( "Server: %s", m_pActiveServer->GetServerHost() );
 
@@ -130,13 +137,13 @@ bool CVideoPadApp::SetConnected( bool bConnected )
 	{
 		SAFE_DELETE( m_pActiveServer );
 		
-		m_fConnected = false;
+		m_bConnected = false;
 		
 		szWindowText.Format( " Server: no server  -  Channel: no channel" );
 	}
 	
 	m_pMainWnd->SetWindowText( szWindowText );
-	return m_fConnected;
+	return m_bConnected;
 }
 
 CServer* CVideoPadApp::GetActualServer()

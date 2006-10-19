@@ -26,7 +26,7 @@ private:
 	CChannelDialog		m_dlgChannel;
 	CConnectingDialog	m_dlgConnecting;
 	
-	bool				m_fConnected;
+	bool				m_bConnected;
 	CServer*			m_pActiveServer;
 	
 	CIniManager			m_iniManager;

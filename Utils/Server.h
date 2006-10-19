@@ -27,15 +27,11 @@ protected:
 	CArray< CChannel* >		m_apChannels;
 	CTCPConnection*			m_pTCPConnection;
 	
-//part of the status dialog
-	CEdit			m_editMessages;
-	CEdit			m_editMessage;
-	
 public:	
 	CServer();
 	~CServer();
 
-	void						Create( CString szHost, CString szPort, CString szNick );
+	HRESULT						Create( CString szHost, CString szPort, CString szNick );
 	const CString&				GetServerHost() const;
 	const CString&				GetServerPort() const;
 	const CString&				GetNick() const;
@@ -43,11 +39,23 @@ public:
 
 	bool						JoinChannel( CChannel* pChannel );
 	bool						JoinChannel( CString szChannelName );
+
+
 	
-//part of the status dialog:
-	void			AddText( CString strText );  // sorvége: "\r\n"	
+	
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// status dialog
+	//
+public:
+	void			AddText( CString szText );  // add "\r\n" after szText
 	
 protected:
+	CEdit			m_editMessages;
+	CEdit			m_editMessage;
+
+
+
 	virtual void	DoDataExchange( CDataExchange* pDX );
 	virtual BOOL	PreTranslateMessage( MSG* pMsg );
 	virtual void	OnOK();
