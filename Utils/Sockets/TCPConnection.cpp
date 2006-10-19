@@ -56,3 +56,8 @@ SOCKET CTCPConnection::Connect( CString szHost, CString szPort )
 
 	return m_sSocket;
 }
+
+void CTCPConnection::SendMessage( CString szLine )
+{
+	send( m_sSocket, szLine, szLine.GetLength(), 0 );
+}

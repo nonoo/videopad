@@ -22,7 +22,6 @@ CServer::CServer()
 	CDialog::Create( IDD_DIALOG_SERVER );
 
 	m_pTCPControlConnection = NULL;
-	m_nRecvBufSize = 0;
 	memset( m_pRecvBuf, 0, MAXMESSAGELENGTH+1 );
 }
 
@@ -128,27 +127,32 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			// now we are connected to the server
 			//
 
-			AddText( " connected\r\n" );
+			AddText( " connected\r\n\r\n" );
 			break;
 		}
 
 		case FD_READ:
 		{
-			int res = recv( m_pTCPControlConnection->GetSocket(), m_pRecvBuf+m_nRecvBufSize,
-				MAXMESSAGELENGTH-m_nRecvBufSize, 0 );
+			int res = recv( m_pTCPControlConnection->GetSocket(), m_pRecvBuf, MAXMESSAGELENGTH, 0 );
 			if( res <= 0 )
 			{
 				AddText( "Disconnected.\r\n" );
 				break;
 			}
-			m_nRecvBufSize += res;
 
-			if( ( m_pRecvBuf[m_nRecvBufSize-1] == '\n' ) || ( m_nRecvBufSize == MAXMESSAGELENGTH ) )
+			// we break up the received string to lines in case we got more than one line
+			// in a string
+			//
+			CString szLine;
+			CString szRecvBuf = m_pRecvBuf;
+			int nCurrPos = 0;
+			while( nCurrPos < szRecvBuf.GetLength() )
 			{
-				ProcessServerMessage( m_pRecvBuf );
-				m_nRecvBufSize = 0;
-				memset( m_pRecvBuf, 0, MAXMESSAGELENGTH+1 );
+				szLine = szRecvBuf.Tokenize( "\n", nCurrPos );
+				ProcessServerMessage( szLine );
 			}
+			
+			memset( m_pRecvBuf, 0, MAXMESSAGELENGTH+1 );
 			break;
 		}
 	}

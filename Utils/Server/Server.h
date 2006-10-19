@@ -25,10 +25,13 @@ private:
 	CString					m_szPort;
 	CString					m_szNick;
 	CArray< CChannel* >		m_apChannels;
+
+	UINT					m_nVideoStreamSerial;
+	UINT					m_nAudioStreamSerial;
+
 	CTCPConnection*			m_pTCPControlConnection;
 	SOCKET					m_sSocket;
 	char					m_pRecvBuf[MAXMESSAGELENGTH+1];
-	UINT					m_nRecvBufSize;
 
 	// in Server.cpp
 public:
@@ -49,6 +52,7 @@ private:
 	afx_msg	LRESULT				OnControlSocketEvent( WPARAM wParam, LPARAM lParam );
 
 	// in Server_ProcessMessages.cpp
+								// processes messages received from the server
 	void						ProcessServerMessage( CString szLine );
 
 	// in Server_Dialog.cpp

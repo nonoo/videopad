@@ -19,5 +19,98 @@
 
 void CServer::ProcessServerMessage( CString szLine )
 {
+	// breaking up szLine to szCommand szParam and szText
+	// szParam is the second token, szText is the string after ':'
+	//
+	int nCurPos = 0;
+	CString szCommand = szLine.Tokenize( " ", nCurPos );
+	CString szParam = szLine.Tokenize( " ", nCurPos );
+	CString szText;
 
+	int nCommaPos = szLine.Find( ':', 0 );
+	if( nCommaPos )
+	{
+		szText = szLine.Mid( nCommaPos+1, szLine.GetLength()-nCommaPos-1 );
+	}
+
+	// for the command list, see videopad-server's README file
+	//
+	if( szCommand == "001" ) // welcome msg
+	{
+		AddText( szText + "\r\n" );
+		return;
+	}
+
+	if( szCommand == "002" ) // server version
+	{
+		AddText( szText + "\r\n" );
+		// sending nick
+		m_pTCPControlConnection->SendMessage( "nick " + m_szNick + "\r\n" );
+		return;
+	}
+
+	if( szCommand == "003" ) // MOTD start
+	{
+		AddText( "\r\nMessage Of The Day:\r\n" );
+		return;
+	}
+
+	if( szCommand == "004" ) // MOTD line
+	{
+		AddText( szText + "\r\n" );
+		return;
+	}
+
+	if( szCommand == "005" ) // MOTD end
+	{
+		AddText( "\r\n" );
+		return;
+	}
+
+	if( szCommand == "006" ) // password needed
+	{
+		CString szPass;
+		// TODO: login ablakot felnyisson modalisan, bekerje a szerver jelszavat a felhasznalotol
+		m_pTCPControlConnection->SendMessage( "pass " + szPass );
+		return;
+	}
+
+	if( szCommand == "007" ) // wrong pass
+	{
+		AddText( szText + "\r\n" );
+		return;
+	}
+
+	if( szCommand == "008" ) // our unique video & audio stream serials
+	{
+		m_nVideoStreamSerial = atoi( szParam );
+		m_nAudioStreamSerial = atoi( szText );
+		return;
+	}
+
+	if( szCommand == "009" ) // login completed
+	{
+		AddText( szText + "\r\n" );
+		// TODO: show channel selection dialog here
+		return;
+	}
+
+	if( szCommand == "011" ) // login timeout
+	{
+		AddText( szText + "\r\n" );
+		return;
+	}
+
+	if( szCommand == "502" ) // PING
+	{
+		m_szNick = szParam;
+		AddText( "Your nick is now " + m_szNick + "\r\n" );
+		return;
+	}
+
+	if( szCommand == "503" ) // PING
+	{
+		m_pTCPControlConnection->SendMessage( "pong\r\n" );
+		return;
+	}
 }
