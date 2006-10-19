@@ -27,8 +27,11 @@ private:
 	CArray< CChannel* >		m_apChannels;
 	CTCPConnection*			m_pTCPControlConnection;
 	SOCKET					m_sSocket;
+	char					m_pRecvBuf[MAXMESSAGELENGTH+1];
+	UINT					m_nRecvBufSize;
 
-public:	
+	// in Server.cpp
+public:
 	CServer();
 	~CServer();
 
@@ -45,13 +48,10 @@ public:
 private:
 	afx_msg	LRESULT				OnControlSocketEvent( WPARAM wParam, LPARAM lParam );
 
+	// in Server_ProcessMessages.cpp
+	void						ProcessServerMessage( CString szLine );
 
-	
-	
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-	// status dialog
-	//
+	// in Server_Dialog.cpp
 public:
 	void			AddText( CString szText );  // add "\r\n" after szText
 	

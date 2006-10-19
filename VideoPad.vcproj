@@ -230,12 +230,6 @@
 				<File
 					RelativePath=".\Utils\IniManager.h">
 				</File>
-				<File
-					RelativePath=".\Utils\Server.cpp">
-				</File>
-				<File
-					RelativePath=".\Utils\Server.h">
-				</File>
 				<Filter
 					Name="Sockets"
 					Filter="">
@@ -256,6 +250,22 @@
 					</File>
 					<File
 						RelativePath=".\Utils\Sockets\UDPConnection.h">
+					</File>
+				</Filter>
+				<Filter
+					Name="Server"
+					Filter="">
+					<File
+						RelativePath=".\Utils\Server\Server.cpp">
+					</File>
+					<File
+						RelativePath=".\Utils\Server\Server.h">
+					</File>
+					<File
+						RelativePath=".\Utils\Server\Server_Dialog.cpp">
+					</File>
+					<File
+						RelativePath=".\Utils\Server\Server_ProcessMessages.cpp">
 					</File>
 				</Filter>
 			</Filter>

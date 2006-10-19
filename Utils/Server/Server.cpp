@@ -16,13 +16,14 @@
 
 #include "stdafx.h"
 #include "Server.h"
-#include "../VideoPad.h"
 
 CServer::CServer()
 {
 	CDialog::Create( IDD_DIALOG_SERVER );
 
 	m_pTCPControlConnection = NULL;
+	m_nRecvBufSize = 0;
+	memset( m_pRecvBuf, 0, MAXMESSAGELENGTH+1 );
 }
 
 CServer::~CServer()
@@ -133,7 +134,22 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 
 		case FD_READ:
 		{
-			
+			int res = recv( m_pTCPControlConnection->GetSocket(), m_pRecvBuf+m_nRecvBufSize,
+				MAXMESSAGELENGTH-m_nRecvBufSize, 0 );
+			if( res <= 0 )
+			{
+				AddText( "Disconnected.\r\n" );
+				break;
+			}
+			m_nRecvBufSize += res;
+
+			if( ( m_pRecvBuf[m_nRecvBufSize-1] == '\n' ) || ( m_nRecvBufSize == MAXMESSAGELENGTH ) )
+			{
+				ProcessServerMessage( m_pRecvBuf );
+				m_nRecvBufSize = 0;
+				memset( m_pRecvBuf, 0, MAXMESSAGELENGTH+1 );
+			}
+			break;
 		}
 	}
 
@@ -166,61 +182,4 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 		}*/
 
 	return 0;
-}
-
-// STATUS DIALOG
-
-BEGIN_MESSAGE_MAP( CServer, CDialog )
-	ON_WM_CLOSE()
-	ON_MESSAGE( WU_CONTROLSOCKET_EVENT, OnControlSocketEvent )
-END_MESSAGE_MAP()
-
-BOOL CServer::PreTranslateMessage( MSG* pMsg )
-{
-	if ( pMsg->message == WM_KEYDOWN )
-	{
-		if ( pMsg->wParam == VK_RETURN )
-		{
-			CString sMessage;
-			m_editMessage.GetWindowText( sMessage );
-			sMessage += "\r\n";
-			m_editMessages.SetSel( -1, 0 );
-			m_editMessages.ReplaceSel( sMessage );
-			m_editMessage.SetSel( 0, -1 );
-			m_editMessage.ReplaceSel( "" );
-
-		}
-	}
-
-	return CDialog::PreTranslateMessage( pMsg );
-}
-
-
-void CServer::DoDataExchange( CDataExchange* pDX )
-{
-	CDialog::DoDataExchange( pDX );
-	DDX_Control( pDX, IDC_EDIT_MESSAGES, m_editMessages );	
-	DDX_Control( pDX, IDC_EDIT_MESSAGE, m_editMessage );	
-
-}
-
-void CServer::OnClose()
-{
-	ShowWindow( false );
-	theApp.SetConnected( false );	
-}
-
-void CServer::OnOK()
-{
-} 
-
-void CServer::AddText( CString szText )
-{
-
-	if ( m_editMessages.GetLineCount() > theApp.GetIniManager()->LoadMaxLineNum() )
-	{
-		m_editMessages.SetSel( 0, -1 );
-	}
-
-	m_editMessages.ReplaceSel( szText );
 }

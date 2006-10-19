@@ -68,8 +68,11 @@
 #define WU_CONTROLSOCKET_EVENT WM_APP+1
 #define WU_DATASOCKET_EVENT WM_APP+2
 
-#include <vector>
-using namespace std;
+// max length of one line sent to the control port
+#define MAXMESSAGELENGTH 1024
+
+//#include <vector>
+//using namespace std;
 
 #include "CommonDefines.h"
 
@@ -79,7 +82,7 @@ using namespace std;
 #include "Dialogs/VideoDialog.h"
 #include "Dialogs/ChatDialog.h"
 
-#include "Utils/Server.h"
+#include "Utils/Server/Server.h"
 #include "Utils/Channel.h"
 #include "Utils/IniManager.h"
 #include "Utils/Client.h"
