@@ -21,6 +21,7 @@
 BEGIN_MESSAGE_MAP( CServer, CDialog )
 	ON_WM_CLOSE()
 	ON_MESSAGE( WU_CONTROLSOCKET_EVENT, OnControlSocketEvent )
+	ON_MESSAGE( WU_DATASOCKET_EVENT, OnDataSocketEvent )
 END_MESSAGE_MAP()
 
 BOOL CServer::PreTranslateMessage( MSG* pMsg )

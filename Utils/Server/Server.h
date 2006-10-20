@@ -16,7 +16,8 @@
 
 #pragma once
 
-#include "Utils/Sockets/TCPConnection.h"
+class CTCPConnection;
+class CUDPConnection;
 
 class CServer : public CDialog
 {
@@ -28,8 +29,12 @@ private:
 
 	UINT					m_nVideoStreamSerial;
 	UINT					m_nAudioStreamSerial;
+	UINT					m_nTCPDataPort;
+	UINT					m_nUDPDataPort;
 
 	CTCPConnection*			m_pTCPControlConnection;
+	CTCPConnection*			m_pTCPDataConnection;
+	CUDPConnection*			m_pUDPDataConnection;
 	SOCKET					m_sSocket;
 	char					m_pRecvBuf[MAXMESSAGELENGTH+1];
 
@@ -49,6 +54,11 @@ public:
 	bool						JoinChannel( CString szChannelName );
 
 private:
+								// this is used only for closing TCP/UDP connections
+								// to fully disconnect, call theApp.Disconnect()
+	void						Disconnect();
+
+	afx_msg	LRESULT				OnDataSocketEvent( WPARAM wParam, LPARAM lParam );
 	afx_msg	LRESULT				OnControlSocketEvent( WPARAM wParam, LPARAM lParam );
 
 	// in Server_ProcessMessages.cpp

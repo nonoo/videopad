@@ -23,12 +23,17 @@ CServer::CServer()
 	CDialog::Create( IDD_DIALOG_SERVER );
 
 	m_pTCPControlConnection = NULL;
+	m_pTCPDataConnection = NULL;
+	m_pUDPDataConnection = NULL;
 	memset( m_pRecvBuf, 0, MAXMESSAGELENGTH+1 );
+
+	m_nTCPDataPort = 0;
+	m_nUDPDataPort = 0;
 }
 
 CServer::~CServer()
 {
-	SAFE_DELETE( m_pTCPControlConnection );
+	Disconnect();
 
 	for ( int i = 0; i < m_apChannels.GetCount(); i++ )
 	{
@@ -57,6 +62,13 @@ void CServer::Connect( CString szHost, CString szPort, CString szNick )
 	{
 		AddText( pError );
 	}
+}
+
+void CServer::Disconnect()
+{
+	SAFE_DELETE( m_pTCPControlConnection );
+	SAFE_DELETE( m_pTCPDataConnection );
+	SAFE_DELETE( m_pUDPDataConnection );
 }
 
 const CString& CServer::GetHost() const
@@ -110,6 +122,51 @@ const SOCKET& CServer::GetSocket()
 	return m_pTCPControlConnection->GetSocket();
 }
 
+LRESULT CServer::OnDataSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
+{
+	WORD wErrCode = WSAGETSELECTERROR( lParam );
+	WORD wEvent = WSAGETSELECTEVENT( lParam );
+
+	switch( wEvent )
+	{
+		case FD_CONNECT:
+		{
+			if( wErrCode == WSAECONNREFUSED )
+			{
+				AddText( "failed: connection refused!\r\n" );
+				Disconnect();
+				return 0;
+			}
+
+			AddText( " connected\r\n" );
+
+			if( m_pUDPDataConnection == NULL )
+			{
+				// creating the udp data socket
+				AddText( "Creating UDP data socket.\r\n\r\n" );
+
+				m_pUDPDataConnection = new CUDPConnection( GetSafeHwnd(), WU_DATASOCKET_EVENT );
+				try
+				{
+					CString szPort;
+					szPort.Format( "%d", m_nUDPDataPort );
+					m_pUDPDataConnection->Connect( m_szHost, szPort );
+					break;
+				}
+				catch ( char* pError )
+				{
+					AddText( pError );
+					Disconnect();
+					break;
+				}
+			}
+			break;
+		}
+	}
+	
+	return 0;
+}
+
 LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 {
 	WORD wErrCode = WSAGETSELECTERROR( lParam );
@@ -122,6 +179,7 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			if( wErrCode == WSAECONNREFUSED )
 			{
 				AddText( "failed: connection refused!\r\n" );
+				Disconnect();
 				return 0;
 			}
 

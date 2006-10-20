@@ -93,15 +93,40 @@ void CServer::ProcessServerMessage( CString szLine )
 	{
 		AddText( szText + "\r\n\r\n" );
 
+		// connecting to the data port
+		AddText( "Connecting to server's TCP data port..." );
+
+		// connecting the tcp data socket
+		m_pTCPDataConnection = new CTCPConnection( GetSafeHwnd(), WU_DATASOCKET_EVENT );
+		try
+		{
+			CString szPort;
+			szPort.Format( "%d", m_nTCPDataPort );
+			m_pTCPDataConnection->Connect( m_szHost, szPort );
+		}
+		catch ( char* pError )
+		{
+			AddText( pError );
+			Disconnect();
+			return;
+		}
+
 		// requesting channel list
 		m_pTCPControlConnection->SendMessage( "chanlist\r\n" );
 
 		return;
 	}
 
-	if( szCommand == "011" ) // login timeout
+	if( szCommand == "010" ) // login timeout
 	{
 		AddText( szText + "\r\n" );
+		return;
+	}
+
+	if( szCommand == "011" ) // login timeout
+	{
+		m_nTCPDataPort = atoi( szParam1 );
+		m_nUDPDataPort = atoi( szParam2 );
 		return;
 	}
 
