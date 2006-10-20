@@ -262,6 +262,9 @@
 						RelativePath=".\Utils\Server\Server.h">
 					</File>
 					<File
+						RelativePath=".\Utils\Server\Server_Commands.cpp">
+					</File>
+					<File
 						RelativePath=".\Utils\Server\Server_Dialog.cpp">
 					</File>
 					<File

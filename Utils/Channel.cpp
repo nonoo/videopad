@@ -21,60 +21,66 @@
 
 CChannel::CChannel()
 {
-	m_bActive = false;
 }
 
 CChannel::~CChannel()
 {
-	for ( int i = 0; i < m_aClients.GetCount(); i++ )
-	{
-		SAFE_DELETE( m_aClients[i] );
-	}
-	
-	m_aClients.RemoveAll();
 }
 
-void CChannel::Create( CString sChannelName )
+void CChannel::Create( CString szName )
 {
-	m_sChannelName = sChannelName;	
+	m_szName = szName;
+
+	m_dlgChat.Create( IDD_DIALOG_CHAT, theApp.m_pMainWnd );
+	m_dlgChat.ShowWindow( SW_SHOW );
 }
 
 void CChannel::AddClient( CClient* pClient )
 {
 	m_aClients.Add( pClient );
+
+	pClient->AddChannel( this );
 }
 
-void CChannel::RemoveClient( CString sUserName )
+void CChannel::RemoveClient( CClient* pClient )
 {
 	for ( int i = 0; i < m_aClients.GetCount(); i++ )
 	{
-		if ( m_aClients[i]->GetName() == sUserName )
+		if ( m_aClients[i] == pClient )
 		{
-			SAFE_DELETE( m_aClients[i] );
 			m_aClients.RemoveAt( i, 1 );
 		}
 	}
+
+	pClient->RemoveChannel( this );
 }
 
-const CString& CChannel::GetChannelName() const
+void CChannel::SetClientFlag( CClient* pClient, char cFlag )
 {
-	return m_sChannelName;
+	m_mpcClientFlags[pClient] = cFlag;
 }
 
-void CChannel::Join()
+const CString& CChannel::GetName()
 {
-	// add some user to this channel:
-	
-	CClient* pNewClient = new CClient;
-	pNewClient->Create( "BlooD2oo1", TRUE );
-	AddClient( pNewClient );
-	
-	pNewClient = new CClient;
-	pNewClient->Create( "Nonoo", TRUE );				
-	AddClient( pNewClient );
-	
-	m_dlgChat.Create( IDD_DIALOG_CHAT, theApp.m_pMainWnd );
-	m_dlgChat.ShowWindow( SW_SHOW );
-	
-	m_bActive = true;
+	return m_szName;
+}
+
+UINT CChannel::GetClientNum()
+{
+	return m_aClients.GetCount();
+}
+
+const CArray< CClient* >& CChannel::GetClients()
+{
+	return m_aClients;
+}
+
+void CChannel::SetCreationTime( time_t tCreationTime )
+{
+	m_tCreationTime = tCreationTime;
+}
+
+const time_t& CChannel::GetCreationTime()
+{
+	return m_tCreationTime;
 }

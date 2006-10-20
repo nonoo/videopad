@@ -28,21 +28,48 @@ CClient::~CClient()
 	SAFE_DELETE( m_pdlgVideo );
 }
 
-
-void CClient::Create( CString sName, bool bOpenVideoDlg )
+void CClient::Create( CString szNick )
 {
-	m_sName = sName;
+	m_szNick = szNick;
+	
+/*	a videodialogot majd csak akkor nyitjuk meg ha megerkezett az elso kepkocka a dekodertol
 	
 	if ( bOpenVideoDlg )
 	{
 		m_pdlgVideo = new CVideoDialog;
 		m_pdlgVideo->Create( IDD_DIALOG_VIDEO );
-		m_pdlgVideo->SetWindowText( m_sName );
+		m_pdlgVideo->SetWindowText( m_szNick );
 		m_pdlgVideo->ShowWindow( SW_SHOW );
+	}*/
+}
+
+const CString& CClient::GetNick()
+{
+	return m_szNick;
+}
+
+void CClient::AddChannel( CChannel* pChannel )
+{
+	m_apChannels.Add( pChannel );
+}
+
+void CClient::RemoveChannel( CChannel* pChannel )
+{
+	for( int i = 0; i < m_apChannels.GetCount(); i++ )
+	{
+		if( m_apChannels[i] == pChannel )
+		{
+			m_apChannels.RemoveAt( i, 1 );
+		}
 	}
 }
 
-const CString& CClient::GetName() const
+INT_PTR CClient::GetChannelNum()
 {
-	return m_sName;
+	return m_apChannels.GetCount();
+}
+
+const CArray< CChannel* >& CClient::GetChannels()
+{
+	return m_apChannels;
 }

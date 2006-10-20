@@ -16,27 +16,32 @@
 
 #pragma once
 
-#include "Client.h"
-#include "Dialogs/ChatDialog.h"
+#include "../Dialogs/ChatDialog.h"
+
+class CClient;
 
 class CChannel
 {
 private:
-	CString				m_sChannelName;
-	//vector< CClient >	m_vClients; faszomat, VA nem hozza elo a tagfugvenyeit.
-	CArray< CClient* >	m_aClients;
-	bool				m_bActive;
-	
-	CChatDialog			m_dlgChat;
+	CString							m_szName;
+	CArray< CClient* >				m_aClients;
+	time_t							m_tCreationTime;
+	CChatDialog						m_dlgChat;
+	typedef map< CClient*,char >	tFlagMap;
+	tFlagMap						m_mpcClientFlags;
 
 public:	
 	CChannel();
 	~CChannel();
-	
-	void				Create( CString sChannelName );		//create channel, named sChannelName
-	void				AddClient( CClient* pClient );
-	void				RemoveClient( CString sUserName );
-	const CString&		GetChannelName() const;
-	void				Join();								// join to this channel, and create clients.
 
+	void						Create( CString szName );
+
+	void						AddClient( CClient* pClient );
+	void						RemoveClient( CClient* pClient );
+	void						SetClientFlag( CClient* pClient, char cFlag );
+	const CString&				GetName();
+	UINT						GetClientNum();
+	const CArray< CClient* >&	GetClients();
+	void						SetCreationTime( time_t nCreationTime );
+	const time_t&				GetCreationTime();
 };

@@ -35,11 +35,17 @@ CServer::~CServer()
 {
 	Disconnect();
 
-	for ( int i = 0; i < m_apChannels.GetCount(); i++ )
+	// deleting m_mspChannels
+	for ( tChannelMap::iterator it = m_mspChannels.begin(); it != m_mspChannels.end(); it++ )
 	{
-		SAFE_DELETE( m_apChannels[i] );
+		SAFE_DELETE( it->second );
 	}
-	m_apChannels.RemoveAll();
+
+	// deleting m_mspClients
+	for ( tClientMap::iterator it = m_mspClients.begin(); it != m_mspClients.end(); it++ )
+	{
+		SAFE_DELETE( it->second );
+	}
 }
 
 void CServer::Connect( CString szHost, CString szPort, CString szNick )
@@ -71,50 +77,19 @@ void CServer::Disconnect()
 	SAFE_DELETE( m_pUDPDataConnection );
 }
 
-const CString& CServer::GetHost() const
+const CString& CServer::GetHost()
 {
 	return m_szHost;
 }
 
-const CString& CServer::GetPort() const
+const CString& CServer::GetPort()
 {
 	return m_szPort;
 }
 
-const CString& CServer::GetNick() const
+const CString& CServer::GetNick()
 {
 	return m_szNick;
-}
-
-CArray< CChannel* >* const CServer::GetChannelsArray()
-{
-	return &m_apChannels;
-}
-
-bool CServer::JoinChannel( CChannel* pChannel )
-{
-	if ( !pChannel )
-	{
-		return false;
-	}
-	
-	pChannel->Join(); // here we join to pChannel
-	
-	return true;
-}
-
-bool CServer::JoinChannel( CString szChannelName )
-{
-	for ( int i = 0; i < m_apChannels.GetCount(); i++ )
-	{
-		if ( m_apChannels[i]->GetChannelName() == szChannelName )
-		{
-			m_apChannels[i]->Join();
-			return true;
-		}
-	}
-	
-	return false;
 }
 
 const SOCKET& CServer::GetSocket()

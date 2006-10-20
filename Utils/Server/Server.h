@@ -22,21 +22,25 @@ class CUDPConnection;
 class CServer : public CDialog
 {
 private:
-	CString					m_szHost;
-	CString					m_szPort;
-	CString					m_szNick;
-	CArray< CChannel* >		m_apChannels;
+	CString						m_szHost;
+	CString						m_szPort;
+	CString						m_szNick;
 
-	UINT					m_nVideoStreamSerial;
-	UINT					m_nAudioStreamSerial;
-	UINT					m_nTCPDataPort;
-	UINT					m_nUDPDataPort;
+	typedef map< CString, CChannel* > tChannelMap;
+	tChannelMap					m_mspChannels;
+	typedef map< CString, CClient* > tClientMap;
+	tClientMap					m_mspClients;
 
-	CTCPConnection*			m_pTCPControlConnection;
-	CTCPConnection*			m_pTCPDataConnection;
-	CUDPConnection*			m_pUDPDataConnection;
-	SOCKET					m_sSocket;
-	char					m_pRecvBuf[MAXMESSAGELENGTH+1];
+	UINT						m_nVideoStreamSerial;
+	UINT						m_nAudioStreamSerial;
+	UINT						m_nTCPDataPort;
+	UINT						m_nUDPDataPort;
+
+	CTCPConnection*				m_pTCPControlConnection;
+	CTCPConnection*				m_pTCPDataConnection;
+	CUDPConnection*				m_pUDPDataConnection;
+	SOCKET						m_sSocket;
+	char						m_pRecvBuf[MAXMESSAGELENGTH+1];
 
 	// in Server.cpp
 public:
@@ -44,14 +48,10 @@ public:
 	~CServer();
 
 	void						Connect( CString szHost, CString szPort, CString szNick );
-	const CString&				GetHost() const;
-	const CString&				GetPort() const;
-	const CString&				GetNick() const;
-	CArray< CChannel* >* const	GetChannelsArray();
+	const CString&				GetHost();
+	const CString&				GetPort();
+	const CString&				GetNick();
 	const SOCKET&				GetSocket();
-
-	bool						JoinChannel( CChannel* pChannel );
-	bool						JoinChannel( CString szChannelName );
 
 private:
 								// this is used only for closing TCP/UDP connections
@@ -64,6 +64,11 @@ private:
 	// in Server_ProcessMessages.cpp
 								// processes messages received from the server
 	void						ProcessServerMessage( CString szLine );
+
+	// in Server_Commands.cpp
+	void						DeleteChannel( CChannel* pChannel );
+	void						PartChannel( CChannel* pChannel, CClient* pClient );
+	void						AddClient( CString szNick, CString szChannel );
 
 	// in Server_Dialog.cpp
 public:

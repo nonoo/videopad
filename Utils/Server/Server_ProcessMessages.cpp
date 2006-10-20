@@ -24,8 +24,8 @@ void CServer::ProcessServerMessage( CString szLine )
 	//
 	int nCurPos = 0;
 	CString szCommand = szLine.Tokenize( " ", nCurPos );
-	CString szParam1 = szLine.Tokenize( " ", nCurPos );
-	CString szParam2 = szLine.Tokenize( " ", nCurPos );
+	CString szParam1 = szLine.Tokenize( " \r", nCurPos );
+	CString szParam2 = szLine.Tokenize( " \r", nCurPos );
 	CString szText;
 
 	int nCommaPos = szLine.Find( ':', 0 );
@@ -123,10 +123,29 @@ void CServer::ProcessServerMessage( CString szLine )
 		return;
 	}
 
-	if( szCommand == "011" ) // login timeout
+	if( szCommand == "011" ) // server's tcp+udp data port numbers
 	{
 		m_nTCPDataPort = atoi( szParam1 );
 		m_nUDPDataPort = atoi( szParam2 );
+		return;
+	}
+
+	if( szCommand == "300" ) // somebody joins the channel (or we)
+	{
+		AddClient( szParam2, szParam1 );
+		return;
+	}
+
+	if( szCommand == "301" ) // channel creation time
+	{
+		time_t tCreationTime = atol(szParam2);
+		m_mspChannels[szParam1]->SetCreationTime( tCreationTime );
+		return;
+	}
+
+	if( szCommand == "305" ) // part
+	{
+		PartChannel( m_mspChannels[szParam1], m_mspClients[szParam2] );
 		return;
 	}
 

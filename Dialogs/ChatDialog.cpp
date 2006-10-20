@@ -16,8 +16,7 @@
 
 #include "stdafx.h"
 #include "../VideoPad.h"
-#include "../Dialogs/ChatDialog.h"
-#include ".\chatdialog.h"
+#include "ChatDialog.h"
 
 
 BEGIN_MESSAGE_MAP(CChatDialog, CDialog)

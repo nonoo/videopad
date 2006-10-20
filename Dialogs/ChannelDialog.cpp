@@ -63,7 +63,7 @@ void CChannelDialog::OnShowWindow( BOOL bShow, UINT /*nStatus*/ )
 		//
 		for ( int i = 0; i < m_pChannels->GetCount(); i++ )
 		{
-			int iPos = m_lbChannels.AddString( (*m_pChannels)[i]->GetChannelName() );
+			int iPos = m_lbChannels.AddString( (*m_pChannels)[i]->GetName() );
 			m_lbChannels.SetItemDataPtr( iPos, (void*)(*m_pChannels)[i] );
 		}
 	}
@@ -84,16 +84,16 @@ void CChannelDialog::OnLbnSelchangeListChannelChannels()
 
 INT_PTR CChannelDialog::DoModalJoinChannel()
 {
-	CServer* pActiveServer = theApp.GetActiveServer();
+/*	CServer* pActiveServer = theApp.GetActiveServer();
 	if ( !pActiveServer )
 	{
 		return IDCANCEL;
 	}
 	
 	m_pChannels = pActiveServer->GetChannelsArray();
-
+*/
 	INT_PTR iRet = this->DoModal();
-	if ( iRet == IDOK )
+/*	if ( iRet == IDOK )
 	{
 		// trying to join m_pSelectedChannel
 		//
@@ -108,7 +108,7 @@ INT_PTR CChannelDialog::DoModalJoinChannel()
 			theApp.GetIniManager()->SaveAutoJoinChannelName( m_pSelectedChannel->GetChannelName() );
 		}		
 	}
-	
+*/	
 	return iRet;
 }
 void CChannelDialog::OnBnClickedCancel()

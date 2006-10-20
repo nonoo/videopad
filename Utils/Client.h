@@ -16,21 +16,26 @@
 
 #pragma once
 
-#include "../Dialogs/VideoDialog.h"
+class CVideoDialog;
 
 class CClient
 {
 private:
-	CString			m_sName;
-	CVideoDialog*	m_pdlgVideo;
+	CString				m_szNick;
+	CVideoDialog*		m_pdlgVideo;
+	CArray< CChannel* >	m_apChannels;
 
 public:
 	CClient();
 	~CClient();
 	
-	void				Create( CString sName, bool bOpenVideoDlg = FALSE );
-	const CString&		GetName() const;
+	void						Create( CString szNick );
+	const CString&				GetNick();
 	
-	
+	void						AddChannel( CChannel* pChannel );
+	void						RemoveChannel( CChannel* pChannel );
 
+								// returns the number of channels the client is on
+	INT_PTR						GetChannelNum();
+	const CArray< CChannel* >&	GetChannels();
 };

@@ -63,6 +63,9 @@
 #include <ws2tcpip.h>
 #include <wspiapi.h>
 
+#include <map>
+using namespace std;
+
 // user defined messages
 //
 #define WU_CONTROLSOCKET_EVENT WM_APP+1
@@ -70,9 +73,6 @@
 
 // max length of one line sent to the control port
 #define MAXMESSAGELENGTH 1024
-
-#include <map>
-using namespace std;
 
 #include "CommonDefines.h"
 
