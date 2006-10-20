@@ -16,21 +16,17 @@
 
 #pragma once
 
-#ifndef __AFXWIN_H__
-	#error include 'stdafx.h' before including this file for PCH
-#endif
-
 class CVideoPadApp : public CWinApp
 {
 private:
+	CSettingsFile		m_SettingsFile;
+
 	CChannelDialog		m_dlgChannel;
 	CConnectingDialog	m_dlgConnecting;
 
 	bool				m_bConnected;
 	CServer*			m_pActiveServer;
 	
-	CIniManager			m_iniManager;
-
 	// winsock
 	WSADATA				m_wsaData;
 
@@ -46,9 +42,9 @@ public:
 	const bool&		GetConnected();
 
 	CServer*		GetActiveServer();
-	CIniManager*	GetIniManager();
-	
-//	CMainFrame*		GetMainFrame();
+	CSettingsFile*	GetSettingsFile();
+
+	//	CMainFrame*		GetMainFrame();
 	
 private:
 	void			OnPressConnect();

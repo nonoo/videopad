@@ -46,11 +46,13 @@ void CConnectingDialog::OnShowWindow( BOOL bShow, UINT /*nStatus*/ )
 {
 	if ( bShow == TRUE )
 	{
-		m_comboServerName.SetItemHeight( CIniManager::RECENTSERVERLISTLENGTH, 13 );
+		m_comboServerName.SetItemHeight( theApp.GetSettingsFile()->GetInt( "Settings", "RecentServerListLength", 5 ), 13 );
 		m_comboServerName.DeleteString( 0 );
-		for ( int i = 0; i < CIniManager::RECENTSERVERLISTLENGTH; i++ )
+		for ( int i = 0; i < theApp.GetSettingsFile()->GetInt( "Settings", "RecentServerListLength", 5 ); i++ )
 		{
-			m_comboServerName.AddString( theApp.GetIniManager()->LoadRecentServerName( i ) );
+			CString num;
+			num.Format( "%d", i+1 );
+			m_comboServerName.AddString( theApp.GetSettingsFile()->Get( "RecentServers", num, "" ) );
 		}
 		
 		m_comboServerName.SetFocus();
@@ -67,8 +69,26 @@ void CConnectingDialog::OnBnClickedOk()
 	}
 	else
 	{
-		MessageBox( "Please enter a server name!", "Error", MB_ICONERROR | MB_OK );
+		MessageBox( "Please enter a server host!", "Error", MB_ICONERROR | MB_OK );
 	}
+}
+
+void CConnectingDialog::AddIntoRecentServerList( CString szServer )
+{
+	// TODO: elmentse a legutobb hasznalt portot is ehhez a szerverhez
+	// megoldhato ugy is hogy a mentes host:port formaban tortenik, visszaolvasaskor meg szetszedi a hostot
+	// es a portot kulon
+	for( int i = theApp.GetSettingsFile()->GetInt( "Settings", "RecentServerListLength", 5 ); i > 1; i-- )
+	{
+		CString szI;
+		szI.Format( "%d", i );
+		CString szI2;
+		szI2.Format( "%d", i-1 );
+//		::MessageBox( NULL, szI, "a", MB_OK );
+//		::MessageBox( NULL, theApp.GetSettingsFile()->Get( "RecentServers", szI2, "" ), "a", MB_OK );
+		theApp.GetSettingsFile()->Set( "RecentServers", szI, theApp.GetSettingsFile()->Get( "RecentServers", szI2, "" ) );
+	}
+	theApp.GetSettingsFile()->Set( "RecentServers", "1", szServer );
 }
 
 INT_PTR CConnectingDialog::DoModalGetServer( CString& szRetServerName, CString& szRetServerPort, CString& szRetNick )
@@ -79,10 +99,7 @@ INT_PTR CConnectingDialog::DoModalGetServer( CString& szRetServerName, CString& 
 		szRetServerName = m_szSelectedServerName;
 		szRetServerPort = m_szSelectedServerPort;
 		szRetNick = m_szSelectedNick;
-		// TODO: elmentse a legutobb hasznalt portot is ehhez a szerverhez
-		// megoldhato ugy is hogy a mentes host:port formaban tortenik, visszaolvasaskor meg szetszedi a hostot
-		// es a portot kulon
-		theApp.GetIniManager()->SaveRecentServerName( m_szSelectedServerName );
+		AddIntoRecentServerList( m_szSelectedServerName );
 	}
 	else
 	{

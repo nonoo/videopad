@@ -219,16 +219,10 @@
 					RelativePath=".\Utils\Client.h">
 				</File>
 				<File
-					RelativePath=".\Utils\INI.cpp">
+					RelativePath=".\Utils\SettingsFile.cpp">
 				</File>
 				<File
-					RelativePath=".\Utils\INI.h">
-				</File>
-				<File
-					RelativePath=".\Utils\IniManager.cpp">
-				</File>
-				<File
-					RelativePath=".\Utils\IniManager.h">
+					RelativePath=".\Utils\SettingsFile.h">
 				</File>
 				<Filter
 					Name="Sockets"

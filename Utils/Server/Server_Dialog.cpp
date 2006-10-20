@@ -70,8 +70,7 @@ void CServer::OnOK()
 
 void CServer::AddText( CString szText )
 {
-
-	if ( m_editMessages.GetLineCount() > theApp.GetIniManager()->LoadMaxLineNum() )
+	if ( m_editMessages.GetLineCount() > theApp.GetSettingsFile()->GetInt( "Settings", "MaxWindowLineNum", 500 ) )
 	{
 		m_editMessages.SetSel( 0, -1 );
 	}

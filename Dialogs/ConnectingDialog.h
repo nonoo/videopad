@@ -38,8 +38,9 @@ public:
 					//
 	INT_PTR			DoModalGetServer( CString& szRetServerName, CString& szRetServerPort, CString& szRetNick );
 
-protected:
+private:
 	virtual void	DoDataExchange( CDataExchange* pDX );    // DDX/DDV support
+	void			AddIntoRecentServerList( CString szServer );
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg	void	OnShowWindow( BOOL bShow, UINT /*nStatus*/ );

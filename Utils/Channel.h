@@ -40,7 +40,7 @@ public:
 	void						RemoveClient( CClient* pClient );
 	void						SetClientFlag( CClient* pClient, char cFlag );
 	const CString&				GetName();
-	UINT						GetClientNum();
+	INT_PTR						GetClientNum();
 	const CArray< CClient* >&	GetClients();
 	void						SetCreationTime( time_t nCreationTime );
 	const time_t&				GetCreationTime();

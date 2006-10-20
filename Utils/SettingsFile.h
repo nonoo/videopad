@@ -16,27 +16,36 @@
 
 #pragma once
 
-#include "INI.h"
-
-class CIniManager
+// config file settings manager class
+//
+class CSettingsFile
 {
+public:
+    CSettingsFile();
+
+    void	LoadConfig();
+    void	SaveConfig();
+
+    CString	Get( CString Section, CString Key, CString DefaultValue );
+    int		GetInt( CString Section, CString Key, const int& DefaultValue );
+    void	Set( CString Section, CString Key, CString Value );
+
 private:
-	CIniReader	m_IniReader;
-	
-public:	
-	CIniManager();
-	~CIniManager();
-	
-	void		SaveAutoJoin( bool bValue );
-	bool		LoadAutoJoin();
-	
-	void		SaveAutoJoinChannelName( CString sChannelName );
-	CString 	LoadAutoJoinChannelName();
-	
-	enum { RECENTSERVERLISTLENGTH = 5 };
-	void		SaveRecentServerName( CString sServerName );
-	CString		LoadRecentServerName( int iInd );
-	
-	void		SaveMaxLineNum( int iMaxLineNum );
-	int			LoadMaxLineNum();
+    // removes whitespaces
+    //
+    CString	TrimLeft( CString szString );
+    CString	TrimRight( CString szString );
+
+    void	SearchForConfigFile();
+
+
+
+
+    CString	m_szConfigFile;
+
+    // ini structure in memory
+    // m_Settings[section][key] == value
+    //
+    typedef map< CString, CString >	t_mKeys;
+    map< CString, t_mKeys >			m_Settings;
 };

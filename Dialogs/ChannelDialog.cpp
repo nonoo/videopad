@@ -57,7 +57,7 @@ void CChannelDialog::OnShowWindow( BOOL bShow, UINT /*nStatus*/ )
 {
 	if ( bShow == TRUE )
 	{
-		m_cbAutoJoin.SetCheck( theApp.GetIniManager()->LoadAutoJoin() );
+		//m_cbAutoJoin.SetCheck( g_SettingsFile.Get( "Settings", "AutoJoinChannel", "" ) );
 		
 		// adding channel names and pointers to the listbox
 		//
@@ -121,11 +121,11 @@ void CChannelDialog::OnBnClickedCheckChannelAutojoin()
 {
 	if ( m_cbAutoJoin.GetCheck() )
 	{
-		theApp.GetIniManager()->SaveAutoJoin( true );
+		//theApp.GetIniManager()->SaveAutoJoin( true );
 		m_bReSaveAutoJoinChannelName = true;		
 	}
 	else
 	{
-		theApp.GetIniManager()->SaveAutoJoin( false );
+		//theApp.GetIniManager()->SaveAutoJoin( false );
 	}
 }

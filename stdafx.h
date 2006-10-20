@@ -84,7 +84,7 @@ using namespace std;
 
 #include "Utils/Server/Server.h"
 #include "Utils/Channel.h"
-#include "Utils/IniManager.h"
+#include "Utils/SettingsFile.h"
 #include "Utils/Client.h"
 
 #include "Utils/Sockets/Connection.h"

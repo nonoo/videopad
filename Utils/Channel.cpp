@@ -65,7 +65,7 @@ const CString& CChannel::GetName()
 	return m_szName;
 }
 
-UINT CChannel::GetClientNum()
+INT_PTR CChannel::GetClientNum()
 {
 	return m_aClients.GetCount();
 }

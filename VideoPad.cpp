@@ -46,7 +46,6 @@ CVideoPadApp::~CVideoPadApp()
 
 CVideoPadApp theApp;
 
-
 BOOL CVideoPadApp::InitInstance()
 {
 	CWinApp::InitInstance();
@@ -54,7 +53,7 @@ BOOL CVideoPadApp::InitInstance()
 	// initializing winsock
 	WSAStartup( MAKEWORD(2,2), &m_wsaData );
 
-	SetRegistryKey( _T("Local AppWizard-Generated Applications") );
+	m_SettingsFile.LoadConfig();
 
 	CMainFrame* pFrame = new CMainFrame;
 	if ( !pFrame )
@@ -130,12 +129,12 @@ CServer* CVideoPadApp::GetActiveServer()
 	return m_pActiveServer;
 }
 
-CIniManager* CVideoPadApp::GetIniManager()
-{
-	return &m_iniManager;
-}
-
 // CMainFrame* CVideoPadApp::GetMainFrame()
 // {
 // 	return m_pMainWnd;
 // }
+
+CSettingsFile* CVideoPadApp::GetSettingsFile()
+{
+	return &m_SettingsFile;
+}
