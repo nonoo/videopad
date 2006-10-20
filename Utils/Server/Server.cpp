@@ -162,6 +162,13 @@ LRESULT CServer::OnDataSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			}
 			break;
 		}
+
+		case FD_CLOSE:
+		{
+			AddText( "Data socket disconnected.\r\n" );
+			Disconnect();
+			break;
+		}
 	}
 	
 	return 0;
@@ -214,6 +221,13 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			}
 			
 			memset( m_pRecvBuf, 0, MAXMESSAGELENGTH+1 );
+			break;
+		}
+
+		case FD_CLOSE:
+		{
+			AddText( "Disconnected.\r\n" );
+			Disconnect();
 			break;
 		}
 	}

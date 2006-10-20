@@ -160,4 +160,6 @@ void CServer::ProcessServerMessage( CString szLine )
 		m_pTCPControlConnection->SendMessage( "pong\r\n" );
 		return;
 	}
+
+	AddText( szLine + "\r\n" );
 }

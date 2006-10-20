@@ -30,14 +30,19 @@ BOOL CServer::PreTranslateMessage( MSG* pMsg )
 	{
 		if ( pMsg->wParam == VK_RETURN )
 		{
-			CString sMessage;
-			m_editMessage.GetWindowText( sMessage );
-			sMessage += "\r\n";
-			m_editMessages.SetSel( -1, 0 );
-			m_editMessages.ReplaceSel( sMessage );
-			m_editMessage.SetSel( 0, -1 );
-			m_editMessage.ReplaceSel( "" );
+			CString szMessage;
+			m_editMessage.GetWindowText( szMessage );
+			szMessage += "\r\n";
 
+			if( m_pTCPControlConnection != NULL )
+			{
+				m_pTCPControlConnection->SendMessage( szMessage );
+
+				m_editMessages.SetSel( -1, 0 );
+				m_editMessages.ReplaceSel( szMessage );
+				m_editMessage.SetSel( 0, -1 );
+				m_editMessage.ReplaceSel( "" );
+			}
 		}
 	}
 
