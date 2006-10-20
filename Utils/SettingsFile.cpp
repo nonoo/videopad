@@ -26,6 +26,13 @@ void CSettingsFile::Set( CString Section, CString Key, CString Value )
 	SaveConfig();
 }
 
+void CSettingsFile::Set( CString Section, int Key, CString Value )
+{
+	CString szKey;
+	szKey.Format( "%d", Key );
+	Set( Section, szKey, Value );
+}
+
 CString CSettingsFile::Get( CString Section, CString Key, CString DefaultValue )
 {
     if( m_Settings.count( Section ) > 0 )
@@ -36,6 +43,13 @@ CString CSettingsFile::Get( CString Section, CString Key, CString DefaultValue )
 		}
     }
     return DefaultValue;
+}
+
+CString CSettingsFile::Get( CString Section, int Key, CString DefaultValue )
+{
+	CString szKey;
+	szKey.Format( "%d", Key );
+	return Get( Section, szKey, DefaultValue );
 }
 
 int CSettingsFile::GetInt( CString Section, CString Key, const int& DefaultValue )

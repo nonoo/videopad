@@ -50,9 +50,7 @@ void CConnectingDialog::OnShowWindow( BOOL bShow, UINT /*nStatus*/ )
 		m_comboServerName.DeleteString( 0 );
 		for ( int i = 0; i < theApp.GetSettingsFile()->GetInt( "Settings", "RecentServerListLength", 5 ); i++ )
 		{
-			CString num;
-			num.Format( "%d", i+1 );
-			m_comboServerName.AddString( theApp.GetSettingsFile()->Get( "RecentServers", num, "" ) );
+			m_comboServerName.AddString( theApp.GetSettingsFile()->Get( "RecentServers", i+1, "" ) );
 		}
 		
 		m_comboServerName.SetFocus();
@@ -75,18 +73,9 @@ void CConnectingDialog::OnBnClickedOk()
 
 void CConnectingDialog::AddIntoRecentServerList( CString szServer )
 {
-	// TODO: elmentse a legutobb hasznalt portot is ehhez a szerverhez
-	// megoldhato ugy is hogy a mentes host:port formaban tortenik, visszaolvasaskor meg szetszedi a hostot
-	// es a portot kulon
 	for( int i = theApp.GetSettingsFile()->GetInt( "Settings", "RecentServerListLength", 5 ); i > 1; i-- )
 	{
-		CString szI;
-		szI.Format( "%d", i );
-		CString szI2;
-		szI2.Format( "%d", i-1 );
-//		::MessageBox( NULL, szI, "a", MB_OK );
-//		::MessageBox( NULL, theApp.GetSettingsFile()->Get( "RecentServers", szI2, "" ), "a", MB_OK );
-		theApp.GetSettingsFile()->Set( "RecentServers", szI, theApp.GetSettingsFile()->Get( "RecentServers", szI2, "" ) );
+		theApp.GetSettingsFile()->Set( "RecentServers", i, theApp.GetSettingsFile()->Get( "RecentServers", i-1, "" ) );
 	}
 	theApp.GetSettingsFile()->Set( "RecentServers", "1", szServer );
 }

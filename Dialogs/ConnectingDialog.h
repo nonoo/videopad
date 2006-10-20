@@ -40,6 +40,9 @@ public:
 
 private:
 	virtual void	DoDataExchange( CDataExchange* pDX );    // DDX/DDV support
+
+					// adds the given server to the top of the recent server list
+					//
 	void			AddIntoRecentServerList( CString szServer );
 
 	DECLARE_MESSAGE_MAP()
