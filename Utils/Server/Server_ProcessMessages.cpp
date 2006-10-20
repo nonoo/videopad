@@ -26,6 +26,7 @@ void CServer::ProcessServerMessage( CString szLine )
 	CString szCommand = szLine.Tokenize( " ", nCurPos );
 	CString szParam1 = szLine.Tokenize( " \r", nCurPos );
 	CString szParam2 = szLine.Tokenize( " \r", nCurPos );
+	CString szParam3 = szLine.Tokenize( " \r", nCurPos );
 	CString szText;
 
 	int nCommaPos = szLine.Find( ':', 0 );
@@ -143,9 +144,21 @@ void CServer::ProcessServerMessage( CString szLine )
 		return;
 	}
 
+	if( szCommand == "304" ) // quit
+	{
+		PartChannel( m_mspChannels[szParam1], m_mspClients[szParam2] );
+		return;
+	}
+
 	if( szCommand == "305" ) // part
 	{
 		PartChannel( m_mspChannels[szParam1], m_mspClients[szParam2] );
+		return;
+	}
+
+	if( szCommand == "306" ) // nick change
+	{
+		m_mspClients[szParam2]->SetNick( szParam3 );
 		return;
 	}
 
@@ -167,7 +180,12 @@ void CServer::ProcessServerMessage( CString szLine )
 		return;
 	}
 
-	if( szCommand == "502" ) // PING
+	if( szCommand == "500" ) // channel message
+	{
+		return;
+	}
+
+	if( szCommand == "502" ) // our nick has changed
 	{
 		m_szNick = szParam1;
 		AddText( "Your nick is now " + m_szNick + "\r\n" );

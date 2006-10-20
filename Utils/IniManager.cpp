@@ -60,7 +60,7 @@ CString CIniManager::LoadAutoJoinChannelName()
 
 void CIniManager::SaveRecentServerName( CString sServerName )
 {
-	CString sName[NUMRECENTLIST];
+	CString sName[RECENTSERVERLISTLENGTH];
 	sName[0] = m_IniReader.getKeyValue( "RecentServerName0", "OPTIONS" );
 
 	if ( sName[0] == sServerName )
@@ -73,7 +73,7 @@ void CIniManager::SaveRecentServerName( CString sServerName )
 	sName[3] = m_IniReader.getKeyValue( "RecentServerName3", "OPTIONS" );	
 	
 	CString sKey;
-	for ( int i = 1; i < NUMRECENTLIST; i++ )
+	for ( int i = 1; i < RECENTSERVERLISTLENGTH; i++ )
 	{
 		if ( sServerName == sName[i] )
 		{
@@ -88,7 +88,7 @@ void CIniManager::SaveRecentServerName( CString sServerName )
 		}
 	}
 	
-	for ( int i = NUMRECENTLIST - 1; i > 0; i-- )
+	for ( int i = RECENTSERVERLISTLENGTH - 1; i > 0; i-- )
 	{
 		sKey.Format( "RecentServerName%i", i ); 
 		m_IniReader.setKey( sName[i-1], sKey, "OPTIONS" );
@@ -100,7 +100,7 @@ void CIniManager::SaveRecentServerName( CString sServerName )
 
 CString CIniManager::LoadRecentServerName( int iInd )
 {
-	if ( iInd > 4 || iInd < 0 )
+	if ( iInd > RECENTSERVERLISTLENGTH-1 || iInd < 0 )
 	{
 		return "";
 	}

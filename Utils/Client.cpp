@@ -43,6 +43,11 @@ void CClient::Create( CString szNick )
 	}*/
 }
 
+void CClient::SetNick( CString szNick )
+{
+	m_szNick = szNick;
+}
+
 const CString& CClient::GetNick()
 {
 	return m_szNick;

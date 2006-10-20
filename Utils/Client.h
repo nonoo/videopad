@@ -30,6 +30,7 @@ public:
 	~CClient();
 	
 	void						Create( CString szNick );
+	void						SetNick( CString szNick );
 	const CString&				GetNick();
 	
 	void						AddChannel( CChannel* pChannel );

@@ -69,6 +69,7 @@ private:
 	void						DeleteChannel( CChannel* pChannel );
 	void						PartChannel( CChannel* pChannel, CClient* pClient );
 	void						AddClient( CString szNick, CString szChannel );
+	void						DoAutoJoin();
 
 	// in Server_Dialog.cpp
 public:

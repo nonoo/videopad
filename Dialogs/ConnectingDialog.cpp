@@ -46,9 +46,9 @@ void CConnectingDialog::OnShowWindow( BOOL bShow, UINT /*nStatus*/ )
 {
 	if ( bShow == TRUE )
 	{
-		m_comboServerName.SetItemHeight( CIniManager::NUMRECENTLIST, 13 );
+		m_comboServerName.SetItemHeight( CIniManager::RECENTSERVERLISTLENGTH, 13 );
 		m_comboServerName.DeleteString( 0 );
-		for ( int i = 0; i < CIniManager::NUMRECENTLIST; i++ )
+		for ( int i = 0; i < CIniManager::RECENTSERVERLISTLENGTH; i++ )
 		{
 			m_comboServerName.AddString( theApp.GetIniManager()->LoadRecentServerName( i ) );
 		}

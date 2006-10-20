@@ -33,9 +33,9 @@ public:
 	void		SaveAutoJoinChannelName( CString sChannelName );
 	CString 	LoadAutoJoinChannelName();
 	
-	enum { NUMRECENTLIST = 5 };	// Change this and this to change recent list count
+	enum { RECENTSERVERLISTLENGTH = 5 };
 	void		SaveRecentServerName( CString sServerName );
-	CString		LoadRecentServerName( int iInd );  // maximum: NUMRECENTLIST
+	CString		LoadRecentServerName( int iInd );
 	
 	void		SaveMaxLineNum( int iMaxLineNum );
 	int			LoadMaxLineNum();

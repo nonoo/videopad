@@ -135,6 +135,9 @@ LRESULT CServer::OnDataSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 					break;
 				}
 			}
+
+			DoAutoJoin();
+
 			break;
 		}
 
@@ -206,34 +209,6 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			break;
 		}
 	}
-
-		//TODO: add channels to the array this way:
-
-		/*		CChannel* pChannel = new CChannel;
-		pChannel->Create( "XkakafosX" );
-		m_apChannels.Add( pChannel );
-
-		pChannel = new CChannel;
-		pChannel->Create( "qka" );
-		m_apChannels.Add( pChannel );	
-
-		pChannel = new CChannel;
-		pChannel->Create( "seggszor" );
-		m_apChannels.Add( pChannel );*/
-
-/*		m_bConnected = true;
-
-		if ( m_iniManager.LoadAutoJoin() )
-		{
-			m_pActiveServer->JoinChannel( m_iniManager.LoadAutoJoinChannelName() );
-		}
-		else
-		{
-			if ( m_dlgChannel.DoModalJoinChannel() == IDOK )  // joining to the selected channel
-			{
-
-			}				
-		}*/
 
 	return 0;
 }
