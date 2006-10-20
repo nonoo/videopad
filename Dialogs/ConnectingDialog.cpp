@@ -59,9 +59,9 @@ void CConnectingDialog::OnShowWindow( BOOL bShow, UINT /*nStatus*/ )
 
 void CConnectingDialog::OnBnClickedOk()
 {
-	m_comboServerName.GetWindowText( m_szSelectedServerName );
+	m_comboServerName.GetWindowText( m_szSelectedServer );
 	
-	if ( m_szSelectedServerName != "" )
+	if ( m_szSelectedServer != "" )
 	{
 		this->EndModalLoop( IDOK );	
 	}
@@ -71,24 +71,23 @@ void CConnectingDialog::OnBnClickedOk()
 	}
 }
 
-void CConnectingDialog::AddIntoRecentServerList( CString szServer )
-{
-	for( int i = theApp.GetSettingsFile()->GetInt( "Settings", "RecentServerListLength", 5 ); i > 1; i-- )
-	{
-		theApp.GetSettingsFile()->Set( "RecentServers", i, theApp.GetSettingsFile()->Get( "RecentServers", i-1, "" ) );
-	}
-	theApp.GetSettingsFile()->Set( "RecentServers", "1", szServer );
-}
-
 INT_PTR CConnectingDialog::DoModalGetServer( CString& szRetServerName, CString& szRetServerPort, CString& szRetNick )
 {
 	INT_PTR iRet = this->DoModal();
 	if ( iRet == IDOK )
 	{
-		szRetServerName = m_szSelectedServerName;
-		szRetServerPort = m_szSelectedServerPort;
-		szRetNick = m_szSelectedNick;
-		AddIntoRecentServerList( m_szSelectedServerName );
+		// checking for host:port format
+		int nCommaPos = m_szSelectedServer.Find( ':' );
+		CString szPort = "62320"; // default VideoPad control port
+		if( nCommaPos > 0 )
+		{
+			szPort = m_szSelectedServer.Mid( nCommaPos + 1, m_szSelectedServer.GetLength() - nCommaPos - 1 );
+			m_szSelectedServer = m_szSelectedServer.Left( nCommaPos );
+		}
+		szRetServerName = m_szSelectedServer;
+		szRetServerPort = szPort;
+		//szRetNick = m_szSelectedNick;
+		szRetNick = "TestNick";
 	}
 	else
 	{

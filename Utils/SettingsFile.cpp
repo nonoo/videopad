@@ -123,9 +123,13 @@ void CSettingsFile::LoadConfig()
 {
     CString tmp;
 
-    if( m_szConfigFile == "" )
+	if( m_szConfigFile == "" )
     {
-		SearchForConfigFile();
+		HRESULT hr = SearchForConfigFile();
+		if( FAILED( hr ) )
+		{
+			return;
+		}
     }
 
     ifstream FileStream( m_szConfigFile );
@@ -213,7 +217,7 @@ void CSettingsFile::LoadConfig()
     FileStream.close();
 }
 
-void CSettingsFile::SearchForConfigFile()
+HRESULT CSettingsFile::SearchForConfigFile()
 {
     // opening config file in current directory
     //
@@ -227,12 +231,13 @@ void CSettingsFile::SearchForConfigFile()
 		FileStream.open( "../VideoPad.ini" );
 		if( FileStream.fail() )
 		{
-			return;
+			return -1;
 	    }
 		m_szConfigFile = "../VideoPad.ini";
-		return;
+		return 0;
 	}
 	m_szConfigFile = "VideoPad.ini";
+	return 0;
 }
 
 CSettingsFile::CSettingsFile()
@@ -243,6 +248,11 @@ void CSettingsFile::SaveConfig()
 {
     ofstream FileStream;
     CString tmp;
+
+	if( m_szConfigFile == "" )
+	{
+		m_szConfigFile = "VideoPad.ini";
+	}
 
 	FileStream.open( m_szConfigFile );
 	if( FileStream.fail() )

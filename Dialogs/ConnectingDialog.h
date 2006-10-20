@@ -26,8 +26,7 @@ public:
 
 private:
 	CComboBox		m_comboServerName;
-	CString			m_szSelectedServerName;
-	CString			m_szSelectedServerPort;
+	CString			m_szSelectedServer;
 	CString			m_szSelectedNick;
 
 public:
@@ -40,10 +39,6 @@ public:
 
 private:
 	virtual void	DoDataExchange( CDataExchange* pDX );    // DDX/DDV support
-
-					// adds the given server to the top of the recent server list
-					//
-	void			AddIntoRecentServerList( CString szServer );
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg	void	OnShowWindow( BOOL bShow, UINT /*nStatus*/ );

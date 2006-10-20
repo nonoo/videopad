@@ -38,7 +38,7 @@ private:
     CString	TrimLeft( CString szString );
     CString	TrimRight( CString szString );
 
-    void	SearchForConfigFile();
+    HRESULT	SearchForConfigFile();
 
 
 

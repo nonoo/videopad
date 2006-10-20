@@ -97,6 +97,24 @@ const SOCKET& CServer::GetSocket()
 	return m_pTCPControlConnection->GetSocket();
 }
 
+void CServer::AddIntoRecentServerList( CString szServer )
+{
+	// is server already stored?
+	for( int i = theApp.GetSettingsFile()->GetInt( "Settings", "RecentServerListLength", 5 ); i > 0; i-- )
+	{
+		if( theApp.GetSettingsFile()->Get( "RecentServers", i, "" ) == szServer )
+		{
+			return;
+		}
+	}
+
+	for( int i = theApp.GetSettingsFile()->GetInt( "Settings", "RecentServerListLength", 5 ); i > 1; i-- )
+	{
+		theApp.GetSettingsFile()->Set( "RecentServers", i, theApp.GetSettingsFile()->Get( "RecentServers", i-1, "" ) );
+	}
+	theApp.GetSettingsFile()->Set( "RecentServers", "1", szServer );
+}
+
 LRESULT CServer::OnDataSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 {
 	WORD wErrCode = WSAGETSELECTERROR( lParam );
@@ -173,6 +191,16 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 
 			theApp.SetConnected( true );
 
+			// saving server name to the recent server list
+			if( m_szPort != "62320" )
+			{
+				AddIntoRecentServerList( m_szHost + ":" + m_szPort );
+			}
+			else
+			{
+				AddIntoRecentServerList( m_szHost );
+			}
+
 			AddText( " connected\r\n\r\n" );
 			break;
 		}
@@ -194,7 +222,7 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			int nCurrPos = 0;
 			while( nCurrPos < szRecvBuf.GetLength() )
 			{
-				szLine = szRecvBuf.Tokenize( "\n", nCurrPos );
+				szLine = szRecvBuf.Tokenize( "\n", nCurrPos ).TrimRight();
 				ProcessServerMessage( szLine );
 			}
 			

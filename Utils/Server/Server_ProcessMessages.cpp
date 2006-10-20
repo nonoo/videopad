@@ -19,21 +19,33 @@
 
 void CServer::ProcessServerMessage( CString szLine )
 {
-	// breaking up szLine to szCommand szParam and szText
-	// szParam1 is the second token, szParam2 is the third, szText is the string after ':'
+	// tokenizing szLine
 	//
+	CArray< CString > szTokens;
 	int nCurPos = 0;
-	CString szCommand = szLine.Tokenize( " ", nCurPos );
-	CString szParam1 = szLine.Tokenize( " \r", nCurPos );
-	CString szParam2 = szLine.Tokenize( " \r", nCurPos );
-	CString szParam3 = szLine.Tokenize( " \r", nCurPos );
-	CString szText;
+	while( nCurPos < szLine.GetLength() )
+	{
+		szTokens.Add( szLine.Tokenize( " ", nCurPos ) );
+	}
 
+	if( szTokens.GetCount() == 0 )
+	{
+		return;
+	}
+
+	CString& szCommand = szTokens[0];
+
+	// szText is the string after ':'
+	//
+	CString szText;
 	int nCommaPos = szLine.Find( ':', 0 );
 	if( nCommaPos )
 	{
 		szText = szLine.Mid( nCommaPos+1, szLine.GetLength()-nCommaPos-1 );
 	}
+
+
+
 
 	// for the command list, see videopad-server's README file
 	//
@@ -85,8 +97,8 @@ void CServer::ProcessServerMessage( CString szLine )
 
 	if( szCommand == "008" ) // our unique video & audio stream serials
 	{
-		m_nVideoStreamSerial = atoi( szParam1 );
-		m_nAudioStreamSerial = atoi( szParam2 );
+		m_nVideoStreamSerial = atoi( szTokens[1] );
+		m_nAudioStreamSerial = atoi( szTokens[2] );
 		return;
 	}
 
@@ -126,39 +138,39 @@ void CServer::ProcessServerMessage( CString szLine )
 
 	if( szCommand == "011" ) // server's tcp+udp data port numbers
 	{
-		m_nTCPDataPort = atoi( szParam1 );
-		m_nUDPDataPort = atoi( szParam2 );
+		m_nTCPDataPort = atoi( szTokens[1] );
+		m_nUDPDataPort = atoi( szTokens[2] );
 		return;
 	}
 
 	if( szCommand == "300" ) // somebody joins the channel (or we)
 	{
-		AddClient( szParam2, szParam1 );
+		AddClient( szTokens[2], szTokens[1] );
 		return;
 	}
 
 	if( szCommand == "301" ) // channel creation time
 	{
-		time_t tCreationTime = atol(szParam2);
-		m_mspChannels[szParam1]->SetCreationTime( tCreationTime );
+		time_t tCreationTime = atol(szTokens[2]);
+		m_mspChannels[szTokens[1]]->SetCreationTime( tCreationTime );
 		return;
 	}
 
 	if( szCommand == "304" ) // quit
 	{
-		PartChannel( m_mspChannels[szParam1], m_mspClients[szParam2] );
+		PartChannel( m_mspChannels[szTokens[1]], m_mspClients[szTokens[2]] );
 		return;
 	}
 
 	if( szCommand == "305" ) // part
 	{
-		PartChannel( m_mspChannels[szParam1], m_mspClients[szParam2] );
+		PartChannel( m_mspChannels[szTokens[1]], m_mspClients[szTokens[2]] );
 		return;
 	}
 
 	if( szCommand == "306" ) // nick change
 	{
-		m_mspClients[szParam2]->SetNick( szParam3 );
+		m_mspClients[szTokens[2]]->SetNick( szTokens[3] );
 		return;
 	}
 
@@ -187,7 +199,7 @@ void CServer::ProcessServerMessage( CString szLine )
 
 	if( szCommand == "502" ) // our nick has changed
 	{
-		m_szNick = szParam1;
+		m_szNick = szTokens[1];
 		AddText( "Your nick is now " + m_szNick + "\r\n" );
 		return;
 	}

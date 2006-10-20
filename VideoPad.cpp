@@ -114,8 +114,7 @@ void CVideoPadApp::Connect()
 
 		// trying to connect to the selected host:port
 		//
-		//m_pActiveServer->Connect( szServerHost, szServerPort, szNick );
-		m_pActiveServer->Connect( "hullahaz.hu", "62320", "TestNick" );
+		m_pActiveServer->Connect( szServerHost, szServerPort, szNick );
 	}
 }
 

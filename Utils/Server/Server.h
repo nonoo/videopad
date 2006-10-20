@@ -58,6 +58,10 @@ private:
 								// to fully disconnect, call theApp.Disconnect()
 	void						Disconnect();
 
+								// adds the given server to the top of the recent server list
+								//
+	void						AddIntoRecentServerList( CString szServer );
+
 	afx_msg	LRESULT				OnDataSocketEvent( WPARAM wParam, LPARAM lParam );
 	afx_msg	LRESULT				OnControlSocketEvent( WPARAM wParam, LPARAM lParam );
 
