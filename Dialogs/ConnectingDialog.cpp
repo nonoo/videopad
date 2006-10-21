@@ -42,6 +42,19 @@ void CConnectingDialog::DoDataExchange( CDataExchange* pDX )
 	CDialog::DoDataExchange( pDX );
 }
 
+BOOL CConnectingDialog::PreTranslateMessage( MSG* pMsg )
+{
+	if ( pMsg->message == WM_KEYDOWN )
+	{
+		if ( pMsg->wParam == VK_RETURN )
+		{
+			OnBnClickedOk();
+		}
+	}
+
+	return CDialog::PreTranslateMessage( pMsg );
+}
+
 void CConnectingDialog::OnShowWindow( BOOL bShow, UINT /*nStatus*/ )
 {
 	if ( bShow == TRUE )

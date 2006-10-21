@@ -39,6 +39,7 @@ public:
 
 private:
 	virtual void	DoDataExchange( CDataExchange* pDX );    // DDX/DDV support
+	virtual BOOL	PreTranslateMessage( MSG* pMsg );
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg	void	OnShowWindow( BOOL bShow, UINT /*nStatus*/ );
