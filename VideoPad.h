@@ -30,6 +30,9 @@ private:
 	// winsock
 	WSADATA				m_wsaData;
 
+						// for asking default capture devices
+	CDirectShowGraph*	DirectShowGraph;
+
 public:
 	CVideoPadApp();
 	~CVideoPadApp();

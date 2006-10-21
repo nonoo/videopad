@@ -14,11 +14,12 @@
 //  along with VideoPad; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-// stdafx.h : include file for standard system include files,
-// or project specific include files that are used frequently,
-// but are changed infrequently
-
 #pragma once
+
+#pragma warning( disable : 4127 ) // endless loops
+#pragma warning( disable : 4201 ) // nameless struct/union in mmsystem.h
+#pragma warning( disable : 4995 ) // include/xlocnum, deprecated
+#pragma warning( disable : 4706 ) // wspapi.h, assigment within conditional expression
 
 #ifndef VC_EXTRALEAN
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
@@ -63,6 +64,14 @@
 #include <ws2tcpip.h>
 #include <wspiapi.h>
 
+// directshow
+//
+#include <qedit.h>
+#include <dshow.h>
+#include <objbase.h>
+#include <streams.h>
+#include <mtype.h>
+
 #include <map>
 using namespace std;
 
@@ -90,3 +99,5 @@ using namespace std;
 #include "Utils/Sockets/Connection.h"
 #include "Utils/Sockets/TCPConnection.h"
 #include "Utils/Sockets/UDPConnection.h"
+
+#include "DirectShow/DirectShowGraph.h"

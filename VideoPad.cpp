@@ -51,9 +51,28 @@ BOOL CVideoPadApp::InitInstance()
 	CWinApp::InitInstance();
 
 	// initializing winsock
-	WSAStartup( MAKEWORD(2,2), &m_wsaData );
+	//
+	HRESULT hr = WSAStartup( MAKEWORD(2,2), &m_wsaData );
+	if( FAILED( hr ) )
+	{
+		MessageBox( NULL, "Can't initialize WinSock!", "Error", MB_ICONERROR | MB_OK );
+		exit( -1 );
+	}
+
+	// initializing COM
+	//
+	hr = CoInitializeEx( NULL, COINIT_APARTMENTTHREADED );
+	if( FAILED( hr ) )
+	{
+		MessageBox( NULL, "Can't initialize COM!", "Error", MB_ICONERROR | MB_OK );
+		exit( -1 );
+	}
 
 	m_SettingsFile.LoadConfig();
+
+	// initializing a directshow filtergraph
+	//
+	DirectShowGraph = new CDirectShowGraph;
 
 	CMainFrame* pFrame = new CMainFrame;
 	if ( !pFrame )

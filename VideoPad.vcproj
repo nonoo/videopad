@@ -20,6 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -33,9 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
+				AdditionalDependencies="Ws2_32.lib strmbase.lib winmm.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="Lib"
+				AdditionalLibraryDirectories="Lib;&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses\XP32_RETAIL&quot;"
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				TargetMachine="1"/>
@@ -79,6 +81,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="1"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="2"
@@ -91,8 +94,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
+				AdditionalDependencies="Ws2_32.lib strmbase.lib winmm.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="Lib;&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses\XP32_RETAIL&quot;"
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -265,6 +270,52 @@
 						RelativePath=".\Utils\Server\Server_ProcessMessages.cpp">
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="DirectShow"
+				Filter="">
+				<File
+					RelativePath=".\DirectShow\AudioCaptureDevice.cpp">
+				</File>
+				<File
+					RelativePath=".\DirectShow\AudioCaptureDevice.h">
+				</File>
+				<File
+					RelativePath=".\DirectShow\AudioGraph.cpp">
+				</File>
+				<File
+					RelativePath=".\DirectShow\AudioGraph.h">
+				</File>
+				<File
+					RelativePath=".\DirectShow\CaptureDevice.cpp">
+				</File>
+				<File
+					RelativePath=".\DirectShow\CaptureDevice.h">
+				</File>
+				<File
+					RelativePath=".\DirectShow\DirectShowGraph.cpp">
+				</File>
+				<File
+					RelativePath=".\DirectShow\DirectShowGraph.h">
+				</File>
+				<File
+					RelativePath=".\DirectShow\GrabberCallBack.cpp">
+				</File>
+				<File
+					RelativePath=".\DirectShow\GrabberCallBack.h">
+				</File>
+				<File
+					RelativePath=".\DirectShow\VideoCaptureDevice.cpp">
+				</File>
+				<File
+					RelativePath=".\DirectShow\VideoCaptureDevice.h">
+				</File>
+				<File
+					RelativePath=".\DirectShow\VideoGraph.cpp">
+				</File>
+				<File
+					RelativePath=".\DirectShow\VideoGraph.h">
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

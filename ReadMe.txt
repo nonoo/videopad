@@ -27,3 +27,20 @@ bandwidth to communicate with other people.
 
 VideoPad is like IRC: the server has channels, users can join them and talk to
 other people on the same channel.
+
+DEVELOPER NOTES
+---------------
+You can download DirectX SDK from:
+http://msdn.microsoft.com/directx/directxdownloads/default.aspx
+You'll need DirectShow SDK too, it's a part of the Platform SDK:
+http://www.microsoft.com/downloads/details.aspx?FamilyID=eba0128f-a770-45f1-86f3-7ab010b398a3&DisplayLang=en
+
+After installing Platform SDK, open a command line running cmd.exe, then follow
+these instructions:
+
+cd "c:\Program Files\Microsoft Plaftorm SDK"
+setenv.bat /XP32 /RETAIL
+cd Samples\Multimedia\DirectShow\BaseClasses
+nmake.exe
+
+Then you'll have baseclasses compiled into a .lib in the XP32_RETAIL folder.
