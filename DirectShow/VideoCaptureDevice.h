@@ -34,6 +34,7 @@ public:
 
 	const UINT&				GetVideoWidth();
 	const UINT&				GetVideoHeight();
+	const REFERENCE_TIME&	GetVideoFPS();
 
 	void					SetPreferredVideoWidth( UINT nWidth );
 	void					SetPreferredVideoHeight( UINT nHeight );
@@ -48,6 +49,7 @@ public:
 	//
 	void					SetVideoWidth( UINT nVideoWidth );
 	void					SetVideoHeight( UINT nVideoHeight );
+	void					SetVideoFPS( REFERENCE_TIME nVideoFPS );
 
 private:
 	UINT					m_nVideoWidth;

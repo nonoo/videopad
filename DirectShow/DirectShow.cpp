@@ -25,6 +25,10 @@ CDirectShow::CDirectShow()
 	m_pDirectShowGraph = new CDirectShowGraph;
 
 	m_pVideoGraph = new CVideoGraph;
+	m_pAudioGraph = new CAudioGraph;
+
+	m_pVideoCaptureDevice = NULL;
+	m_pAudioCaptureDevice = NULL;
 
 	InitCaptureDevices();
 }
@@ -33,6 +37,7 @@ CDirectShow::~CDirectShow()
 {
 	SAFE_DELETE( m_pDirectShowGraph );
 	SAFE_DELETE( m_pVideoGraph );
+	SAFE_DELETE( m_pAudioGraph );
 	SAFE_DELETE( m_pVideoCaptureDevice );
 	SAFE_DELETE( m_pAudioCaptureDevice );
 }
@@ -137,15 +142,21 @@ void CDirectShow::SetVideoFormat( UINT nPreferredVideoWidth, UINT nPreferredVide
 	StopVideo();
 	m_pVideoGraph->Destroy();
 
+	// setting preferred width, height, fps
+	// the video capture device's supported video format may not match it, that's
+	// why these functions contain "preferred" in their names
+	//
 	m_pVideoCaptureDevice->SetPreferredVideoWidth( nPreferredVideoWidth );
 	m_pVideoCaptureDevice->SetPreferredVideoHeight( nPreferredVideoHeight );
 	m_pVideoCaptureDevice->SetPreferredVideoFPS( rtPreferredVideoFPS );
 
 	m_pVideoGraph->Create( m_pVideoCaptureDevice );
 
+	// storing current video format in the settings file
+	//
 	theApp.GetSettingsFile()->Set( "VideoCaptureDevice", "VideoWidth", m_pVideoGraph->GetVideoWidth() );
 	theApp.GetSettingsFile()->Set( "VideoCaptureDevice", "VideoHeight", m_pVideoGraph->GetVideoHeight() );
-	//theApp.GetSettingsFile()->Set( "VideoCaptureDevice", "VideoFPS", m_pVideoGraph->GetVideoFPS() );
+	theApp.GetSettingsFile()->Set( "VideoCaptureDevice", "VideoFPS", (int)m_pVideoGraph->GetVideoFPS() );
 
 	StartVideo();
 }

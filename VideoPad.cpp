@@ -44,6 +44,9 @@ CVideoPadApp::~CVideoPadApp()
 
 	// winsock cleanup
 	WSACleanup();
+
+	// COM uninitialize
+	CoUninitialize();
 }
 
 CVideoPadApp theApp;

@@ -43,6 +43,11 @@ void CVideoCaptureDevice::SetVideoHeight( UINT nVideoHeight )
 	m_nVideoHeight = nVideoHeight;
 }
 
+void CVideoCaptureDevice::SetVideoFPS( REFERENCE_TIME rtVideoFPS )
+{
+	m_rtVideoFPS = rtVideoFPS;
+}
+
 void CVideoCaptureDevice::SetPreferredVideoWidth( UINT nWidth )
 {
 	m_nPreferredImageWidth = nWidth;
@@ -81,4 +86,9 @@ const UINT& CVideoCaptureDevice::GetVideoHeight()
 const UINT& CVideoCaptureDevice::GetVideoWidth()
 {
 	return m_nVideoWidth;
+}
+
+const REFERENCE_TIME& CVideoCaptureDevice::GetVideoFPS()
+{
+	return m_rtVideoFPS;
 }

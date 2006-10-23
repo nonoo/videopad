@@ -22,16 +22,17 @@ class CVideoCaptureDevice;
 class CVideoGraph : public CDirectShowGraph
 {
 public:
-	HRESULT				Create( CVideoCaptureDevice* VideoCaptureDevice );
-	void				Destroy();
+	HRESULT					Create( CVideoCaptureDevice* VideoCaptureDevice );
+	void					Destroy();
 
-	const UINT&			GetVideoWidth();
-	const UINT&			GetVideoHeight();
+	const UINT&				GetVideoWidth();
+	const UINT&				GetVideoHeight();
+	const REFERENCE_TIME&	GetVideoFPS();
 
 private:
-						// sets the given video format for the graph
-						//
-	HRESULT				SetVideoFormat( UINT nPreferredImageWidth, UINT nPreferredImageHeight, REFERENCE_TIME nPreferredFPS );
+				// sets the given video format for the graph
+				//
+	HRESULT		SetVideoFormat( UINT nPreferredImageWidth, UINT nPreferredImageHeight, REFERENCE_TIME nPreferredFPS );
 
 
 

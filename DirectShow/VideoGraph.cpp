@@ -80,6 +80,7 @@ HRESULT CVideoGraph::SetVideoFormat( UINT nPreferredImageWidth, UINT nPreferredI
 		{
 			m_pVideoCaptureDevice->SetVideoWidth( ((VIDEOINFOHEADER *)pfnt->pbFormat)->bmiHeader.biWidth );
 			m_pVideoCaptureDevice->SetVideoHeight( ((VIDEOINFOHEADER *)pfnt->pbFormat)->bmiHeader.biHeight );
+			m_pVideoCaptureDevice->SetVideoFPS( 10000000/((VIDEOINFOHEADER *)pfnt->pbFormat)->AvgTimePerFrame );
 
 			DeleteMediaType( pfnt );
 		}
@@ -226,4 +227,9 @@ const UINT& CVideoGraph::GetVideoHeight()
 const UINT& CVideoGraph::GetVideoWidth()
 {
 	return m_pVideoCaptureDevice->GetVideoWidth();
+}
+
+const REFERENCE_TIME& CVideoGraph::GetVideoFPS()
+{
+	return m_pVideoCaptureDevice->GetVideoFPS();
 }
