@@ -293,6 +293,12 @@
 					RelativePath=".\DirectShow\CaptureDevice.h">
 				</File>
 				<File
+					RelativePath=".\DirectShow\DirectShow.cpp">
+				</File>
+				<File
+					RelativePath=".\DirectShow\DirectShow.h">
+				</File>
+				<File
 					RelativePath=".\DirectShow\DirectShowGraph.cpp">
 				</File>
 				<File

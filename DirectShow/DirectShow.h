@@ -16,45 +16,28 @@
 
 #pragma once
 
-class CDirectShow;
+class CDirectShowGraph;
+class CVideoCaptureDevice;
+class CAudioCaptureDevice;
 
-class CVideoPadApp : public CWinApp
+class CDirectShow
 {
-private:
-	CSettingsFile		m_SettingsFile;
-
-	CChannelDialog		m_dlgChannel;
-	CConnectingDialog	m_dlgConnecting;
-
-	bool				m_bConnected;
-	CServer*			m_pActiveServer;
-	
-	// winsock
-	WSADATA				m_wsaData;
-
-	CDirectShow*		m_pDirectShow;
-
 public:
-	CVideoPadApp();
-	~CVideoPadApp();
-	virtual BOOL	InitInstance();
+	CDirectShow();
+	~CDirectShow();
 
-	void			Connect();
-	void			Disconnect();
-
-	void			SetConnected( bool bConnected );
-	const bool&		GetConnected();
-
-	CServer*		GetActiveServer();
-	CSettingsFile*	GetSettingsFile();
-
-	//	CMainFrame*		GetMainFrame();
-	
 private:
-	void			OnPressConnect();
-	void			OnPressChannel();
+	// returns the autodetected video/audio capture device's COM ID
+	//
+	void			AutoDetectVideoCaptureDevice( CString& szVideoCaptureDeviceID );
+	void			AutoDetectAudioCaptureDevice( CString& szVideoCaptureDeviceID );
 
-	DECLARE_MESSAGE_MAP()
+	void			InitCaptureDevices();
+
+
+
+	// for asking default capture devices
+	CDirectShowGraph*		m_pDirectShowGraph;
+	CVideoCaptureDevice*	m_pVideoCaptureDevice;
+	CAudioCaptureDevice*	m_pAudioCaptureDevice;
 };
-
-extern CVideoPadApp theApp;

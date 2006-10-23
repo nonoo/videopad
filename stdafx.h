@@ -100,6 +100,7 @@ using namespace std;
 #include "Utils/Sockets/TCPConnection.h"
 #include "Utils/Sockets/UDPConnection.h"
 
+#include "DirectShow/DirectShow.h"
 #include "DirectShow/DirectShowGraph.h"
 #include "DirectShow/AudioCaptureDevice.h"
 #include "DirectShow/AudioGraph.h"

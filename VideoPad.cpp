@@ -34,18 +34,13 @@ CVideoPadApp::CVideoPadApp()
 {
 	m_bConnected = false;
 	m_pActiveServer = NULL;
-	m_pDirectShowGraph = NULL;
-	m_pVideoCaptureDevice = NULL;
-	m_pAudioCaptureDevice = NULL;
 }
 
 CVideoPadApp::~CVideoPadApp()
 {
 	SAFE_DELETE( m_pActiveServer );
 
-	SAFE_DELETE( m_pDirectShowGraph );
-	SAFE_DELETE( m_pVideoCaptureDevice );
-	SAFE_DELETE( m_pAudioCaptureDevice );
+	SAFE_DELETE( m_pDirectShow );
 
 	// winsock cleanup
 	WSACleanup();
@@ -77,7 +72,7 @@ BOOL CVideoPadApp::InitInstance()
 
 	m_SettingsFile.LoadConfig();
 
-	InitCaptureDevices();
+	m_pDirectShow = new CDirectShow;
 
 	CMainFrame* pFrame = new CMainFrame;
 	if ( !pFrame )
@@ -160,83 +155,4 @@ CServer* CVideoPadApp::GetActiveServer()
 CSettingsFile* CVideoPadApp::GetSettingsFile()
 {
 	return &m_SettingsFile;
-}
-
-void CVideoPadApp::AutoDetectVideoCaptureDevice( CString& szVideoCaptureDeviceID )
-{
-	map< CString, CString > szmVideoCaptureDevices =
-		m_pDirectShowGraph->ListVideoCaptureDevices();
-	if( !szmVideoCaptureDevices.empty() )
-	{
-		// we use the first device from the list
-		//
-		m_SettingsFile.Set( "VideoCaptureDevice", "Name", szmVideoCaptureDevices.begin()->second );
-		m_SettingsFile.Set( "VideoCaptureDevice", "ID", szmVideoCaptureDevices.begin()->first );
-
-		// returning with the device ID
-		szVideoCaptureDeviceID = szmVideoCaptureDevices.begin()->first;
-	}
-}
-
-void CVideoPadApp::AutoDetectAudioCaptureDevice( CString& szAudioCaptureDeviceID )
-{
-	map< CString, CString > szmAudioCaptureDevices =
-		m_pDirectShowGraph->ListAudioCaptureDevices();
-	if( !szmAudioCaptureDevices.empty() )
-	{
-		// we use the first device from the list
-		//
-		m_SettingsFile.Set( "AudioCaptureDevice", "Name", szmAudioCaptureDevices.begin()->second );
-		m_SettingsFile.Set( "AudioCaptureDevice", "ID", szmAudioCaptureDevices.begin()->first );
-
-		// returning with the device ID
-		szAudioCaptureDeviceID = szmAudioCaptureDevices.begin()->first;
-	}
-}
-
-void CVideoPadApp::InitCaptureDevices()
-{
-	// initializing a directshow filtergraph
-	//
-	m_pDirectShowGraph = new CDirectShowGraph;
-	m_pVideoCaptureDevice = new CVideoCaptureDevice;
-	m_pAudioCaptureDevice = new CAudioCaptureDevice;
-
-	// if the settingsfile has a video capture device COM ID, we init our device using it,
-	// otherwise we try to init the default video capture device
-	//
-	CString szVideoCaptureDeviceID = m_SettingsFile.Get( "VideoCaptureDevice", "ID", "" );
-
-	// trying to init the last used (stored in the settings file) video capture device
-	//
-	HRESULT hr = m_pVideoCaptureDevice->Create( szVideoCaptureDeviceID );
-	if( FAILED( hr ) )
-	{
-		AutoDetectVideoCaptureDevice( szVideoCaptureDeviceID );
-		hr = m_pVideoCaptureDevice->Create( szVideoCaptureDeviceID );
-		if( FAILED( hr ) )
-		{
-			// no video capture device
-			SAFE_DELETE( m_pVideoCaptureDevice );
-		}
-	}
-
-	// if the settingsfile has an audio capture device COM ID, we init our device using it,
-	// otherwise we try to init the default audio capture device
-	//
-	CString szAudioCaptureDeviceID = m_SettingsFile.Get( "AudioCaptureDevice", "ID", "" );
-
-	// trying to init the last used (stored in the settings file) audio capture device
-	//
-	hr = m_pAudioCaptureDevice->Create( szAudioCaptureDeviceID );
-	if( FAILED( hr ) )
-	{
-		AutoDetectAudioCaptureDevice( szAudioCaptureDeviceID );
-		hr = m_pAudioCaptureDevice->Create( szAudioCaptureDeviceID );
-		if( FAILED( hr ) )
-		{
-			// no audio capture device
-			SAFE_DELETE( m_pAudioCaptureDevice );
-		}
-	}
 }
