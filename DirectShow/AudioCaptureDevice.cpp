@@ -17,9 +17,9 @@
 #include "stdafx.h"
 #include "AudioCaptureDevice.h"
 
-CAudioCaptureDevice::CAudioCaptureDevice( LPWSTR szID ) : CCaptureDevice( szID )
+HRESULT CAudioCaptureDevice::Create( CString szID )
 {
-	return;
+	return CCaptureDevice::Create( szID );
 }
 
 CAudioCaptureDevice::CAudioCaptureDevice()

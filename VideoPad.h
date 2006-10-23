@@ -30,8 +30,12 @@ private:
 	// winsock
 	WSADATA				m_wsaData;
 
-						// for asking default capture devices
-	CDirectShowGraph*	DirectShowGraph;
+
+							// for asking default capture devices
+	CDirectShowGraph*		m_pDirectShowGraph;
+	CVideoCaptureDevice*	m_pVideoCaptureDevice;
+	CAudioCaptureDevice*	m_pAudioCaptureDevice;
+
 
 public:
 	CVideoPadApp();
@@ -50,6 +54,13 @@ public:
 	//	CMainFrame*		GetMainFrame();
 	
 private:
+					// returns the autodetected video/audio capture device's COM ID
+					//
+	void			AutoDetectVideoCaptureDevice( CString& szVideoCaptureDeviceID );
+	void			AutoDetectAudioCaptureDevice( CString& szVideoCaptureDeviceID );
+
+	void			InitCaptureDevices();
+
 	void			OnPressConnect();
 	void			OnPressChannel();
 

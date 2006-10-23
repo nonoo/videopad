@@ -30,31 +30,31 @@ public:
 
 	// init capture device by given COM object ID
 	//
-	CVideoCaptureDevice( LPWSTR szID );
+	HRESULT					Create( CString szID );
 
-	const UINT& GetVideoWidth();
-	const UINT& GetVideoHeight();
+	const UINT&				GetVideoWidth();
+	const UINT&				GetVideoHeight();
 
-	void SetPreferredVideoWidth( UINT nWidth );
-	void SetPreferredVideoHeight( UINT nHeight );
-	void SetPreferredVideoFPS( REFERENCE_TIME rtFPS );
+	void					SetPreferredVideoWidth( UINT nWidth );
+	void					SetPreferredVideoHeight( UINT nHeight );
+	void					SetPreferredVideoFPS( REFERENCE_TIME rtFPS );
 
-	const UINT& GetPreferredVideoWidth();
-	const UINT& GetPreferredVideoHeight();
-	const REFERENCE_TIME& GetPreferredVideoFPS();
+	const UINT&				GetPreferredVideoWidth();
+	const UINT&				GetPreferredVideoHeight();
+	const REFERENCE_TIME&	GetPreferredVideoFPS();
 
 	// these functions are used by CVideoGraph to set the
 	// current output format information
 	//
-	void SetVideoWidth( UINT nVideoWidth );
-	void SetVideoHeight( UINT nVideoHeight );
+	void					SetVideoWidth( UINT nVideoWidth );
+	void					SetVideoHeight( UINT nVideoHeight );
 
 private:
-	UINT m_nVideoWidth;
-	UINT m_nVideoHeight;
-	REFERENCE_TIME m_rtVideoFPS;
+	UINT					m_nVideoWidth;
+	UINT					m_nVideoHeight;
+	REFERENCE_TIME			m_rtVideoFPS;
 
-	UINT m_nPreferredImageWidth;
-	UINT m_nPreferredImageHeight;
-	REFERENCE_TIME m_rtPreferredFPS;
+	UINT					m_nPreferredImageWidth;
+	UINT					m_nPreferredImageHeight;
+	REFERENCE_TIME			m_rtPreferredFPS;
 };

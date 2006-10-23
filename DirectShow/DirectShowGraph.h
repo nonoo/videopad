@@ -30,10 +30,10 @@ public:
 	~CDirectShowGraph();
 
 	CVideoCaptureDevice* GetDefaultVideoCaptureDevice();
-	void ListVideoCaptureDevices();
+	map< CString, CString > ListVideoCaptureDevices();
 
 	CAudioCaptureDevice* GetDefaultAudioCaptureDevice();
-	void ListAudioCaptureDevices();
+	map< CString, CString > ListAudioCaptureDevices();
 
 	void Start();
 	void Stop();

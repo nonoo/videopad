@@ -28,9 +28,9 @@ CVideoCaptureDevice::CVideoCaptureDevice()
 	m_rtPreferredFPS = 0;
 }
 
-CVideoCaptureDevice::CVideoCaptureDevice( LPWSTR szID ) : CCaptureDevice( szID )
+HRESULT CVideoCaptureDevice::Create( CString szID )
 {
-	return;
+	return CCaptureDevice::Create( szID );
 }
 
 void CVideoCaptureDevice::SetVideoWidth( UINT nVideoWidth )

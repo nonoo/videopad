@@ -165,14 +165,11 @@ void CDirectShowGraph::RemoveGraphFromRot( DWORD pdwRegister )
 }
 #endif
 
-void CDirectShowGraph::ListVideoCaptureDevices()
+map< CString, CString > CDirectShowGraph::ListVideoCaptureDevices()
 {
+	map< CString, CString > szmDevices;
 	CComPtr< IBaseFilter >* ppCap;
 	HRESULT hr;
-
-	printf( "listing video capture devices:\n" );
-//	FILE* fp;
-//	fopen_s( &fp, "devices_videocapture.txt", "w" );
 
 	// create an enumerator
 	CComPtr< ICreateDevEnum > pCreateDevEnum;
@@ -185,8 +182,8 @@ void CDirectShowGraph::ListVideoCaptureDevices()
 
 	if ( !pEm )
 	{
-		MessageBox( NULL, "Error: no video capture devices found!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// no video capture devices found
+		return szmDevices;
 	}
 
 	pEm->Reset();
@@ -223,29 +220,24 @@ void CDirectShowGraph::ListVideoCaptureDevices()
 			CComVariant var;
 			var.vt = VT_BSTR;
 			pBag->Read( L"FriendlyName", &var, NULL );
+			TCHAR lpszDeviceName[1000];
+			WideCharToLocal( lpszDeviceName, var.bstrVal, 1000 );
 
-			LPOLESTR szDeviceID;
-			pM->GetDisplayName( 0, NULL, &szDeviceID );
+			LPOLESTR wszDeviceID;
+			TCHAR lpszDeviceID[1000];
+			pM->GetDisplayName( 0, NULL, &wszDeviceID );
+			WideCharToLocal( lpszDeviceID, wszDeviceID, 1000 );
 
 			// device seems ok
-			printf( "device #%d:\n", i );
-			wprintf( L"%s\n", var.bstrVal ); // device name
-			wprintf( L"%s\n", szDeviceID );
-
-			//fprintf( fp, "device #%d:\n", i );
-			//fwprintf( fp, L"%s\n", var.bstrVal ); // device name
-			//fwprintf( fp, L"%s\n", szDeviceID );
-
-			SAFE_RELEASE( ppCap );
+			szmDevices[lpszDeviceID] = lpszDeviceName;
 		}
 	}
-	printf( "\n" );
-//	fclose( fp );
+
+	return szmDevices;
 }
 
 CVideoCaptureDevice* CDirectShowGraph::GetDefaultVideoCaptureDevice()
 {
-	CVideoCaptureDevice* VCD = new CVideoCaptureDevice;
 	HRESULT hr;
 	CComPtr< IBaseFilter > pSourceFilter;
 
@@ -260,11 +252,12 @@ CVideoCaptureDevice* CDirectShowGraph::GetDefaultVideoCaptureDevice()
 
 	if ( !pEm )
 	{
-		MessageBox( NULL, "Error: no video capture devices found!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// no video capture devices found
+		return NULL;
 	}
 
 	pEm->Reset();
+	CVideoCaptureDevice* VCD = new CVideoCaptureDevice;
 
 	// go through and find first capture device
 	while (true)
@@ -275,8 +268,9 @@ CVideoCaptureDevice* CDirectShowGraph::GetDefaultVideoCaptureDevice()
 		hr = pEm->Next(1, &pM, &ulFetched);
 		if( hr != S_OK )
 		{
-			MessageBox( NULL, "Error: no suitable video capture device found!", "Error", MB_ICONSTOP );
-			exit(-1);
+			// no suitable video capture device found
+			SAFE_DELETE( VCD );
+			return NULL;
 		}
 
 		// ask for the actual filter
@@ -301,10 +295,6 @@ CVideoCaptureDevice* CDirectShowGraph::GetDefaultVideoCaptureDevice()
 			pM->GetDisplayName( 0, NULL, &szDeviceID );
 
 			// device seems ok
-			printf( "using video device #1:\n" );
-			wprintf( L"%s\n", var.bstrVal ); // device name
-			wprintf( L"%s\n", szDeviceID );
-
 			TCHAR* lpszDeviceName = new TCHAR[1000];
 			TCHAR* lpszDeviceID = new TCHAR[1000];
 			WideCharToLocal( lpszDeviceName, var.bstrVal, 1000 );
@@ -318,7 +308,6 @@ CVideoCaptureDevice* CDirectShowGraph::GetDefaultVideoCaptureDevice()
 			break;
 		}
 	}
-	printf( "\n" );
 
 	return VCD;
 }
@@ -354,7 +343,7 @@ void CDirectShowGraph::Start()
 	HRESULT hr = pControl->Run();
 	pControl.Release();
 
-	if (FAILED(hr))
+	if ( FAILED(hr) )
 	{
 		MessageBox( NULL, "DirectShow Error: can't start capture graph!", "Error", MB_ICONSTOP );
 		exit(-1);
@@ -370,7 +359,6 @@ void CDirectShowGraph::Stop()
 
 CAudioCaptureDevice* CDirectShowGraph::GetDefaultAudioCaptureDevice()
 {
-	CAudioCaptureDevice* ACD = new CAudioCaptureDevice;
 	HRESULT hr;
 	CComPtr< IBaseFilter > pSourceFilter;
 
@@ -385,11 +373,12 @@ CAudioCaptureDevice* CDirectShowGraph::GetDefaultAudioCaptureDevice()
 
 	if ( !pEm )
 	{
-		MessageBox( NULL, "Error: no audio capture devices found!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// no audio capture devices found
+		return NULL;
 	}
 
 	pEm->Reset();
+	CAudioCaptureDevice* ACD = new CAudioCaptureDevice;
 
 	// go through and find first capture device
 	while (true)
@@ -400,8 +389,9 @@ CAudioCaptureDevice* CDirectShowGraph::GetDefaultAudioCaptureDevice()
 		hr = pEm->Next(1, &pM, &ulFetched);
 		if( hr != S_OK )
 		{
-			MessageBox( NULL, "Error: no suitable audio capture device found!", "Error", MB_ICONSTOP );
-			exit(-1);
+			// no suitable audio capture device found
+			SAFE_DELETE( ACD );
+			return NULL;
 		}
 
 		// ask for the actual filter
@@ -426,10 +416,6 @@ CAudioCaptureDevice* CDirectShowGraph::GetDefaultAudioCaptureDevice()
 			pM->GetDisplayName( 0, NULL, &szDeviceID );
 
 			// device seems ok
-			printf( "using audio device #1:\n" );
-			wprintf( L"%s\n", var.bstrVal ); // device name
-			wprintf( L"%s\n", szDeviceID );
-
 			TCHAR* lpszDeviceName = new TCHAR[1000];
 			TCHAR* lpszDeviceID = new TCHAR[1000];
 			WideCharToLocal( lpszDeviceName, var.bstrVal, 1000 );
@@ -443,19 +429,15 @@ CAudioCaptureDevice* CDirectShowGraph::GetDefaultAudioCaptureDevice()
 			break;
 		}
 	}
-	printf( "\n" );
 
 	return ACD;
 }
 
-void CDirectShowGraph::ListAudioCaptureDevices()
+map< CString, CString > CDirectShowGraph::ListAudioCaptureDevices()
 {
+	map< CString, CString > szmDevices;
 	CComPtr< IBaseFilter >* ppCap;
 	HRESULT hr;
-
-	printf( "listing audio capture devices:\n" );
-//	FILE* fp;
-//	fopen_s( &fp, "devices_audiocapture.txt", "w" );
 
 	// create an enumerator
 	CComPtr< ICreateDevEnum > pCreateDevEnum;
@@ -468,8 +450,8 @@ void CDirectShowGraph::ListAudioCaptureDevices()
 
 	if ( !pEm )
 	{
-		MessageBox( NULL, "Error: no audio capture devices found!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// no audio capture device found
+		return szmDevices;
 	}
 
 	pEm->Reset();
@@ -506,24 +488,20 @@ void CDirectShowGraph::ListAudioCaptureDevices()
 			CComVariant var;
 			var.vt = VT_BSTR;
 			pBag->Read( L"FriendlyName", &var, NULL );
+			TCHAR lpszDeviceName[1000];
+			WideCharToLocal( lpszDeviceName, var.bstrVal, 1000 );
 
-			LPOLESTR szDeviceID;
-			pM->GetDisplayName( 0, NULL, &szDeviceID );
+			LPOLESTR wszDeviceID;
+			pM->GetDisplayName( 0, NULL, &wszDeviceID );
+			TCHAR lpszDeviceID[1000];
+			WideCharToLocal( lpszDeviceID, wszDeviceID, 1000 );
 
 			// device seems ok
-			printf( "device #%d:\n", i );
-			wprintf( L"%s\n", var.bstrVal ); // device name
-			wprintf( L"%s\n", szDeviceID );
-
-			//fprintf( fp, "device #%d:\n", i );
-			//fwprintf( fp, L"%s\n", var.bstrVal ); // device name
-			//fwprintf( fp, L"%s\n", szDeviceID );
-
-			SAFE_RELEASE( ppCap );
+			szmDevices[lpszDeviceID] = lpszDeviceName;
 		}
 	}
-	printf( "\n" );
-	//fclose( fp );
+
+	return szmDevices;
 }
 
 BYTE* CDirectShowGraph::GetBuffer()

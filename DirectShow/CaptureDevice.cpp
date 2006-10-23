@@ -17,7 +17,7 @@
 #include "stdafx.h"
 #include "CaptureDevice.h"
 
-CCaptureDevice::CCaptureDevice( LPWSTR szName )
+HRESULT CCaptureDevice::Create( CString szName )
 {
 	HRESULT hr;
 
@@ -31,8 +31,8 @@ CCaptureDevice::CCaptureDevice( LPWSTR szName )
 
 	if ( !pEm )
 	{
-		MessageBox( NULL, "Error: no video capture devices found!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// no video capture device found
+		return -1;
 	}
 
 	pEm->Reset();
@@ -42,8 +42,8 @@ CCaptureDevice::CCaptureDevice( LPWSTR szName )
 
 	if( hr != S_OK )
 	{
-		MessageBox( NULL, "Error: the given capture device is not valid!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// the given capture device ID is not valid
+		return -2;
 	}
 
 	ULONG ulFetched;
@@ -51,21 +51,25 @@ CCaptureDevice::CCaptureDevice( LPWSTR szName )
 
 	// getting device moniker from given id (szName)
 	//
-	hr = MkParseDisplayName( pBindCtx, szName, &ulFetched, &pM );
+	WCHAR* wsz = new WCHAR[szName.GetLength()+1];
+	wmemset( wsz, 0, szName.GetLength()+1 );
+	MultiByteToWideChar( CP_ACP, 0, szName, szName.GetLength(), wsz, szName.GetLength() );
+	hr = MkParseDisplayName( pBindCtx, wsz, &ulFetched, &pM );
+	SAFE_DELETE_ARRAY( wsz );
 	SAFE_RELEASE( pBindCtx );
 
 	if( hr != S_OK )
 	{
-		MessageBox( NULL, "Error: the given capture device is not valid!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// the given capture device ID is not valid
+		return -2;
 	}
 
 	// ask for the actual filter
 	hr = pM->BindToObject(0,0,IID_IBaseFilter, (void **)&m_pBaseFilter);
 	if( hr != S_OK )
 	{
-		MessageBox( NULL, "Error: the given capture device is not valid!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// the given capture device ID is not valid
+		return -2;
 	}
 
 	// get the property bag interface from the moniker
@@ -73,8 +77,8 @@ CCaptureDevice::CCaptureDevice( LPWSTR szName )
 	hr = pM->BindToStorage( 0, 0, IID_IPropertyBag, (void**) &pBag );
 	if( hr != S_OK )
 	{
-		MessageBox( NULL, "Error: the given capture device is not valid!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// the given capture device ID is not valid
+		return -2;
 	}
 
 	// ask for the english-readable name
@@ -87,6 +91,8 @@ CCaptureDevice::CCaptureDevice( LPWSTR szName )
 
 	m_szID = szName;
 	m_szDeviceName = var.bstrVal;
+
+	return 0;
 }
 
 CComPtr< IBaseFilter >& CCaptureDevice::GetBaseFilter()

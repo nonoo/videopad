@@ -25,22 +25,22 @@ public:
 
 	// init capture device by given COM object ID
 	//
-	CAudioCaptureDevice( LPWSTR szID );
+	HRESULT			Create( CString szID );
 
-	const DWORD& GetSamplesPerSec();
-	const WORD& GetBitsPerSample();
-	const WORD& GetChannels();
+	const DWORD&	GetSamplesPerSec();
+	const WORD&		GetBitsPerSample();
+	const WORD&		GetChannels();
 
 	// these functions are used by CAudioGraph to set
 	// the current audio format information of the graph
 	// and the device
 	//
-	void SetAudioSamplesPerSec( DWORD nSamplesPerSec );
-	void SetAudioBitsPerSample( WORD wBitsPerSample );
-	void SetAudioChannels( WORD nChannels );
+	void			SetAudioSamplesPerSec( DWORD nSamplesPerSec );
+	void			SetAudioBitsPerSample( WORD wBitsPerSample );
+	void			SetAudioChannels( WORD nChannels );
 
 private:
-	DWORD m_nSamplesPerSec;
-	WORD m_wBitsPerSample;
-	WORD m_nChannels;
+	DWORD			m_nSamplesPerSec;
+	WORD			m_wBitsPerSample;
+	WORD			m_nChannels;
 };

@@ -24,32 +24,32 @@ public:
 	CCaptureDevice();
 	~CCaptureDevice();
 
-	// init capture device by given COM object ID
-	//
-	CCaptureDevice( LPWSTR szID );
+								// init capture device by given COM object ID
+								//
+	HRESULT						Create( CString szID );
 
-	// retrieves device's COM object ID
-	//
-	const CString& GetID();
+								// retrieves device's COM object ID
+								//
+	const CString&				GetID();
 
-	// device name
-	//
-	const CString& GetName();
+								// device name
+								//
+	const CString&				GetName();
 
-	CComPtr< IBaseFilter >& GetBaseFilter();
-	CComPtr< IPin >& GetOutPin();
+	CComPtr< IBaseFilter >&		GetBaseFilter();
+	CComPtr< IPin >&			GetOutPin();
 
 
 
-	void SetOutPin( CComPtr< IPin > Pin );
-	void SetBaseFilter( CComPtr< IBaseFilter > Filter );
-	void SetDeviceName( CString szNewDeviceName );
-	void SetDeviceID( CString szNewID );
+	void						SetOutPin( CComPtr< IPin > Pin );
+	void						SetBaseFilter( CComPtr< IBaseFilter > Filter );
+	void						SetDeviceName( CString szNewDeviceName );
+	void						SetDeviceID( CString szNewID );
 
 private:
-	CComPtr< IBaseFilter > m_pBaseFilter;
-	CComPtr< IPin > m_pOutPin;
+	CComPtr< IBaseFilter >		m_pBaseFilter;
+	CComPtr< IPin >				m_pOutPin;
 
-	CString m_szDeviceName;
-	CString m_szID;
+	CString						m_szDeviceName;
+	CString						m_szID;
 };
