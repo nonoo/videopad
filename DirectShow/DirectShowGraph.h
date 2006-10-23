@@ -29,10 +29,7 @@ public:
 	CDirectShowGraph();
 	~CDirectShowGraph();
 
-	CVideoCaptureDevice* GetDefaultVideoCaptureDevice();
 	map< CString, CString > ListVideoCaptureDevices();
-
-	CAudioCaptureDevice* GetDefaultAudioCaptureDevice();
 	map< CString, CString > ListAudioCaptureDevices();
 
 	void Start();
@@ -51,10 +48,6 @@ public:
 	void ResetFPSMeter();
 
 protected:
-	// for converting unicode BSTRs to ansi strings
-	//
-	int WideCharToLocal( LPTSTR pLocal, LPCWSTR pWide, DWORD dwChars );
-
 	// the capture source
 	//
 	CComPtr< IBaseFilter > m_pSourceFilter;
@@ -84,5 +77,9 @@ protected:
 #endif
 
 private:
+	// for converting unicode BSTRs to ansi strings
+	//
+	int WideCharToLocal( LPTSTR pLocal, LPCWSTR pWide, DWORD dwChars );
+
 	HRESULT GetPin( IBaseFilter* pFilter, PIN_DIRECTION dirrequired, int iNum, IPin **ppPin );
 };
