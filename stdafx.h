@@ -101,3 +101,9 @@ using namespace std;
 #include "Utils/Sockets/UDPConnection.h"
 
 #include "DirectShow/DirectShowGraph.h"
+#include "DirectShow/AudioCaptureDevice.h"
+#include "DirectShow/AudioGraph.h"
+#include "DirectShow/CaptureDevice.h"
+#include "DirectShow/GrabberCallBack.h"
+#include "DirectShow/VideoCaptureDevice.h"
+#include "DirectShow/VideoGraph.h"

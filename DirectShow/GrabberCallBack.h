@@ -1,5 +1,20 @@
-#ifndef __GRABBERCALLBACK_H
-#define __GRABBERCALLBACK_H
+//  This file is part of VideoPad.
+//
+//  VideoPad is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  VideoPad is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with VideoPad; if not, write to the Free Software
+//  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+#pragma once
 
 // Note: this object is a SEMI-COM object, and can only be created statically.
 // We use this little semi-com object to handle the sample-grab-callback,
@@ -20,15 +35,15 @@ public:
 	STDMETHODIMP SampleCB( double SampleTime, IMediaSample* pSample );
 	STDMETHODIMP BufferCB( double dblSampleTime, BYTE* pBuffer, long lBufferSize );
 
-	__forceinline BYTE* GetBuffer();
-	__forceinline long GetBufferSize();
-	__forceinline BOOL IsBufferAvailable();
+	BYTE* GetBuffer();
+	const long& GetBufferSize();
+	const BOOL& IsBufferAvailable();
 
 	// sets the function to call when the buffer becomes available
 	//
 	void SetCallBack( void (*lpfnCallBack)( BYTE*, long ) );
 
-	UINT GetFPSMeter();
+	const UINT& GetFPSMeter();
 	void ResetFPSMeter();
 
 private:
@@ -42,35 +57,3 @@ private:
 
 	//void (*m_lpfnCallBack)( BYTE*, long );
 };
-
-
-
-
-
-__forceinline BYTE* CGrabberCallBack::GetBuffer()
-{
-	m_bBufferAvailable = false;
-	return m_pBuffer;
-}
-
-__forceinline long CGrabberCallBack::GetBufferSize()
-{
-	return m_lBufferSize;
-}
-
-__forceinline BOOL CGrabberCallBack::IsBufferAvailable()
-{
-	return m_bBufferAvailable;
-}
-
-__forceinline UINT CGrabberCallBack::GetFPSMeter()
-{
-	return m_nFPSMeter;
-}
-
-__forceinline void CGrabberCallBack::ResetFPSMeter()
-{
-	m_nFPSMeter = 0;
-}
-
-#endif

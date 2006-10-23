@@ -1,9 +1,24 @@
-#ifndef __DIRECTSHOWGRAPH_H
-#define __DIRECTSHOWGRAPH_H
+//  This file is part of VideoPad.
+//
+//  VideoPad is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  VideoPad is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with VideoPad; if not, write to the Free Software
+//  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+#pragma once
 
 #include "GrabberCallBack.h"
-#include "VideoCaptureDevice.h"
-#include "AudioCaptureDevice.h"
+class CVideoCaptureDevice;
+class CAudioCaptureDevice;
 
 // represents a DirectShow filter graph whence you can
 // capture video (CVideoGraph) or audio (CAudioGraph)
@@ -25,18 +40,18 @@ public:
 
 	// retrieving captured data (from CGrabberCallback)
 	//
-	__forceinline BYTE* GetBuffer();
-	__forceinline long GetBufferSize();
-	__forceinline BOOL IsBufferAvailable();
+	BYTE* GetBuffer();
+	const long& GetBufferSize();
+	const BOOL& IsBufferAvailable();
 
 	// retrieving FPS meter
 	// this is an integer increasing when a sample is grabbed
 	//
-	__forceinline UINT GetFPSMeter();
-	__forceinline void ResetFPSMeter();
+	const UINT& GetFPSMeter();
+	void ResetFPSMeter();
 
 protected:
-	// for converting BSTRs
+	// for converting unicode BSTRs to ansi strings
 	//
 	int WideCharToLocal( LPTSTR pLocal, LPCWSTR pWide, DWORD dwChars );
 
@@ -71,34 +86,3 @@ protected:
 private:
 	HRESULT GetPin( IBaseFilter* pFilter, PIN_DIRECTION dirrequired, int iNum, IPin **ppPin );
 };
-
-
-
-
-
-__forceinline BYTE* CDirectShowGraph::GetBuffer()
-{
-	return GrabberCallBack.GetBuffer();
-}
-
-__forceinline long CDirectShowGraph::GetBufferSize()
-{
-	return GrabberCallBack.GetBufferSize();
-}
-
-__forceinline BOOL CDirectShowGraph::IsBufferAvailable()
-{
-	return GrabberCallBack.IsBufferAvailable();
-}
-
-__forceinline UINT CDirectShowGraph::GetFPSMeter()
-{
-	return GrabberCallBack.GetFPSMeter();
-}
-
-__forceinline void CDirectShowGraph::ResetFPSMeter()
-{
-	GrabberCallBack.ResetFPSMeter();
-}
-
-#endif

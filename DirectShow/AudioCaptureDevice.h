@@ -1,5 +1,20 @@
-#ifndef __AUDIOCAPTUREDEVICE_H
-#define __AUDIOCAPTUREDEVICE_H
+//  This file is part of VideoPad.
+//
+//  VideoPad is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  VideoPad is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with VideoPad; if not, write to the Free Software
+//  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+#pragma once
 
 #include "CaptureDevice.h"
 
@@ -12,9 +27,9 @@ public:
 	//
 	CAudioCaptureDevice( LPWSTR szID );
 
-	__forceinline DWORD GetSamplesPerSec();
-	__forceinline WORD GetBitsPerSample();
-	__forceinline WORD GetChannels();
+	const DWORD& GetSamplesPerSec();
+	const WORD& GetBitsPerSample();
+	const WORD& GetChannels();
 
 	// these functions are used by CAudioGraph to set
 	// the current audio format information of the graph
@@ -29,26 +44,3 @@ private:
 	WORD m_wBitsPerSample;
 	WORD m_nChannels;
 };
-
-
-
-
-
-
-
-__forceinline DWORD CAudioCaptureDevice::GetSamplesPerSec()
-{
-	return m_nSamplesPerSec;
-}
-
-__forceinline WORD CAudioCaptureDevice::GetBitsPerSample()
-{
-	return m_wBitsPerSample;
-}
-
-__forceinline WORD CAudioCaptureDevice::GetChannels()
-{
-	return m_nChannels;
-}
-
-#endif

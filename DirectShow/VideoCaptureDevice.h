@@ -1,5 +1,20 @@
-#ifndef __VIDEOCAPTUREDEVICE_H
-#define __VIDEOCAPTUREDEVICE_H
+//  This file is part of VideoPad.
+//
+//  VideoPad is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  VideoPad is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with VideoPad; if not, write to the Free Software
+//  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+#pragma once
 
 #include "CaptureDevice.h"
 
@@ -17,16 +32,16 @@ public:
 	//
 	CVideoCaptureDevice( LPWSTR szID );
 
-	__forceinline UINT GetVideoWidth();
-	__forceinline UINT GetVideoHeight();
+	const UINT& GetVideoWidth();
+	const UINT& GetVideoHeight();
 
 	void SetPreferredVideoWidth( UINT nWidth );
 	void SetPreferredVideoHeight( UINT nHeight );
 	void SetPreferredVideoFPS( REFERENCE_TIME rtFPS );
 
-	UINT GetPreferredVideoWidth();
-	UINT GetPreferredVideoHeight();
-	REFERENCE_TIME GetPreferredVideoFPS();
+	const UINT& GetPreferredVideoWidth();
+	const UINT& GetPreferredVideoHeight();
+	const REFERENCE_TIME& GetPreferredVideoFPS();
 
 	// these functions are used by CVideoGraph to set the
 	// current output format information
@@ -35,7 +50,6 @@ public:
 	void SetVideoHeight( UINT nVideoHeight );
 
 private:
-
 	UINT m_nVideoWidth;
 	UINT m_nVideoHeight;
 	REFERENCE_TIME m_rtVideoFPS;
@@ -44,20 +58,3 @@ private:
 	UINT m_nPreferredImageHeight;
 	REFERENCE_TIME m_rtPreferredFPS;
 };
-
-
-
-
-
-
-__forceinline UINT CVideoCaptureDevice::GetVideoHeight()
-{
-	return m_nVideoHeight;
-}
-
-__forceinline UINT CVideoCaptureDevice::GetVideoWidth()
-{
-	return m_nVideoWidth;
-}
-
-#endif
