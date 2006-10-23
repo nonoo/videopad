@@ -33,6 +33,22 @@ void CSettingsFile::Set( CString Section, int Key, CString Value )
 	Set( Section, szKey, Value );
 }
 
+void CSettingsFile::Set( CString Section, int Key, int Value )
+{
+	CString szKey;
+	szKey.Format( "%d", Key );
+	CString szValue;
+	szValue.Format( "%d", Value );
+	Set( Section, szKey, szValue );
+}
+
+void CSettingsFile::Set( CString Section, CString Key, int Value )
+{
+	CString szValue;
+	szValue.Format( "%d", Value );
+	Set( Section, Key, szValue );
+}
+
 CString CSettingsFile::Get( CString Section, CString Key, CString DefaultValue )
 {
     if( m_Settings.count( Section ) > 0 )
@@ -68,6 +84,27 @@ int CSettingsFile::GetInt( CString Section, CString Key, const int& DefaultValue
 		}
     }
     return DefaultValue;
+}
+
+int CSettingsFile::GetInt( CString Section, int Key, const int& DefaultValue )
+{
+	CString szKey;
+	szKey.Format( "%d", Key );
+
+	if( m_Settings.count( Section ) > 0 )
+	{
+		if( m_Settings[Section].count( szKey ) > 0 )
+		{
+			char* p;
+			int res = strtol( m_Settings[Section][szKey], &p, 0 );
+			if( *p != 0 ) // the whole CString was not valid
+			{
+				return DefaultValue;
+			}
+			return res;
+		}
+	}
+	return DefaultValue;
 }
 
 CString CSettingsFile::TrimLeft( CString szString )

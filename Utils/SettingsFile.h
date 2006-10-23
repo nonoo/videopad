@@ -29,8 +29,11 @@ public:
     CString	Get( CString Section, CString Key, CString DefaultValue );
 	CString	Get( CString Section, int Key, CString DefaultValue );
     int		GetInt( CString Section, CString Key, const int& DefaultValue );
+	int		GetInt( CString Section, int Key, const int& DefaultValue );
     void	Set( CString Section, CString Key, CString Value );
 	void	Set( CString Section, int Key, CString Value );
+	void	Set( CString Section, CString Key, int Value );
+	void	Set( CString Section, int Key, int Value );
 
 private:
     // removes whitespaces

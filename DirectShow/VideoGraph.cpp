@@ -17,29 +17,31 @@
 #include "stdafx.h"
 #include "VideoGraph.h"
 
-void CVideoGraph::SetVideoFormat( UINT nPreferredImageWidth, UINT nPreferredImageHeight, REFERENCE_TIME nPreferredFPS )
+HRESULT CVideoGraph::SetVideoFormat( UINT nPreferredImageWidth, UINT nPreferredImageHeight, REFERENCE_TIME nPreferredFPS )
 {
 	// get the nearest, or exact video size the user wants
 	//
 	IEnumMediaTypes *pMedia;
 	AM_MEDIA_TYPE *pmt = NULL, *pfnt = NULL;
 
-	HRESULT hr = VideoCaptureDevice.GetOutPin()->EnumMediaTypes( &pMedia );
+	HRESULT hr = m_pVideoCaptureDevice->GetOutPin()->EnumMediaTypes( &pMedia );
 
 	if( SUCCEEDED(hr) )
 	{
+		// going through all available video formats until we find the correct one
+		//
 		while( pMedia->Next( 1, &pmt, 0 ) == S_OK )
 		{
 			if ( ( pmt->formattype == FORMAT_VideoInfo ) && 
 				( pmt->cbFormat == sizeof(VIDEOINFOHEADER) ) )
 			{
 				VIDEOINFOHEADER *vih = (VIDEOINFOHEADER *)pmt->pbFormat;
-				printf( "available video size: %ix%i\n", vih->bmiHeader.biWidth, vih->bmiHeader.biHeight );
 				if( (UINT)vih->bmiHeader.biWidth == nPreferredImageWidth && (UINT)vih->bmiHeader.biHeight == nPreferredImageHeight )
 				{
 					pfnt = pmt;
 
-					printf( "found correct video size: %ix%i\n", vih->bmiHeader.biWidth, vih->bmiHeader.biHeight );
+					// found correct video size
+					//
 					break;
 				}
 				DeleteMediaType( pmt );
@@ -51,46 +53,52 @@ void CVideoGraph::SetVideoFormat( UINT nPreferredImageWidth, UINT nPreferredImag
 	// set the video size
 	//
 	CComPtr<IAMStreamConfig> pConfig;
-	hr = VideoCaptureDevice.GetOutPin()->QueryInterface( IID_IAMStreamConfig, (void **) &pConfig );
+	hr = m_pVideoCaptureDevice->GetOutPin()->QueryInterface( IID_IAMStreamConfig, (void **) &pConfig );
 	if( SUCCEEDED( hr ) )
 	{
 		if( pfnt != NULL )
 		{
 			VIDEOINFOHEADER *vih = (VIDEOINFOHEADER *)pfnt->pbFormat;
+
+			// setting fps
+			//
 			vih->AvgTimePerFrame = 10000000/nPreferredFPS;
-			printf("changing fps to %d\n\n",nPreferredFPS);
 			pConfig->SetFormat( pfnt );
 
 			DeleteMediaType( pfnt );
 		}
 		else
 		{
-			printf( "can't set video size!\n" );
+			return -1;
 		}
 
+		// getting current video format, it may differ from the format we wanted
+		// so that's way we ask for it again
+		//
 		hr = pConfig->GetFormat( &pfnt );
 		if( SUCCEEDED( hr ) )
 		{
-			VideoCaptureDevice.SetVideoWidth( ((VIDEOINFOHEADER *)pfnt->pbFormat)->bmiHeader.biWidth );
-			VideoCaptureDevice.SetVideoHeight( ((VIDEOINFOHEADER *)pfnt->pbFormat)->bmiHeader.biHeight );
-
-			printf("initialized video: %dx%d\n\n", VideoCaptureDevice.GetVideoWidth(), VideoCaptureDevice.GetVideoHeight() );
+			m_pVideoCaptureDevice->SetVideoWidth( ((VIDEOINFOHEADER *)pfnt->pbFormat)->bmiHeader.biWidth );
+			m_pVideoCaptureDevice->SetVideoHeight( ((VIDEOINFOHEADER *)pfnt->pbFormat)->bmiHeader.biHeight );
 
 			DeleteMediaType( pfnt );
 		}
 	}
+	return 0;
 }
 
-CVideoGraph::CVideoGraph( CVideoCaptureDevice& VideoCaptureDevice ) : VideoCaptureDevice( VideoCaptureDevice )
+HRESULT CVideoGraph::Create( CVideoCaptureDevice* pVideoCaptureDevice )
 {
+	m_pVideoCaptureDevice = pVideoCaptureDevice;
+
 	// creating the smart tee splitter
 	//
 	m_pSplitter.CoCreateInstance( CLSID_SmartTee );
 
 	if( !m_pSplitter )
 	{
-		MessageBox( NULL, "DirectShow Error: Can't create Smart Tee Splitter!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// can't create Smart Tee Splitter
+		return -1;
 	}
 	CComQIPtr< IBaseFilter, &IID_IBaseFilter > pSplitterBase( m_pSplitter );
 
@@ -104,8 +112,8 @@ CVideoGraph::CVideoGraph( CVideoCaptureDevice& VideoCaptureDevice ) : VideoCaptu
 
 	if( !m_pGrabber )
 	{
-		MessageBox( NULL, "DirectShow Error: Can't create ISampleGrabber!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// can't create ISampleGrabber
+		return -2;
 	}
 	CComQIPtr< IBaseFilter, &IID_IBaseFilter > pGrabberBase( m_pGrabber );
 
@@ -115,7 +123,7 @@ CVideoGraph::CVideoGraph( CVideoCaptureDevice& VideoCaptureDevice ) : VideoCaptu
 
 	// create the source filter (pSourceFilter)
 
-	m_pSourceFilter = VideoCaptureDevice.GetBaseFilter();
+	m_pSourceFilter = m_pVideoCaptureDevice->GetBaseFilter();
 	CComQIPtr< IBaseFilter, &IID_IBaseFilter > pCaptureBase( m_pSourceFilter );
 
 	// add video capture source to the graph
@@ -132,18 +140,18 @@ CVideoGraph::CVideoGraph( CVideoCaptureDevice& VideoCaptureDevice ) : VideoCaptu
 
 	// setting video size
 	//
-	VideoCaptureDevice.SetOutPin( GetOutPin( m_pSourceFilter, 0 ) );
-	SetVideoFormat( VideoCaptureDevice.GetPreferredVideoWidth(), VideoCaptureDevice.GetPreferredVideoHeight(), VideoCaptureDevice.GetPreferredVideoFPS() );
+	m_pVideoCaptureDevice->SetOutPin( GetOutPin( m_pSourceFilter, 0 ) );
+	SetVideoFormat( m_pVideoCaptureDevice->GetPreferredVideoWidth(), m_pVideoCaptureDevice->GetPreferredVideoHeight(), m_pVideoCaptureDevice->GetPreferredVideoFPS() );
 
 	HRESULT hr;
 	// connect the webcam out pin to the splitter
 	//
 	CComPtr< IPin > pSplitterInPin = GetInPin( pSplitterBase, 0 );
-	hr = m_pGraph->Connect( VideoCaptureDevice.GetOutPin(), pSplitterInPin );
+	hr = m_pGraph->Connect( m_pVideoCaptureDevice->GetOutPin(), pSplitterInPin );
 	if( FAILED( hr ) )
 	{
-		MessageBox( NULL, "DirectShow Error: Can't connect pins in filtergraph!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// can't connect pins in filtergraph
+		return -3;
 	}
 	pSplitterInPin.Release();
 
@@ -155,8 +163,8 @@ CVideoGraph::CVideoGraph( CVideoCaptureDevice& VideoCaptureDevice ) : VideoCaptu
 	hr = m_pGraph->Connect( pSplitterOutPin, pGrabberInPin );
 	if( FAILED( hr ) )
 	{
-		MessageBox( NULL, "DirectShow Error: Can't connect pins in filtergraph!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// can't connect pins in filtergraph
+		return -3;
 	}
 	pGrabberInPin.Release();
 	pSplitterOutPin.Release();
@@ -170,8 +178,8 @@ CVideoGraph::CVideoGraph( CVideoCaptureDevice& VideoCaptureDevice ) : VideoCaptu
 
 	if( FAILED( hr ) )
 	{
-		MessageBox( NULL, "DirectShow Error: Can't render image from the device!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// can't render image from the device
+		return -4;
 	}
 
 	// don't buffer the samples as they pass through
@@ -196,13 +204,15 @@ CVideoGraph::CVideoGraph( CVideoCaptureDevice& VideoCaptureDevice ) : VideoCaptu
 	hr = AddGraphToRot(m_pGraph, &m_dwGraphRegister);
 	if (FAILED(hr))
 	{
-		MessageBox( NULL, "DirectShow Error: Failed to register filtergraph to Running Object Table!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// failed to register filtergraph to Running Object Table
+		return -5;
 	}
 #endif
+
+	return 0;
 }
 
-CVideoGraph::~CVideoGraph()
+void CVideoGraph::Destroy()
 {
 	m_pActiveMovieWindow.Release();
 	m_pSplitter.Release();
@@ -210,10 +220,10 @@ CVideoGraph::~CVideoGraph()
 
 const UINT& CVideoGraph::GetVideoHeight()
 {
-	return VideoCaptureDevice.GetVideoHeight();
+	return m_pVideoCaptureDevice->GetVideoHeight();
 }
 
 const UINT& CVideoGraph::GetVideoWidth()
 {
-	return VideoCaptureDevice.GetVideoWidth();
+	return m_pVideoCaptureDevice->GetVideoWidth();
 }

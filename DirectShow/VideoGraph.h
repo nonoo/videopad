@@ -22,19 +22,21 @@ class CVideoCaptureDevice;
 class CVideoGraph : public CDirectShowGraph
 {
 public:
-	CVideoGraph( CVideoCaptureDevice& VideoCaptureDevice );
-	~CVideoGraph();
+	HRESULT				Create( CVideoCaptureDevice* VideoCaptureDevice );
+	void				Destroy();
 
-	const UINT& GetVideoWidth();
-	const UINT& GetVideoHeight();
+	const UINT&			GetVideoWidth();
+	const UINT&			GetVideoHeight();
 
 private:
-	// sets the given video format for the graph
-	//
-	void SetVideoFormat( UINT nPreferredImageWidth, UINT nPreferredImageHeight, REFERENCE_TIME nPreferredFPS );
+						// sets the given video format for the graph
+						//
+	HRESULT				SetVideoFormat( UINT nPreferredImageWidth, UINT nPreferredImageHeight, REFERENCE_TIME nPreferredFPS );
 
-	CVideoCaptureDevice& VideoCaptureDevice;
 
-	CComQIPtr< IVideoWindow, &IID_IVideoWindow > m_pActiveMovieWindow;
-	CComPtr< IBaseFilter > m_pSplitter;
+
+	CVideoCaptureDevice*							m_pVideoCaptureDevice;
+
+	CComQIPtr< IVideoWindow, &IID_IVideoWindow >	m_pActiveMovieWindow;
+	CComPtr< IBaseFilter >							m_pSplitter;
 };

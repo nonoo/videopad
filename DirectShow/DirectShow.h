@@ -19,12 +19,18 @@
 class CDirectShowGraph;
 class CVideoCaptureDevice;
 class CAudioCaptureDevice;
+class CVideoGraph;
+class CAudioGraph;
 
 class CDirectShow
 {
 public:
 	CDirectShow();
 	~CDirectShow();
+
+	void			SetVideoFormat( UINT nPreferredVideoWidth, UINT nPreferredVideoHeight, REFERENCE_TIME rtPreferredVideoFPS );
+	void			StartVideo();
+	void			StopVideo();
 
 private:
 	// returns the autodetected video/audio capture device's COM ID
@@ -38,6 +44,10 @@ private:
 
 	// for asking default capture devices
 	CDirectShowGraph*		m_pDirectShowGraph;
+
 	CVideoCaptureDevice*	m_pVideoCaptureDevice;
 	CAudioCaptureDevice*	m_pAudioCaptureDevice;
+
+	CVideoGraph*			m_pVideoGraph;
+	CAudioGraph*			m_pAudioGraph;
 };

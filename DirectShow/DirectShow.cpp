@@ -24,12 +24,15 @@ CDirectShow::CDirectShow()
 	//
 	m_pDirectShowGraph = new CDirectShowGraph;
 
+	m_pVideoGraph = new CVideoGraph;
+
 	InitCaptureDevices();
 }
 
 CDirectShow::~CDirectShow()
 {
 	SAFE_DELETE( m_pDirectShowGraph );
+	SAFE_DELETE( m_pVideoGraph );
 	SAFE_DELETE( m_pVideoCaptureDevice );
 	SAFE_DELETE( m_pAudioCaptureDevice );
 }
@@ -89,6 +92,15 @@ void CDirectShow::InitCaptureDevices()
 			SAFE_DELETE( m_pVideoCaptureDevice );
 		}
 	}
+	else
+	{
+		SetVideoFormat(
+			theApp.GetSettingsFile()->GetInt( "VideoCaptureDevice", "VideoWidth", 352 ),
+			theApp.GetSettingsFile()->GetInt( "VideoCaptureDevice", "VideoHeight", 288 ),
+			theApp.GetSettingsFile()->GetInt( "VideoCaptureDevice", "VideoFPS", 30 )
+			);
+	}
+
 
 	// if the settingsfile has an audio capture device COM ID, we init our device using it,
 	// otherwise we try to init the default audio capture device
@@ -108,4 +120,32 @@ void CDirectShow::InitCaptureDevices()
 			SAFE_DELETE( m_pAudioCaptureDevice );
 		}
 	}
+}
+
+void CDirectShow::StartVideo()
+{
+	m_pVideoGraph->Start();
+}
+
+void CDirectShow::StopVideo()
+{
+	m_pVideoGraph->Stop();
+}
+
+void CDirectShow::SetVideoFormat( UINT nPreferredVideoWidth, UINT nPreferredVideoHeight, REFERENCE_TIME rtPreferredVideoFPS )
+{
+	StopVideo();
+	m_pVideoGraph->Destroy();
+
+	m_pVideoCaptureDevice->SetPreferredVideoWidth( nPreferredVideoWidth );
+	m_pVideoCaptureDevice->SetPreferredVideoHeight( nPreferredVideoHeight );
+	m_pVideoCaptureDevice->SetPreferredVideoFPS( rtPreferredVideoFPS );
+
+	m_pVideoGraph->Create( m_pVideoCaptureDevice );
+
+	theApp.GetSettingsFile()->Set( "VideoCaptureDevice", "VideoWidth", m_pVideoGraph->GetVideoWidth() );
+	theApp.GetSettingsFile()->Set( "VideoCaptureDevice", "VideoHeight", m_pVideoGraph->GetVideoHeight() );
+	//theApp.GetSettingsFile()->Set( "VideoCaptureDevice", "VideoFPS", m_pVideoGraph->GetVideoFPS() );
+
+	StartVideo();
 }

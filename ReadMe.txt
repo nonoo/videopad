@@ -38,9 +38,13 @@ http://www.microsoft.com/downloads/details.aspx?FamilyID=eba0128f-a770-45f1-86f3
 After installing Platform SDK, open a command line running cmd.exe, then follow
 these instructions:
 
-cd "c:\Program Files\Microsoft Plaftorm SDK"
-setenv.bat /XP32 /RETAIL
+cd "c:\Program Files\Microsoft Platform SDK"
+setenv.cmd /XP32 /RETAIL
+cd Samples\Multimedia\DirectShow\BaseClasses
+nmake.exe
+cd "c:\Program Files\Microsoft Platform SDK"
+setenv.cmd /XP32 /DEBUG
 cd Samples\Multimedia\DirectShow\BaseClasses
 nmake.exe
 
-Then you'll have baseclasses compiled into a .lib in the XP32_RETAIL folder.
+Then you'll have baseclasses compiled into a .lib in XP32_RETAIL and XP32_DEBUG folders.
