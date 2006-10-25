@@ -22,6 +22,8 @@ class CTCPConnection : public CConnection
 {
 public:
 	CTCPConnection( HWND hParentWnd, WORD wMessage );
+
 	SOCKET		Connect( CString szHost, CString szPort );
 	void		SendMessage( CString szLine );
+	void		SendData( char* pData, long nDataSize );
 };

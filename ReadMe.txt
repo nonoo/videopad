@@ -55,30 +55,35 @@ nmake.exe
 Then you'll have baseclasses compiled into a .lib in XP32_RETAIL and XP32_DEBUG folders.
 
 You'll need libogg, download it from http://www.xiph.org/
-Place libogg source in VideoPad/libogg subfolder, then open libogg/ogg.dsw in
-Visual Studio. Build it, then switch to the Release version in the project properties->
-configuration manager. Build it again. Now you have debug and release versions of
-libogg, both static and dynamic.
+- Place libogg source in VideoPad/libogg subfolder, then open libogg/ogg.dsw in
+  Visual Studio.
+- Build it, then switch to the Release version in the project properties->
+  configuration manager.
+- Build it again. Now you have debug and release versions of
+  libogg, both static and dynamic.
 
 You can download libtheora from http://www.xiph.org
-Place libtheora source in VideoPad/libtheora subfolder, then open
-libtheora/win32/vs2003/libtheora/libtheora.vcproj
-In the project properties, switch Configuration Type from Dynamic DLL to Static Library.
-Now build the project, then switch to Release version in the Configuration Manager.
-Change the Configuration Type to Static Library again, and build the project.
-Now you have static debug and release versions of libtheora.
+- Place libtheora source in VideoPad/libtheora subfolder, then open
+  libtheora/win32/vs2003/libtheora/libtheora.vcproj
+- Make sure that every .c and .h file in libtheora/lib directory is in the Visual Studio
+  project's source file list, otherwise you'll get a bunch of unresolved externals.
+- In the project properties, switch Configuration Type from Dynamic DLL to Static Library.
+- Now build the project, then switch to Release version in the Configuration Manager.
+  Change the Configuration Type to Static Library again, and build the project.
+  Now you have static debug and release versions of libtheora.
 
 You'll need libspeex, download it from http://www.speex.org/
 VideoPad is compiled with libspeex 1.2beta, so make sure you download the latest
 version, no matter if it is a beta release.
-Place libspeex source in VideoPad/libspeex subfolder, then open
-libspeex/win32/libspeex/libspeex.dsw in Visual Studio.
-Make sure that every .c file in libspeex/src directory is in the Visual Studio project's
-source file list, in both libspeex and libspeex_dynamic, otherwise you'll get a bunch of
-unresolved externals.
-Build it, then switch to the Release version in the project properties->
-configuration manager. Build it again. Now you have debug and release versions of
-libspeex, both static and dynamic.
+- Place libspeex source in VideoPad/libspeex subfolder, then open
+  libspeex/win32/libspeex/libspeex.dsw in Visual Studio.
+- Delete libspeex_dynamic from the project browser.
+- Make sure that every .c and .h file in libspeex/src directory is in the Visual Studio
+  project's source file list, in both libspeex and libspeex_dynamic, otherwise you'll get a
+  bunch of unresolved externals.
+- Build it, then switch to the Release version in the project properties->
+  configuration manager. Build it again. Now you have debug and release versions of
+  libspeex, both static and dynamic.
 
 
 

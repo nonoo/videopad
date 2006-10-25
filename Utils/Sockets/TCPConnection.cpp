@@ -61,3 +61,8 @@ void CTCPConnection::SendMessage( CString szLine )
 {
 	send( m_sSocket, szLine, szLine.GetLength(), 0 );
 }
+
+void CTCPConnection::SendData( char* pData, long nDataSize )
+{
+	send( m_sSocket, pData, nDataSize, 0 );
+}

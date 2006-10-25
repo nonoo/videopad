@@ -60,3 +60,8 @@ SOCKET CUDPConnection::Connect( CString szHost, CString szPort )
 
 	return m_sSocket;
 }
+
+void CUDPConnection::SendData( char* pData, long nDataSize )
+{
+	send( m_sSocket, pData, nDataSize, 0 );
+}

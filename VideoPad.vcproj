@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses&quot;;D:\webcam\VideoPad\libogg\include;D:\webcam\VideoPad\libtheora\include;D:\webcam\VideoPad\libspeex\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -81,7 +81,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses&quot;;D:\webcam\VideoPad\libogg\include;D:\webcam\VideoPad\libtheora\include;D:\webcam\VideoPad\libspeex\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="0"
@@ -321,6 +321,56 @@
 				</File>
 				<File
 					RelativePath=".\DirectShow\VideoGraph.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Ogg"
+				Filter="">
+				<File
+					RelativePath=".\Ogg\OggStream.cpp">
+				</File>
+				<File
+					RelativePath=".\Ogg\OggStream.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Encoder"
+				Filter="">
+				<File
+					RelativePath=".\Encoder\Speex.cpp">
+				</File>
+				<File
+					RelativePath=".\Encoder\Speex.h">
+				</File>
+				<File
+					RelativePath=".\Encoder\SpeexEncoder.cpp">
+				</File>
+				<File
+					RelativePath=".\Encoder\SpeexEncoder.h">
+				</File>
+				<File
+					RelativePath=".\Encoder\SpeexThread.cpp">
+				</File>
+				<File
+					RelativePath=".\Encoder\SpeexThread.h">
+				</File>
+				<File
+					RelativePath=".\Encoder\Theora.cpp">
+				</File>
+				<File
+					RelativePath=".\Encoder\Theora.h">
+				</File>
+				<File
+					RelativePath=".\Encoder\TheoraEncoder.cpp">
+				</File>
+				<File
+					RelativePath=".\Encoder\TheoraEncoder.h">
+				</File>
+				<File
+					RelativePath=".\Encoder\TheoraThread.cpp">
+				</File>
+				<File
+					RelativePath=".\Encoder\TheoraThread.h">
 				</File>
 			</Filter>
 		</Filter>

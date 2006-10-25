@@ -22,5 +22,7 @@ class CUDPConnection : public CConnection
 {
 public:
 	CUDPConnection( HWND hParentWnd, WORD wMessage );
+
 	SOCKET		Connect( CString szHost, CString szPort );
+	void		SendData( char* pData, long nDataSize );
 };

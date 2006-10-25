@@ -79,6 +79,8 @@ using namespace std;
 //
 #define WU_CONTROLSOCKET_EVENT WM_APP+1
 #define WU_DATASOCKET_EVENT WM_APP+2
+#define WU_THREAD_STOP WM_APP+3
+#define WU_THREAD_PROCESS WM_APP+4
 
 // max length of one line sent to the control port
 #define MAXMESSAGELENGTH 1024
@@ -108,3 +110,18 @@ using namespace std;
 #include "DirectShow/GrabberCallBack.h"
 #include "DirectShow/VideoCaptureDevice.h"
 #include "DirectShow/VideoGraph.h"
+
+#include "ogg/ogg.h"
+#include "theora/theora.h"
+#include "speex/speex.h"
+#include "speex/speex_preprocess.h"
+#include "speex/speex_header.h"
+
+#include "Ogg/OggStream.h"
+
+#include "Encoder/TheoraEncoder.h"
+#include "Encoder/Theora.h"
+#include "Encoder/TheoraThread.h"
+#include "Encoder/SpeexEncoder.h"
+#include "Encoder/Speex.h"
+#include "Encoder/SpeexThread.h"
