@@ -96,7 +96,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib strmbase.lib winmm.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="Lib;&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses\XP32_RETAIL&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses\XP32_RETAIL&quot;"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"

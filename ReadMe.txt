@@ -48,3 +48,8 @@ cd Samples\Multimedia\DirectShow\BaseClasses
 nmake.exe
 
 Then you'll have baseclasses compiled into a .lib in XP32_RETAIL and XP32_DEBUG folders.
+
+If you get "Debugger detected - please close it down and restart" message when trying
+to run VideoPad from a debugger, you should check if Nero CD burner is installed, because
+one of it's DirectShow filters causing this error. In this case, try to delete/rename
+"C:\Program Files\Common Files\Ahead\DSFilter\NeVideo.ax"

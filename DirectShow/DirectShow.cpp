@@ -109,7 +109,7 @@ void CDirectShow::InitCaptureDevices()
 			hr = SetVideoFormat( 352, 288, 30 );
 			if( FAILED( hr ) )
 			{
-				MessageBox( theApp.GetMainWnd()->GetSafeHwnd(), "Can't initialize video capturing!", "Error", MB_ICONERROR );
+				MessageBox( theApp.GetMainWnd()->GetSafeHwnd(), "Can't start video capturing!\n\nYou should close every application that is currently using your video capture device!", "Error", MB_ICONERROR );
 			}
 		}
 	}
@@ -145,7 +145,7 @@ void CDirectShow::InitCaptureDevices()
 			hr = SetAudioFormat( 11025, 16, 1 );
 			if( FAILED( hr ) )
 			{
-				MessageBox( theApp.GetMainWnd()->GetSafeHwnd(), "Can't initialize sound recording!", "Error", MB_ICONERROR );
+				MessageBox( theApp.GetMainWnd()->GetSafeHwnd(), "Can't start sound capturing!", "Error", MB_ICONERROR );
 			}
 		}
 	}

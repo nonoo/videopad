@@ -15,14 +15,13 @@
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "stdafx.h"
-#include "VideoPad.h"
-#include "MainFrm.h"
-
 
 #ifdef _DEBUG
 #include "Utils\vld.h" // memory leak detection, http://www.codeproject.com/tools/visualleakdetector.asp
-#define new DEBUG_NEW
 #endif
+
+#include "VideoPad.h"
+#include "MainFrm.h"
 
 BEGIN_MESSAGE_MAP(CVideoPadApp, CWinApp)
 	ON_BN_CLICKED(ID_TOOLBAR_CONNECT, OnPressConnect)
@@ -34,6 +33,7 @@ CVideoPadApp::CVideoPadApp()
 {
 	m_bConnected = false;
 	m_pActiveServer = NULL;
+	m_pDirectShow = NULL;
 }
 
 CVideoPadApp::~CVideoPadApp()
@@ -75,8 +75,6 @@ BOOL CVideoPadApp::InitInstance()
 
 	m_SettingsFile.LoadConfig();
 
-	m_pDirectShow = new CDirectShow;
-
 	CMainFrame* pFrame = new CMainFrame;
 	if ( !pFrame )
 	{
@@ -89,6 +87,8 @@ BOOL CVideoPadApp::InitInstance()
 
 	pFrame->ShowWindow( SW_SHOW );
 	pFrame->UpdateWindow();
+
+	m_pDirectShow = new CDirectShow;
 
 	return TRUE;
 }

@@ -222,6 +222,7 @@ void CVideoGraph::Destroy()
 {
 	m_pActiveMovieWindow.Release();
 	m_pSplitter.Release();
+	m_pGrabber.Release();
 }
 
 const UINT& CVideoGraph::GetVideoHeight()
