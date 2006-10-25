@@ -31,4 +31,5 @@ protected:
 	SOCKET				m_sSocket;
 	HWND				m_hParentWnd;
 	WORD				m_wMessage;
+	bool				m_bLock;
 };

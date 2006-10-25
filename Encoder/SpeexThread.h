@@ -31,6 +31,9 @@ public:
 					//
 	void			Create( CSpeex* Speex, CAudioGraph* AudioGraph );
 
+	void			Start();
+	void			Stop();
+
 private:
 	afx_msg void	Process( WPARAM wp, LPARAM lp );
 	afx_msg void	OnTerminate( WPARAM wp, LPARAM lp );
@@ -38,8 +41,10 @@ private:
 
 
 
-	// indicates that the thread should stop itself
+					// indicates that the thread should stop itself
 	bool			m_bEndThread;
+					// when it's true, the thread hangs
+	bool			m_bStopThread;
 
 	CSpeex*			m_pSpeex;
 	CAudioGraph*	m_pAudioGraph;

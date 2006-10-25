@@ -56,6 +56,4 @@ void CTheoraThread::Create( CTheora* pTheora, CVideoGraph* pVideoGraph, UINT nEn
 	m_nEncoderFPS = nEncoderFPS;
 	m_pTheora = pTheora;
 	m_pVideoGraph = pVideoGraph;
-
-	this->ResumeThread();
 }

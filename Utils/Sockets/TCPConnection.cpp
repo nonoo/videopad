@@ -22,6 +22,7 @@ CTCPConnection::CTCPConnection( HWND hParentWnd, WORD wMessage )
 	m_sSocket = INVALID_SOCKET;
 	m_hParentWnd = hParentWnd;
 	m_wMessage = wMessage;
+	m_bLock = false;
 }
 
 SOCKET CTCPConnection::Connect( CString szHost, CString szPort )
@@ -64,5 +65,11 @@ void CTCPConnection::SendMessage( CString szLine )
 
 void CTCPConnection::SendData( char* pData, long nDataSize )
 {
+	while( m_bLock )
+	{
+		Sleep(1);
+	}
+	m_bLock = true;
 	send( m_sSocket, pData, nDataSize, 0 );
+	m_bLock = false;
 }

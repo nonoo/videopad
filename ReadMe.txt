@@ -33,28 +33,27 @@ other people on the same channel.
 DEVELOPER NOTES
 ---------------
 You'll need a few things to set up before you can compile VideoPad source.
-First, you'll need DirectX SDK. You can download it from here:
-http://msdn.microsoft.com/directx/directxdownloads/default.aspx
 
-You'll need DirectShow SDK too, because it's not in the DirectX SDK anymore.
-Now it's a part of the Platform SDK. You can download it from here:
-http://www.microsoft.com/downloads/details.aspx?FamilyID=eba0128f-a770-45f1-86f3-7ab010b398a3&DisplayLang=en
+* First, you'll need DirectX SDK. You can download it from here:
+  http://msdn.microsoft.com/directx/directxdownloads/default.aspx
 
-After installing the Platform SDK, open a command line running cmd.exe, then type in
-these commands:
+* You'll need DirectShow SDK too, because it's not in the DirectX SDK anymore.
+  Now it's a part of the Platform SDK. You can download it from here:
+  http://www.microsoft.com/downloads/details.aspx?FamilyID=eba0128f-a770-45f1-86f3-7ab010b398a3&DisplayLang=en
 
-cd "c:\Program Files\Microsoft Platform SDK"
-setenv.cmd /XP32 /RETAIL
-cd Samples\Multimedia\DirectShow\BaseClasses
-nmake.exe
-cd "c:\Program Files\Microsoft Platform SDK"
-setenv.cmd /XP32 /DEBUG
-cd Samples\Multimedia\DirectShow\BaseClasses
-nmake.exe
+- After installing the Platform SDK, open a command line running cmd.exe, then type in
+  these commands:
 
-Then you'll have baseclasses compiled into a .lib in XP32_RETAIL and XP32_DEBUG folders.
+  cd "c:\Program Files\Microsoft Platform SDK"
+  setenv.cmd /XP32 /RETAIL
+  cd Samples\Multimedia\DirectShow\BaseClasses
+  nmake.exe
+  cd "c:\Program Files\Microsoft Platform SDK"
+  setenv.cmd /XP32 /DEBUG
+  cd Samples\Multimedia\DirectShow\BaseClasses
+  nmake.exe
 
-You'll need libogg, download it from http://www.xiph.org/
+* You'll need libogg, download it from http://www.xiph.org/
 - Place libogg source in VideoPad/libogg subfolder, then open libogg/ogg.dsw in
   Visual Studio.
 - Build it, then switch to the Release version in the project properties->
@@ -62,7 +61,7 @@ You'll need libogg, download it from http://www.xiph.org/
 - Build it again. Now you have debug and release versions of
   libogg, both static and dynamic.
 
-You can download libtheora from http://www.xiph.org
+* You can download libtheora from http://www.xiph.org
 - Place libtheora source in VideoPad/libtheora subfolder, then open
   libtheora/win32/vs2003/libtheora/libtheora.vcproj
 - Make sure that every .c and .h file in libtheora/lib directory is in the Visual Studio
@@ -72,9 +71,9 @@ You can download libtheora from http://www.xiph.org
   Change the Configuration Type to Static Library again, and build the project.
   Now you have static debug and release versions of libtheora.
 
-You'll need libspeex, download it from http://www.speex.org/
-VideoPad is compiled with libspeex 1.2beta, so make sure you download the latest
-version, no matter if it is a beta release.
+* You'll need libspeex, download it from http://www.speex.org/
+  VideoPad is compiled with libspeex 1.2beta, so make sure you download the latest
+  version, no matter if it is a beta release.
 - Place libspeex source in VideoPad/libspeex subfolder, then open
   libspeex/win32/libspeex/libspeex.dsw in Visual Studio.
 - Delete libspeex_dynamic from the project browser.

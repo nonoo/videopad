@@ -29,6 +29,16 @@ CSpeexEncoder::CSpeexEncoder( COggStream* pOggStream, CAudioGraph* pAudioGraph )
 	pSpeexThread->Create( pSpeex, pAudioGraph );
 }
 
+void CSpeexEncoder::Start()
+{
+	pSpeexThread->Start();
+}
+
+void CSpeexEncoder::Stop()
+{
+	pSpeexThread->Stop();
+}
+
 CSpeexEncoder::~CSpeexEncoder()
 {
 	// stopping thread
