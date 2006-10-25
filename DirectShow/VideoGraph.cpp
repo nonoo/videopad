@@ -26,7 +26,7 @@ HRESULT CVideoGraph::SetVideoFormat( UINT nPreferredImageWidth, UINT nPreferredI
 
 	HRESULT hr = m_pVideoCaptureDevice->GetOutPin()->EnumMediaTypes( &pMedia );
 
-	if( SUCCEEDED(hr) )
+	if( SUCCEEDED( hr ) )
 	{
 		// going through all available video formats until we find the correct one
 		//
@@ -212,6 +212,11 @@ HRESULT CVideoGraph::Create( CVideoCaptureDevice* pVideoCaptureDevice )
 
 	return 0;
 }
+
+CVideoGraph::~CVideoGraph()
+{
+	Destroy();
+};
 
 void CVideoGraph::Destroy()
 {

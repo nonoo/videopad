@@ -28,9 +28,13 @@ public:
 	CDirectShow();
 	~CDirectShow();
 
-	void			SetVideoFormat( UINT nPreferredVideoWidth, UINT nPreferredVideoHeight, REFERENCE_TIME rtPreferredVideoFPS );
+	HRESULT			SetVideoFormat( UINT nPreferredVideoWidth, UINT nPreferredVideoHeight, REFERENCE_TIME rtPreferredVideoFPS );
 	void			StartVideo();
 	void			StopVideo();
+
+	HRESULT			SetAudioFormat( DWORD dwPreferredSamplesPerSec, WORD wPreferredBitsPerSample, WORD nPreferredChannels );
+	void			StartAudio();
+	void			StopAudio();
 
 private:
 	// returns the autodetected video/audio capture device's COM ID

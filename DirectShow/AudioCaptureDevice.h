@@ -27,9 +27,17 @@ public:
 	//
 	HRESULT			Create( CString szID );
 
+	const DWORD&	GetPreferredSamplesPerSec();
+	const WORD&		GetPreferredBitsPerSample();
+	const WORD&		GetPreferredChannels();
+
 	const DWORD&	GetSamplesPerSec();
 	const WORD&		GetBitsPerSample();
 	const WORD&		GetChannels();
+
+	void			SetPreferredAudioSamplesPerSec( DWORD nSamplesPerSec );
+	void			SetPreferredAudioBitsPerSample( WORD wBitsPerSample );
+	void			SetPreferredAudioChannels( WORD nChannels );
 
 	// these functions are used by CAudioGraph to set
 	// the current audio format information of the graph
@@ -40,6 +48,10 @@ public:
 	void			SetAudioChannels( WORD nChannels );
 
 private:
+	DWORD			m_nPreferredSamplesPerSec;
+	WORD			m_wPreferredBitsPerSample;
+	WORD			m_nPreferredChannels;
+
 	DWORD			m_nSamplesPerSec;
 	WORD			m_wBitsPerSample;
 	WORD			m_nChannels;

@@ -97,13 +97,21 @@ void CDirectShow::InitCaptureDevices()
 			SAFE_DELETE( m_pVideoCaptureDevice );
 		}
 	}
-	else
+	if( m_pVideoCaptureDevice )
 	{
-		SetVideoFormat(
+		HRESULT hr = SetVideoFormat(
 			theApp.GetSettingsFile()->GetInt( "VideoCaptureDevice", "VideoWidth", 352 ),
 			theApp.GetSettingsFile()->GetInt( "VideoCaptureDevice", "VideoHeight", 288 ),
 			theApp.GetSettingsFile()->GetInt( "VideoCaptureDevice", "VideoFPS", 30 )
 			);
+		if( FAILED( hr ) )
+		{
+			hr = SetVideoFormat( 352, 288, 30 );
+			if( FAILED( hr ) )
+			{
+				MessageBox( theApp.GetMainWnd()->GetSafeHwnd(), "Can't initialize video capturing!", "Error", MB_ICONERROR );
+			}
+		}
 	}
 
 
@@ -125,6 +133,22 @@ void CDirectShow::InitCaptureDevices()
 			SAFE_DELETE( m_pAudioCaptureDevice );
 		}
 	}
+	if( m_pAudioCaptureDevice )
+	{
+		HRESULT hr = SetAudioFormat(
+			theApp.GetSettingsFile()->GetInt( "AudioCaptureDevice", "SamplesPerSec", 11025 ),
+			(WORD)theApp.GetSettingsFile()->GetInt( "AudioCaptureDevice", "BitsPerSample", 16 ),
+			(WORD)theApp.GetSettingsFile()->GetInt( "AudioCaptureDevice", "Channels", 1 )
+			);
+		if( FAILED( hr ) )
+		{
+			hr = SetAudioFormat( 11025, 16, 1 );
+			if( FAILED( hr ) )
+			{
+				MessageBox( theApp.GetMainWnd()->GetSafeHwnd(), "Can't initialize sound recording!", "Error", MB_ICONERROR );
+			}
+		}
+	}
 }
 
 void CDirectShow::StartVideo()
@@ -137,7 +161,7 @@ void CDirectShow::StopVideo()
 	m_pVideoGraph->Stop();
 }
 
-void CDirectShow::SetVideoFormat( UINT nPreferredVideoWidth, UINT nPreferredVideoHeight, REFERENCE_TIME rtPreferredVideoFPS )
+HRESULT CDirectShow::SetVideoFormat( UINT nPreferredVideoWidth, UINT nPreferredVideoHeight, REFERENCE_TIME rtPreferredVideoFPS )
 {
 	StopVideo();
 	m_pVideoGraph->Destroy();
@@ -150,7 +174,11 @@ void CDirectShow::SetVideoFormat( UINT nPreferredVideoWidth, UINT nPreferredVide
 	m_pVideoCaptureDevice->SetPreferredVideoHeight( nPreferredVideoHeight );
 	m_pVideoCaptureDevice->SetPreferredVideoFPS( rtPreferredVideoFPS );
 
-	m_pVideoGraph->Create( m_pVideoCaptureDevice );
+	HRESULT hr = m_pVideoGraph->Create( m_pVideoCaptureDevice );
+	if( FAILED( hr ) )
+	{
+		return hr;
+	}
 
 	// storing current video format in the settings file
 	//
@@ -159,4 +187,40 @@ void CDirectShow::SetVideoFormat( UINT nPreferredVideoWidth, UINT nPreferredVide
 	theApp.GetSettingsFile()->Set( "VideoCaptureDevice", "VideoFPS", (int)m_pVideoGraph->GetVideoFPS() );
 
 	StartVideo();
+	return 0;
+}
+
+void CDirectShow::StartAudio()
+{
+	m_pAudioGraph->Start();
+}
+
+void CDirectShow::StopAudio()
+{
+	m_pAudioGraph->Stop();
+}
+
+HRESULT CDirectShow::SetAudioFormat( DWORD dwPreferredSamplesPerSec, WORD wPreferredBitsPerSample, WORD nPreferredChannels )
+{
+	StopAudio();
+	m_pAudioGraph->Destroy();
+
+	m_pAudioCaptureDevice->SetPreferredAudioSamplesPerSec( dwPreferredSamplesPerSec );
+	m_pAudioCaptureDevice->SetPreferredAudioBitsPerSample( wPreferredBitsPerSample );
+	m_pAudioCaptureDevice->SetPreferredAudioChannels( nPreferredChannels );
+
+	HRESULT hr = m_pAudioGraph->Create( m_pAudioCaptureDevice );
+	if( FAILED( hr ) )
+	{
+		return hr;
+	}
+
+	// storing current audio format in the settings file
+	//
+	theApp.GetSettingsFile()->Set( "AudioCaptureDevice", "SamplesPerSec", m_pAudioGraph->GetSamplesPerSec() );
+	theApp.GetSettingsFile()->Set( "AudioCaptureDevice", "BitsPerSample", m_pAudioGraph->GetBitsPerSample() );
+	theApp.GetSettingsFile()->Set( "AudioCaptureDevice", "Channels", m_pAudioGraph->GetChannels());
+
+	StartAudio();
+	return 0;
 }

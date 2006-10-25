@@ -22,6 +22,8 @@ class CVideoCaptureDevice;
 class CVideoGraph : public CDirectShowGraph
 {
 public:
+	~CVideoGraph();
+
 	HRESULT					Create( CVideoCaptureDevice* VideoCaptureDevice );
 	void					Destroy();
 

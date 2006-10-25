@@ -17,16 +17,23 @@
 #include "stdafx.h"
 #include "AudioGraph.h"
 
-CAudioGraph::CAudioGraph( CAudioCaptureDevice& AudioCaptureDevice, DWORD dwPreferredSampleRate, WORD wPreferredBitsPerSecond, WORD wPreferredChannels ) : AudioCaptureDevice( AudioCaptureDevice )
+CAudioGraph::~CAudioGraph()
 {
+	Destroy();
+};
+
+HRESULT CAudioGraph::Create( CAudioCaptureDevice* pAudioCaptureDevice )
+{
+	m_pAudioCaptureDevice = pAudioCaptureDevice;
+
 	// creating the sample grabber
 	//
 	m_pGrabber.CoCreateInstance( CLSID_SampleGrabber );
 
 	if( !m_pGrabber )
 	{
-		MessageBox( NULL, "DirectShow Error: Can't create ISampleGrabber!", "Error", MB_ICONSTOP );
-		exit(-1);
+		// DirectShow error: Can't create ISampleGrabber
+		return -1;
 	}
 	CComQIPtr< IBaseFilter, &IID_IBaseFilter > pGrabberBase( m_pGrabber );
 
@@ -44,28 +51,35 @@ CAudioGraph::CAudioGraph( CAudioCaptureDevice& AudioCaptureDevice, DWORD dwPrefe
 
 	// create the source filter (pSourceFilter)
 	//
-	m_pSourceFilter = AudioCaptureDevice.GetBaseFilter();
+	m_pSourceFilter = m_pAudioCaptureDevice->GetBaseFilter();
 	CComQIPtr< IBaseFilter, &IID_IBaseFilter > pCaptureBase( m_pSourceFilter );
 
 	// add audio capture source to the graph
 	//
 	m_pGraph->AddFilter( pCaptureBase, L"Source" );
-	AudioCaptureDevice.SetOutPin( GetOutPin( pCaptureBase, 0 ) );
+	m_pAudioCaptureDevice->SetOutPin( GetOutPin( pCaptureBase, 0 ) );
 	pCaptureBase.Release();
 
-	SetAudioFormat( dwPreferredSampleRate, wPreferredBitsPerSecond, wPreferredChannels );
+	HRESULT hr = SetAudioFormat( m_pAudioCaptureDevice->GetPreferredSamplesPerSec(), m_pAudioCaptureDevice->GetPreferredBitsPerSample(), m_pAudioCaptureDevice->GetPreferredChannels() );
+	if( FAILED( hr ) )
+	{
+		pGrabberBase.Release();
+		m_pGrabber.Release();
+		return -2;
+	}
 
-	HRESULT hr;
 	// connect the capture device out pin to the grabber
 	//
 	CComPtr< IPin > pGrabberInPin = GetInPin( pGrabberBase, 0 );
 	pGrabberBase.Release();
 
-	hr = m_pGraph->Connect( AudioCaptureDevice.GetOutPin(), pGrabberInPin );
+	hr = m_pGraph->Connect( m_pAudioCaptureDevice->GetOutPin(), pGrabberInPin );
 	if( FAILED( hr ) )
 	{
-		MessageBox( NULL, "DirectShow Error: Can't connect pins in audio filtergraph!", "Error", MB_ICONSTOP );
-		exit(-1);
+		pGrabberInPin.Release();
+		m_pGrabber.Release();
+		// DirectShow error: Can't connect pins in audio filtergraph!
+		return -3;
 	}
 	pGrabberInPin.Release();
 
@@ -87,13 +101,20 @@ CAudioGraph::CAudioGraph( CAudioCaptureDevice& AudioCaptureDevice, DWORD dwPrefe
 	hr = AddGraphToRot(m_pGraph, &m_dwGraphRegister);
 	if (FAILED(hr))
 	{
-		MessageBox( NULL, "DirectShow Error: Failed to register filtergraph to Running Object Table!", "Error", MB_ICONSTOP );
-		exit(-1);
+		m_pGrabber.Release();
+		// DirectShow error: Failed to register filtergraph to Running Object Table
+		return -4;
 	}
 #endif
+	return 0;
 }
 
-void CAudioGraph::SetAudioFormat( DWORD dwSamplesPerSec, WORD wBitsPerSample, WORD nChannels )
+void CAudioGraph::Destroy()
+{
+	m_pGrabber.Release();
+}
+
+HRESULT CAudioGraph::SetAudioFormat( DWORD dwSamplesPerSec, WORD wBitsPerSample, WORD nChannels )
 {
 	IAMBufferNegotiation *pNeg = NULL;
 	WORD wBytesPerSample = wBitsPerSample/8;
@@ -117,7 +138,7 @@ void CAudioGraph::SetAudioFormat( DWORD dwSamplesPerSec, WORD wBitsPerSample, WO
 	IEnumMediaTypes *pMedia = NULL;
 	AM_MEDIA_TYPE *pmt = NULL;
 
-	HRESULT hr = AudioCaptureDevice.GetOutPin()->EnumMediaTypes( &pMedia );
+	HRESULT hr = m_pAudioCaptureDevice->GetOutPin()->EnumMediaTypes( &pMedia );
 
 	if( SUCCEEDED(hr) )
 	{
@@ -128,27 +149,23 @@ void CAudioGraph::SetAudioFormat( DWORD dwSamplesPerSec, WORD wBitsPerSample, WO
 			{
 				WAVEFORMATEX *wf = (WAVEFORMATEX *)pmt->pbFormat;
 
-				printf( "audio format: %dhz %dbit %dchannel\n", wf->nSamplesPerSec, wf->wBitsPerSample, wf->nChannels );
-
 				if( ( wf->nSamplesPerSec == dwSamplesPerSec ) &&
 					( wf->wBitsPerSample == wBitsPerSample ) &&
 					( wf->nChannels == nChannels ) )
 				{
-					printf( "found correct audio format: %dhz %dbit %dchannel\n", wf->nSamplesPerSec, wf->wBitsPerSample, wf->nChannels );
-
-					// set the audio format
+					// found correct audio format
 					//
 					CComPtr<IAMStreamConfig> pConfig;
-					hr = AudioCaptureDevice.GetOutPin()->QueryInterface( IID_IAMStreamConfig, (void **) &pConfig );
+					hr = m_pAudioCaptureDevice->GetOutPin()->QueryInterface( IID_IAMStreamConfig, (void **) &pConfig );
 					if( SUCCEEDED( hr ) )
 					{
 						// get buffer negotiation interface
-						AudioCaptureDevice.GetOutPin()->QueryInterface(IID_IAMBufferNegotiation, (void **)&pNeg);
+						m_pAudioCaptureDevice->GetOutPin()->QueryInterface(IID_IAMBufferNegotiation, (void **)&pNeg);
 
 						// set the buffer size based on selected settings
 						ALLOCATOR_PROPERTIES prop={0};
 						prop.cbBuffer = dwBufferSize;
-						prop.cBuffers = 6;
+						prop.cBuffers = 6; // AUDIO STREAM LAG DEPENDS ON THIS
 						prop.cbAlign = wBytesPerSample * nChannels;
 						pNeg->SuggestAllocatorProperties(&prop);
 						SAFE_RELEASE( pNeg );
@@ -167,7 +184,11 @@ void CAudioGraph::SetAudioFormat( DWORD dwSamplesPerSec, WORD wBitsPerSample, WO
 					}
 					else
 					{
-						printf( "can't set audio format!\n" );
+						pConfig.Release();
+						SAFE_RELEASE( pMedia );
+						DeleteMediaType( pmt );
+						// can't set given audio format!
+						return -1;
 					}
 
 					DeleteMediaType( pmt );
@@ -177,38 +198,43 @@ void CAudioGraph::SetAudioFormat( DWORD dwSamplesPerSec, WORD wBitsPerSample, WO
 					{
 						WAVEFORMATEX *wf = (WAVEFORMATEX *)pmt->pbFormat;
 
-						AudioCaptureDevice.SetAudioSamplesPerSec( wf->nSamplesPerSec );
-						AudioCaptureDevice.SetAudioBitsPerSample( wf->wBitsPerSample );
-						AudioCaptureDevice.SetAudioChannels( wf->nChannels );
+						m_pAudioCaptureDevice->SetAudioSamplesPerSec( wf->nSamplesPerSec );
+						m_pAudioCaptureDevice->SetAudioBitsPerSample( wf->wBitsPerSample );
+						m_pAudioCaptureDevice->SetAudioChannels( wf->nChannels );
 
-						printf("\ninitialized audio: %dhz %dbit %dchannel\n\n", AudioCaptureDevice.GetSamplesPerSec(), AudioCaptureDevice.GetBitsPerSample(), AudioCaptureDevice.GetChannels() );
-
+						// audio is now initialized
+						DeleteMediaType( pmt );
+						pConfig.Release();
+						SAFE_RELEASE( pMedia );
+						return 0;
 					}
 
+					// error initializing audio
 					DeleteMediaType( pmt );
 					pConfig.Release();
 					SAFE_RELEASE( pMedia );
-					break;
+					return -1;
 				}
 			}
 			DeleteMediaType( pmt );
 		}
 		SAFE_RELEASE( pMedia );
 	}
-	printf( "\ncouldn't find appropriate audio format!\n\n" );
+	// couldn't find appropriate audio format
+	return -2;
 }
 
 const DWORD& CAudioGraph::GetSamplesPerSec()
 {
-	return AudioCaptureDevice.GetSamplesPerSec();
+	return m_pAudioCaptureDevice->GetSamplesPerSec();
 }
 
 const WORD& CAudioGraph::GetBitsPerSample()
 {
-	return AudioCaptureDevice.GetBitsPerSample();
+	return m_pAudioCaptureDevice->GetBitsPerSample();
 }
 
 const WORD& CAudioGraph::GetChannels()
 {
-	return AudioCaptureDevice.GetChannels();
+	return m_pAudioCaptureDevice->GetChannels();
 }

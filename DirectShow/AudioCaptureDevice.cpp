@@ -27,6 +27,21 @@ CAudioCaptureDevice::CAudioCaptureDevice()
 	return;
 }
 
+void CAudioCaptureDevice::SetPreferredAudioSamplesPerSec( DWORD nSamplesPerSec )
+{
+	m_nPreferredSamplesPerSec = nSamplesPerSec;
+}
+
+void CAudioCaptureDevice::SetPreferredAudioBitsPerSample( WORD wBitsPerSample )
+{
+	m_wPreferredBitsPerSample = wBitsPerSample;
+}
+
+void CAudioCaptureDevice::SetPreferredAudioChannels( WORD nChannels )
+{
+	m_nPreferredChannels = nChannels;
+}
+
 void CAudioCaptureDevice::SetAudioSamplesPerSec( DWORD nSamplesPerSec )
 {
 	m_nSamplesPerSec = nSamplesPerSec;
@@ -40,6 +55,21 @@ void CAudioCaptureDevice::SetAudioBitsPerSample( WORD wBitsPerSample )
 void CAudioCaptureDevice::SetAudioChannels( WORD nChannels )
 {
 	m_nChannels = nChannels;
+}
+
+const DWORD& CAudioCaptureDevice::GetPreferredSamplesPerSec()
+{
+	return m_nPreferredSamplesPerSec;
+}
+
+const WORD& CAudioCaptureDevice::GetPreferredBitsPerSample()
+{
+	return m_wPreferredBitsPerSample;
+}
+
+const WORD& CAudioCaptureDevice::GetPreferredChannels()
+{
+	return m_nPreferredChannels;
 }
 
 const DWORD& CAudioCaptureDevice::GetSamplesPerSec()

@@ -22,14 +22,15 @@ class CAudioCaptureDevice;
 class CAudioGraph : public CDirectShowGraph
 {
 public:
-	CAudioGraph( CAudioCaptureDevice& AudioCaptureDevice, DWORD dwPreferredSampleRate, WORD wPreferredBitsPerSecond, WORD wPreferredChannels );
+	HRESULT			Create( CAudioCaptureDevice* pAudioCaptureDevice );
+	void			Destroy();
 
-	const DWORD& GetSamplesPerSec();
-	const WORD& GetBitsPerSample();
-	const WORD& GetChannels();
+	const DWORD&	GetSamplesPerSec();
+	const WORD&		GetBitsPerSample();
+	const WORD&		GetChannels();
 
 private:
-	void SetAudioFormat( DWORD dwSamplesPerSec, WORD wBitsPerSample, WORD nChannels );
+	HRESULT			SetAudioFormat( DWORD dwSamplesPerSec, WORD wBitsPerSample, WORD nChannels );
 
-	CAudioCaptureDevice& AudioCaptureDevice;
+	CAudioCaptureDevice*	m_pAudioCaptureDevice;
 };
