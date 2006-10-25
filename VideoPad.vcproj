@@ -15,7 +15,7 @@
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
-			UseOfMFC="2"
+			UseOfMFC="1"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
@@ -24,7 +24,7 @@
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="3"
 				WarningLevel="4"
@@ -34,10 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib strmbasd.lib winmm.lib"
+				AdditionalDependencies="Ws2_32.lib strmbasd.lib winmm.lib ogg_static_d.lib libtheora.lib libspeex.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="Lib;&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses\XP32_DEBUG&quot;"
-				IgnoreDefaultLibraryNames="libcmtd.lib"
+				AdditionalLibraryDirectories="Lib;&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses\XP32_DEBUG&quot;;D:\webcam\VideoPad\libogg\win32\Static_Debug;D:\webcam\VideoPad\libtheora\win32\VS2003\libtheora\Debug;D:\webcam\VideoPad\libspeex\win32\libspeex\Debug"
+				IgnoreDefaultLibraryNames="msvcrtd.lib"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				TargetMachine="1"/>
@@ -72,7 +72,7 @@
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
-			UseOfMFC="2"
+			UseOfMFC="1"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
@@ -84,7 +84,7 @@
 				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				MinimalRebuild="FALSE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="3"
 				WarningLevel="4"
@@ -94,10 +94,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib strmbase.lib winmm.lib"
+				AdditionalDependencies="Ws2_32.lib strmbase.lib winmm.lib ogg_static.lib libtheora.lib libspeex.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses\XP32_RETAIL&quot;"
-				IgnoreDefaultLibraryNames="libcmt.lib"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Samples\Multimedia\DirectShow\BaseClasses\XP32_RETAIL&quot;;D:\webcam\VideoPad\libogg\win32\Static_Release;D:\webcam\VideoPad\libtheora\win32\VS2003\libtheora\Release;D:\webcam\VideoPad\libspeex\win32\libspeex\Release"
+				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"

@@ -22,6 +22,8 @@ class CAudioCaptureDevice;
 class CVideoGraph;
 class CAudioGraph;
 
+// this is the main class for handling directshow stuff from the main VideoPad application
+//
 class CDirectShow
 {
 public:
