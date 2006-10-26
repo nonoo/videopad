@@ -42,6 +42,8 @@ public:
 private:
 	bool				IsHeaderPacket( ogg_packet* pOggPacket );
 
+	UINT				m_nSerial;
+
 	ogg_stream_state*	m_pStreamState;
 	ogg_page			m_Page;
 

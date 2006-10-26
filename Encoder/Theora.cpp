@@ -94,10 +94,12 @@ CTheora::CTheora( COggStream* pOggStream, UINT frame_x, UINT frame_y, UINT fps )
 
 	theora_comment_init( &tc );
 	theora_encode_comment( &tc, m_pOggPacket );
+	m_pOggPacket->granulepos = 0;
 	m_pOggStream->PacketIn( m_pOggPacket );
 	free( m_pOggPacket->packet ); // needed because theora_encode_comment does not free it's internal buffer
 
 	theora_encode_tables( &td, m_pOggPacket );
+	m_pOggPacket->granulepos = 0;
 	m_pOggStream->PacketIn( m_pOggPacket );
 }
 
@@ -127,6 +129,14 @@ void CTheora::FeedFrame( BYTE* pData, UINT lBufferSize )
 	// for compression and pull out the packet
 	//
 	theora_encode_packetout( &td, 0, m_pOggPacket );
+
+	// this is not a header packet so we adjust granulepos if needed
+	//
+	if( m_pOggPacket->granulepos == 0 )
+	{
+		m_pOggPacket->granulepos = 1;
+	}
+
 	m_pOggStream->PacketIn( m_pOggPacket );
 }
 

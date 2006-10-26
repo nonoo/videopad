@@ -116,6 +116,7 @@ void CServer::ProcessServerMessage( CString szLine )
 			CString szPort;
 			szPort.Format( "%d", m_nTCPDataPort );
 			m_pTCPDataConnection->Connect( m_szHost, szPort );
+			//m_pTCPDataConnection->Connect( m_szHost, "62333" );
 		}
 		catch ( char* pError )
 		{

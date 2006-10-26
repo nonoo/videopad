@@ -21,6 +21,7 @@ static bool	g_bOggLock = false;
 
 COggStream::COggStream( UINT nSerial )
 {
+	m_nSerial = nSerial;
 	m_pTCPConnection = NULL;
 	m_pUDPConnection = NULL;
 
@@ -29,7 +30,7 @@ COggStream::COggStream( UINT nSerial )
 	m_pData = NULL;
 	m_lDataSize = 0;
 
-	m_pStreamState = (ogg_stream_state*) malloc( sizeof( ogg_stream_state ) );
+	m_pStreamState = (ogg_stream_state *) malloc( sizeof( ogg_stream_state ) );
 
 	ogg_stream_init( m_pStreamState, nSerial );
 }
@@ -81,7 +82,7 @@ void COggStream::PacketIn( ogg_packet* pOggPacket )
 
 bool COggStream::IsHeaderPacket( ogg_packet* pOggPacket )
 {
-	return ( pOggPacket->packet[0] & 0x80 ) ? 1 : 0;
+	return ( pOggPacket->granulepos == 0 ) ? 1 : 0;
 }
 
 void COggStream::SetTCPDataConnection( CTCPConnection* pTCPConnection )

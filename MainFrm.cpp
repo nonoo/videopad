@@ -39,7 +39,13 @@ CMainFrame::~CMainFrame()
 
 void CMainFrame::OnClose()
 {
-	theApp.GetActiveServer()->GetControlConnection()->SendMessage( "quit" );
+	if( theApp.GetActiveServer() )
+	{
+		if( theApp.GetActiveServer()->GetControlConnection() )
+		{
+			theApp.GetActiveServer()->GetControlConnection()->SendMessage( "quit" );
+		}
+	}
 	CFrameWnd::OnClose();
 }
 

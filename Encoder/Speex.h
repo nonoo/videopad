@@ -56,4 +56,6 @@ private:
 	SpeexPreprocessState*	m_pPreProcState;
 
 	ogg_packet	m_Op;
+
+	__int64		m_nGranulePos;
 };
