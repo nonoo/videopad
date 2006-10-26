@@ -37,7 +37,7 @@ int CSpeexThread::ExitInstance()
 void CSpeexThread::Process( WPARAM wp, LPARAM lp )
 {
 loop:
-	if( !m_bStopThread )
+	if( !m_bStopped )
 	{
 		if( m_pAudioGraph->IsBufferAvailable() )
 		{
@@ -49,7 +49,7 @@ loop:
 	{
 		goto loop;
 	}
-	AfxEndThread( 0, true );
+	AfxEndThread( 0, false );
 }
 
 void CSpeexThread::OnTerminate( WPARAM wp, LPARAM lp )
@@ -64,7 +64,7 @@ void CSpeexThread::Create( CSpeex* pSpeex, CAudioGraph* pAudioGraph )
 	m_pAudioGraph = pAudioGraph;
 
 	m_bEndThread = false;
-	m_bStopThread = true;
+	m_bStopped = true;
 
 	// starting thread
 	//
@@ -75,10 +75,15 @@ void CSpeexThread::Create( CSpeex* pSpeex, CAudioGraph* pAudioGraph )
 
 void CSpeexThread::Start()
 {
-	m_bStopThread = false;
+	m_bStopped = false;
 }
 
 void CSpeexThread::Stop()
 {
-	m_bStopThread = true;
+	m_bStopped = true;
+}
+
+bool CSpeexThread::IsRunning()
+{
+	return m_bStopped;
 }

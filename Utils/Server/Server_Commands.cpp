@@ -29,10 +29,33 @@ void CServer::PartChannel( CChannel* pChannel, CClient* pClient )
 	if( pClient->GetNick() == m_szNick )
 	{
 		DeleteChannel( pChannel );
+
+		// if we are not on any channels
+		//
+		if( m_mspChannels.size() == 0 )
+		{
+			StopBroadcast();
+		}
 	}
 	else
 	{
 		pChannel->RemoveClient( pClient );
+
+		// if we are the only one on all of our channels
+		//
+		bool bStopNeeded = true;
+		for( tChannelMap::iterator it = m_mspChannels.begin(); it != m_mspChannels.end(); it++ )
+		{
+			CChannel* pTmpChannel = it->second;
+			if( pTmpChannel->GetClientNum() > 1 )
+			{
+				bStopNeeded = false;
+			}
+		}
+		if( bStopNeeded )
+		{
+			StopBroadcast();
+		}
 	}
 
 	// if the client has no channels, we delete it
@@ -52,6 +75,12 @@ void CServer::AddClient( CString szNick, CString szChannel )
 		CChannel* pChannel = new CChannel;
 		pChannel->Create( szChannel );
 		m_mspChannels[szChannel] = pChannel;
+	}
+	else
+	{
+		// we're already on the channel,
+		// that means someone else has just joined
+		StartBroadcast();
 	}
 
 	// removing flags from nick
@@ -74,6 +103,8 @@ void CServer::AddClient( CString szNick, CString szChannel )
 	// adding the client to the channel
 	m_mspChannels[szChannel]->AddClient( m_mspClients[szNick] );
 	m_mspChannels[szChannel]->SetClientFlag( m_mspClients[szNick], cFlag );
+
+	StartBroadcast(); // this is here just for debugging purposes
 }
 
 void CServer::DoAutoJoin()

@@ -38,6 +38,9 @@ public:
 	void			StartAudio();
 	void			StopAudio();
 
+	CVideoGraph*	GetVideoGraph();
+	CAudioGraph*	GetAudioGraph();
+
 private:
 	// returns the autodetected video/audio capture device's COM ID
 	//

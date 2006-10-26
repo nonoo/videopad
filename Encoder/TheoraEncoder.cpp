@@ -24,18 +24,23 @@ CTheoraEncoder::CTheoraEncoder( COggStream* pOggStream, CVideoGraph* pVideoGraph
 	// starting encoder feeder thread
 	// this feeds images from the given graph to the encoder
 	//
-	m_pTheoraThread = (CTheoraThread *)AfxBeginThread( RUNTIME_CLASS(CTheoraThread), THREAD_PRIORITY_BELOW_NORMAL, CREATE_SUSPENDED );
+	m_pTheoraThread = (CTheoraThread *)AfxBeginThread( RUNTIME_CLASS(CTheoraThread), THREAD_PRIORITY_BELOW_NORMAL, 0, CREATE_SUSPENDED );
 	m_pTheoraThread->Create( m_pTheora, pVideoGraph, nEncoderFPS );
 }
 
 void CTheoraEncoder::Stop()
 {
-	m_pTheoraThread->SuspendThread();
+	m_pTheoraThread->Stop();
 }
 
 void CTheoraEncoder::Start()
 {
-	m_pTheoraThread->ResumeThread();
+	m_pTheoraThread->Start();
+}
+
+bool CTheoraEncoder::IsRunning()
+{
+	return m_pTheoraThread->IsRunning();
 }
 
 CTheoraEncoder::~CTheoraEncoder()
@@ -43,11 +48,11 @@ CTheoraEncoder::~CTheoraEncoder()
 	// stopping thread
 	//
 	m_pTheoraThread->PostThreadMessage( WU_THREAD_STOP, 0, 0 );
-	
+
 	// waiting for the thread to stop
 	//
-	WaitForSingleObject( m_pTheoraThread->m_hThread, INFINITE );
-	m_pTheoraThread = NULL;
+	WaitForSingleObject( m_pTheoraThread->m_hThread, 500 );
+	SAFE_DELETE( m_pTheoraThread );
 
 	SAFE_DELETE( m_pTheora );
 }

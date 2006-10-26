@@ -240,7 +240,7 @@ BEGIN
     BEGIN
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
-    MENUITEM "&Edit",                       65535
+    MENUITEM "&Edit",                       ID_EDIT
 END
 
 

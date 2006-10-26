@@ -31,9 +31,15 @@ public:
 	//
 	void			Create( CTheora* pTheora, CVideoGraph* pVideoGraph, UINT nEncoderFPS );
 
+	void			Start();
+	void			Stop();
+	bool			IsRunning();
+
 private:
 	afx_msg void	OnTimer( WPARAM wp, LPARAM lp );
 	afx_msg void	OnTerminate( WPARAM wp, LPARAM lp );
+	afx_msg void	OnClose();
+	BOOL			IsIdleMessage( MSG* pMsg );
 
 	UINT_PTR		m_pTimer;
 
@@ -42,6 +48,7 @@ private:
 	UINT			m_nEncoderFPS;
 
 	bool			m_bStopped;
+	bool			m_bDestroy;
 
 	DECLARE_MESSAGE_MAP()
 };

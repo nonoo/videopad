@@ -82,20 +82,23 @@ CTheora::CTheora( COggStream* pOggStream, UINT frame_x, UINT frame_y, UINT fps )
 	ti.noise_sensitivity = 1;
 	ti.sharpness = 0; // 2 - less sharp, less bandwidth
 
-	theora_encode_init( &td,&ti );
+	theora_encode_init( &td, &ti );
 	theora_info_clear( &ti );
+
+	m_pOggPacket = new ogg_packet;
 
 	// header packet
 	//
-	theora_encode_header( &td, &op );
-	m_pOggStream->PacketIn( &op );
+	theora_encode_header( &td, m_pOggPacket );
+	m_pOggStream->PacketIn( m_pOggPacket );
 
 	theora_comment_init( &tc );
-	theora_encode_comment( &tc, &op );
-	m_pOggStream->PacketIn( &op );
+	theora_encode_comment( &tc, m_pOggPacket );
+	m_pOggStream->PacketIn( m_pOggPacket );
+	free( m_pOggPacket->packet ); // needed because theora_encode_comment does not free it's internal buffer
 
-	theora_encode_tables( &td, &op );
-	m_pOggStream->PacketIn( &op );
+	theora_encode_tables( &td, m_pOggPacket );
+	m_pOggStream->PacketIn( m_pOggPacket );
 }
 
 // feeds a frame to the ogg theora encoder stream
@@ -123,12 +126,14 @@ void CTheora::FeedFrame( BYTE* pData, UINT lBufferSize )
 	// Theora is a one-frame-in, one-frame-out system; submit a frame
 	// for compression and pull out the packet
 	//
-	theora_encode_packetout( &td, 0, &op );
-	m_pOggStream->PacketIn( &op );
+	theora_encode_packetout( &td, 0, m_pOggPacket );
+	m_pOggStream->PacketIn( m_pOggPacket );
 }
 
 CTheora::~CTheora()
 {
+	SAFE_DELETE( m_pOggPacket );
+
 	theora_clear( &td );
 
 	SAFE_DELETE_ARRAY( m_pImageDataY );

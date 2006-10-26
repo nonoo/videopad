@@ -29,10 +29,11 @@ public:
 	CSpeexEncoder( COggStream* pOggStream, CAudioGraph* pAudioGraph );
 	~CSpeexEncoder();
 
-	void Start();
-	void Stop();
+	void				Start();
+	void				Stop();
+	bool				IsRunning();
 
 private:
-	CSpeex*				pSpeex;
-	CSpeexThread*		pSpeexThread;
+	CSpeex*				m_pSpeex;
+	CSpeexThread*		m_pSpeexThread;
 };

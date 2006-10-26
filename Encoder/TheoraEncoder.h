@@ -31,6 +31,7 @@ public:
 
 	void				Start();
 	void				Stop();
+	bool				IsRunning();
 
 private:
 	CTheora*			m_pTheora;

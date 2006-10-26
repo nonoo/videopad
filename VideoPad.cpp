@@ -34,12 +34,20 @@ CVideoPadApp::CVideoPadApp()
 	m_bConnected = false;
 	m_pActiveServer = NULL;
 	m_pDirectShow = NULL;
+	m_pVideoStream = NULL;
+	m_pAudioStream = NULL;
+	m_pTheoraEncoder = NULL;
+	m_pSpeexEncoder = NULL;
 }
 
 CVideoPadApp::~CVideoPadApp()
 {
 	SAFE_DELETE( m_pActiveServer );
 
+	SAFE_DELETE( m_pTheoraEncoder );
+	SAFE_DELETE( m_pSpeexEncoder );
+	SAFE_DELETE( m_pVideoStream );
+	SAFE_DELETE( m_pAudioStream );
 	SAFE_DELETE( m_pDirectShow );
 
 	// winsock cleanup
@@ -158,4 +166,49 @@ CServer* CVideoPadApp::GetActiveServer()
 CSettingsFile* CVideoPadApp::GetSettingsFile()
 {
 	return &m_SettingsFile;
+}
+
+CDirectShow* CVideoPadApp::GetDirectShow()
+{
+	return m_pDirectShow;
+}
+
+COggStream* CVideoPadApp::GetVideoStream()
+{
+	return m_pVideoStream;
+}
+
+COggStream* CVideoPadApp::GetAudioStream()
+{
+	return m_pAudioStream;
+}
+
+CTheoraEncoder* CVideoPadApp::GetTheoraEncoder()
+{
+	return m_pTheoraEncoder;
+}
+
+CSpeexEncoder* CVideoPadApp::GetSpeexEncoder()
+{
+	return m_pSpeexEncoder;
+}
+
+void CVideoPadApp::SetVideoStream( COggStream* pVideoStream )
+{
+	m_pVideoStream = pVideoStream;
+}
+
+void CVideoPadApp::SetAudioStream( COggStream* pAudioStream )
+{
+	m_pAudioStream = pAudioStream;
+}
+
+void CVideoPadApp::SetTheoraEncoder( CTheoraEncoder* pTheoraEncoder )
+{
+	m_pTheoraEncoder = pTheoraEncoder;
+}
+
+void CVideoPadApp::SetSpeexEncoder( CSpeexEncoder* pSpeexEncoder )
+{
+	m_pSpeexEncoder = pSpeexEncoder;
 }

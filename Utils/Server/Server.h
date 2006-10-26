@@ -51,9 +51,14 @@ public:
 	const CString&				GetHost();
 	const CString&				GetPort();
 	const CString&				GetNick();
-	const SOCKET&				GetSocket();
+	CTCPConnection*				GetControlConnection();
 
 private:
+								// if we are not already sending data to the server,
+								// starts sending audio & video
+	void						StartBroadcast();
+	void						StopBroadcast();
+
 								// this is used only for closing TCP/UDP connections
 								// to fully disconnect, call theApp.Disconnect()
 	void						Disconnect();

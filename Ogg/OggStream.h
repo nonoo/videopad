@@ -42,7 +42,7 @@ public:
 private:
 	bool				IsHeaderPacket( ogg_packet* pOggPacket );
 
-	ogg_stream_state	m_StreamState;
+	ogg_stream_state*	m_pStreamState;
 	ogg_page			m_Page;
 
 	CTCPConnection*		m_pTCPConnection;

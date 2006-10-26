@@ -224,3 +224,13 @@ HRESULT CDirectShow::SetAudioFormat( DWORD dwPreferredSamplesPerSec, WORD wPrefe
 	StartAudio();
 	return 0;
 }
+
+CVideoGraph* CDirectShow::GetVideoGraph()
+{
+	return m_pVideoGraph;
+}
+
+CAudioGraph* CDirectShow::GetAudioGraph()
+{
+	return m_pAudioGraph;
+}

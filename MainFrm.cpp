@@ -19,11 +19,6 @@
 
 #include "MainFrm.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-
 IMPLEMENT_DYNAMIC(CMainFrame, CFrameWnd)
 
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
@@ -31,6 +26,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_SETFOCUS()
 	ON_UPDATE_COMMAND_UI(ID_TOOLBAR_CONNECT, OnUpdateToolBar)
 	ON_UPDATE_COMMAND_UI(ID_TOOLBAR_CHANNEL, OnUpdateToolBar)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 CMainFrame::CMainFrame()
@@ -41,6 +37,11 @@ CMainFrame::~CMainFrame()
 {
 }
 
+void CMainFrame::OnClose()
+{
+	theApp.GetActiveServer()->GetControlConnection()->SendMessage( "quit" );
+	CFrameWnd::OnClose();
+}
 
 int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {

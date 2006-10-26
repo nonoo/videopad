@@ -33,6 +33,7 @@ public:
 
 	void			Start();
 	void			Stop();
+	bool			IsRunning();
 
 private:
 	afx_msg void	Process( WPARAM wp, LPARAM lp );
@@ -44,7 +45,7 @@ private:
 					// indicates that the thread should stop itself
 	bool			m_bEndThread;
 					// when it's true, the thread hangs
-	bool			m_bStopThread;
+	bool			m_bStopped;
 
 	CSpeex*			m_pSpeex;
 	CAudioGraph*	m_pAudioGraph;

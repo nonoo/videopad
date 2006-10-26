@@ -29,22 +29,24 @@ COggStream::COggStream( UINT nSerial )
 	m_pData = NULL;
 	m_lDataSize = 0;
 
-	ogg_stream_init( &m_StreamState, nSerial );
+	m_pStreamState = (ogg_stream_state*) malloc( sizeof( ogg_stream_state ) );
+
+	ogg_stream_init( m_pStreamState, nSerial );
 }
 
 COggStream::~COggStream()
 {
-	ogg_stream_destroy( &m_StreamState );
+	ogg_stream_destroy( m_pStreamState );
 	SAFE_DELETE_ARRAY( m_pData );
 }
 
 void COggStream::PacketIn( ogg_packet* pOggPacket )
 {
-	ogg_stream_packetin( &m_StreamState, pOggPacket );
+	ogg_stream_packetin( m_pStreamState, pOggPacket );
 
 	// generating a page for this packet
 	//
-	ogg_stream_flush( &m_StreamState, &m_Page );
+	ogg_stream_flush( m_pStreamState, &m_Page );
 
 	if( m_lDataSize < m_Page.body_len+m_Page.header_len )
 	{

@@ -33,6 +33,10 @@ private:
 	WSADATA				m_wsaData;
 
 	CDirectShow*		m_pDirectShow;
+	COggStream*			m_pVideoStream;
+	COggStream*			m_pAudioStream;
+	CTheoraEncoder*		m_pTheoraEncoder;
+	CSpeexEncoder*		m_pSpeexEncoder;
 
 public:
 	CVideoPadApp();
@@ -47,6 +51,17 @@ public:
 
 	CServer*		GetActiveServer();
 	CSettingsFile*	GetSettingsFile();
+
+	CDirectShow*	GetDirectShow();
+	COggStream*		GetVideoStream();
+	COggStream*		GetAudioStream();
+	CTheoraEncoder*	GetTheoraEncoder();
+	CSpeexEncoder*	GetSpeexEncoder();
+
+	void			SetVideoStream( COggStream* pVideoStream );
+	void			SetAudioStream( COggStream* pAudioStream );
+	void			SetTheoraEncoder( CTheoraEncoder* pTheoraEncoder );
+	void			SetSpeexEncoder( CSpeexEncoder* pSpeexEncoder );
 
 	//	CMainFrame*		GetMainFrame();
 	

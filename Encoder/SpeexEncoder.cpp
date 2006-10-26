@@ -19,36 +19,41 @@
 
 CSpeexEncoder::CSpeexEncoder( COggStream* pOggStream, CAudioGraph* pAudioGraph )
 {
-	pSpeex = new CSpeex( pOggStream, pAudioGraph->GetSamplesPerSec(), pAudioGraph->GetBitsPerSample(),
+	m_pSpeex = new CSpeex( pOggStream, pAudioGraph->GetSamplesPerSec(), pAudioGraph->GetBitsPerSample(),
 		pAudioGraph->GetChannels() );
 
 	// starting encoder feeder thread
 	// this feeds samples from the given graph to the encoder
 	//
-	pSpeexThread = (CSpeexThread *)AfxBeginThread( RUNTIME_CLASS(CSpeexThread), THREAD_PRIORITY_BELOW_NORMAL, CREATE_SUSPENDED );
-	pSpeexThread->Create( pSpeex, pAudioGraph );
+	m_pSpeexThread = (CSpeexThread *)AfxBeginThread( RUNTIME_CLASS(CSpeexThread), THREAD_PRIORITY_BELOW_NORMAL, 0, CREATE_SUSPENDED );
+	m_pSpeexThread->Create( m_pSpeex, pAudioGraph );
 }
 
 void CSpeexEncoder::Start()
 {
-	pSpeexThread->Start();
+	m_pSpeexThread->Start();
 }
 
 void CSpeexEncoder::Stop()
 {
-	pSpeexThread->Stop();
+	m_pSpeexThread->Stop();
+}
+
+bool CSpeexEncoder::IsRunning()
+{
+	return m_pSpeexThread->IsRunning();
 }
 
 CSpeexEncoder::~CSpeexEncoder()
 {
 	// stopping thread
 	//
-	pSpeexThread->PostThreadMessage( WU_THREAD_STOP, 0, 0 );
+	m_pSpeexThread->PostThreadMessage( WU_THREAD_STOP, 0, 0 );
 
 	// waiting for the thread to stop
 	//
-	WaitForSingleObject( pSpeexThread->m_hThread, INFINITE );
-	pSpeexThread = NULL;
+	WaitForSingleObject( m_pSpeexThread->m_hThread, 500 );
+	SAFE_DELETE( m_pSpeexThread );
 
-	SAFE_DELETE( pSpeex );
+	SAFE_DELETE( m_pSpeex );
 }

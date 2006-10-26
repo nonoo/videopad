@@ -35,7 +35,7 @@ private:
 
 	COggStream*		m_pOggStream;
 
-	ogg_packet		op;
+	ogg_packet*		m_pOggPacket;
 
 	theora_state	td;
 	theora_info		ti;
