@@ -55,7 +55,7 @@ void CTheoraThread::OnTerminate( WPARAM wp, LPARAM lp )
 
 void CTheoraThread::OnTimer( WPARAM wp, LPARAM lp )
 {
-	if( m_pVideoGraph != NULL )
+	if( ( m_pVideoGraph != NULL ) && ( !m_bStopped ) )
 	{
 		m_pTheora->FeedFrame( m_pVideoGraph->GetBuffer(), m_pVideoGraph->GetBufferSize() );
 	}

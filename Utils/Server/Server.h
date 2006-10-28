@@ -54,11 +54,6 @@ public:
 	CTCPConnection*				GetControlConnection();
 
 private:
-								// if we are not already sending data to the server,
-								// starts sending audio & video
-	void						StartBroadcast();
-	void						StopBroadcast();
-
 								// this is used only for closing TCP/UDP connections
 								// to fully disconnect, call theApp.Disconnect()
 	void						Disconnect();
@@ -79,6 +74,10 @@ private:
 	void						PartChannel( CChannel* pChannel, CClient* pClient );
 	void						AddClient( CString szNick, CString szChannel );
 	void						DoAutoJoin();
+								// if we are not already sending data to the server,
+								// starts sending audio & video
+	void						StartBroadcast();
+	void						StopBroadcast();
 
 	// in Server_Dialog.cpp
 public:

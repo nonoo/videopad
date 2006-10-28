@@ -115,7 +115,6 @@ void CServer::ProcessServerMessage( CString szLine )
 			CString szPort;
 			szPort.Format( "%d", m_nTCPDataPort );
 			m_pTCPDataConnection->Connect( m_szHost, szPort );
-			//m_pTCPDataConnection->Connect( m_szHost, "62333" );
 		}
 		catch ( char* pError )
 		{
@@ -171,6 +170,8 @@ void CServer::ProcessServerMessage( CString szLine )
 	if( szCommand == "306" ) // nick change
 	{
 		m_mspClients[szTokens[2]]->SetNick( szTokens[3] );
+		m_mspClients[szTokens[3]] = m_mspClients[szTokens[2]];
+		m_mspClients.erase( m_mspClients.find( szTokens[2] ) );
 		return;
 	}
 

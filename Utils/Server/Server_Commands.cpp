@@ -16,6 +16,7 @@
 
 #include "stdafx.h"
 #include "Server.h"
+#include "../../VideoPad.h"
 
 void CServer::DeleteChannel( CChannel* pChannel )
 {
@@ -120,4 +121,75 @@ void CServer::DoAutoJoin()
 
 	}				
 	}*/
+}
+
+void CServer::StartBroadcast()
+{
+	CTheoraEncoder* pTheoraEncoder = theApp.GetTheoraEncoder();
+	CSpeexEncoder* pSpeexEncoder = theApp.GetSpeexEncoder();
+	CDirectShow* pDirectShow = theApp.GetDirectShow();
+
+	if( pTheoraEncoder == NULL )
+	{
+		// checking if we have video
+		if( pDirectShow->GetVideoGraph() != NULL )
+		{
+			// initializing theora encoder
+			//
+			COggStream* pVideoStream = new COggStream( m_nVideoStreamSerial );
+			pVideoStream->SetTCPDataConnection( m_pTCPDataConnection );
+			pVideoStream->SetUDPDataConnection( m_pUDPDataConnection );
+			pTheoraEncoder = new CTheoraEncoder(
+				pVideoStream,
+				pDirectShow->GetVideoGraph(),
+				theApp.GetSettingsFile()->GetInt( "VideoEncoder", "FPS", 15 )
+				);
+
+			theApp.SetVideoStream( pVideoStream );
+			theApp.SetTheoraEncoder( pTheoraEncoder );
+		}
+	}
+
+	if( pSpeexEncoder == NULL )
+	{
+		// checking if we have audio
+		if( pDirectShow->GetAudioGraph() != NULL )
+		{
+			// initializing speex encoder
+			//
+			COggStream* pAudioStream = new COggStream( m_nAudioStreamSerial );
+			pAudioStream->SetTCPDataConnection( m_pTCPDataConnection );
+			pAudioStream->SetUDPDataConnection( m_pUDPDataConnection );
+			pSpeexEncoder = new CSpeexEncoder( pAudioStream, pDirectShow->GetAudioGraph() );
+
+			theApp.SetAudioStream( pAudioStream );
+			theApp.SetSpeexEncoder( pSpeexEncoder );
+		}
+	}
+
+	if( pTheoraEncoder != NULL )
+	{
+		pTheoraEncoder->Start();
+	}
+
+	if( pSpeexEncoder != NULL )
+	{
+		pSpeexEncoder->Start();
+	}
+}
+
+void CServer::StopBroadcast()
+{
+	CTheoraEncoder* pTheoraEncoder = theApp.GetTheoraEncoder();
+	CSpeexEncoder* pSpeexEncoder = theApp.GetSpeexEncoder();
+
+	if( pTheoraEncoder != NULL )
+	{
+		pTheoraEncoder->Stop();
+	}
+
+	if( pSpeexEncoder != NULL )
+	{
+		pSpeexEncoder->Stop();
+	}
 }
