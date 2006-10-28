@@ -46,7 +46,6 @@ void CServer::ProcessServerMessage( CString szLine )
 
 
 
-
 	// for the command list, see videopad-server's README file
 	//
 	if( szCommand == "001" ) // welcome msg

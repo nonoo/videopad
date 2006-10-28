@@ -130,13 +130,6 @@ void CTheora::FeedFrame( BYTE* pData, UINT lBufferSize )
 	//
 	theora_encode_packetout( &td, 0, m_pOggPacket );
 
-	// this is not a header packet so we adjust granulepos if needed
-	//
-	if( m_pOggPacket->granulepos == 0 )
-	{
-		m_pOggPacket->granulepos = 1;
-	}
-
 	m_pOggStream->PacketIn( m_pOggPacket );
 }
 

@@ -45,7 +45,7 @@ void COggStream::PacketIn( ogg_packet* pOggPacket )
 {
 	ogg_stream_packetin( m_pStreamState, pOggPacket );
 
-	// generating a page for this packet
+	// generating a page for this packet (1 packet/page)
 	//
 	ogg_stream_flush( m_pStreamState, &m_Page );
 
@@ -64,6 +64,8 @@ void COggStream::PacketIn( ogg_packet* pOggPacket )
 	memcpy( m_pData, m_Page.header, m_Page.header_len );
 	memcpy( m_pData+m_Page.header_len, m_Page.body, m_Page.body_len );
 
+	// header packets are sent over TCP, everything else via UDP
+	//
 	if( ( IsHeaderPacket( pOggPacket ) ) || ( m_bTCPOnly == true ) )
 	{
 		if( m_pTCPConnection != NULL )
