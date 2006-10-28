@@ -17,9 +17,9 @@
 #include "stdafx.h"
 #include "TheoraEncoder.h"
 
-CTheoraEncoder::CTheoraEncoder( COggStream* pOggStream, CVideoGraph* pVideoGraph, UINT nEncoderFPS )
+CTheoraEncoder::CTheoraEncoder( COggOutStream* pOggOutStream, CVideoGraph* pVideoGraph, UINT nEncoderFPS )
 {
-	m_pTheora = new CTheora( pOggStream, pVideoGraph->GetVideoWidth(), pVideoGraph->GetVideoHeight(), nEncoderFPS );
+	m_pTheora = new CTheora( pOggOutStream, pVideoGraph->GetVideoWidth(), pVideoGraph->GetVideoHeight(), nEncoderFPS );
 
 	// starting encoder feeder thread
 	// this feeds images from the given graph to the encoder

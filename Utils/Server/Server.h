@@ -42,6 +42,9 @@ private:
 	SOCKET						m_sSocket;
 	char						m_pRecvBuf[MAXMESSAGELENGTH+1];
 
+	COggDecoder					m_OggDecoder;
+	CSerialMapper				m_SerialMapper;
+
 	// in Server.cpp
 public:
 	CServer();
@@ -69,6 +72,10 @@ private:
 								// processes messages received from the server
 	void						ProcessServerMessage( CString szLine );
 
+	// in Server_ProcessData.cpp
+								// reads and processes data received from the server
+	void						ProcessIncomingData();
+
 	// in Server_Commands.cpp
 	void						DeleteChannel( CChannel* pChannel );
 	void						PartChannel( CChannel* pChannel, CClient* pClient );
@@ -86,9 +93,6 @@ public:
 private:
 	CEdit			m_editMessages;
 	CEdit			m_editMessage;
-
-	COggDecoder		OggDecoder;
-	CSerialMapper	SerialMapper;
 
 	virtual void	DoDataExchange( CDataExchange* pDX );
 	virtual BOOL	PreTranslateMessage( MSG* pMsg );

@@ -267,6 +267,9 @@
 						RelativePath=".\Utils\Server\Server_Dialog.cpp">
 					</File>
 					<File
+						RelativePath=".\Utils\Server\Server_ProcessData.cpp">
+					</File>
+					<File
 						RelativePath=".\Utils\Server\Server_ProcessMessages.cpp">
 					</File>
 				</Filter>
@@ -333,6 +336,12 @@
 					RelativePath=".\Ogg\OggDecoder.h">
 				</File>
 				<File
+					RelativePath=".\Ogg\OggOutStream.cpp">
+				</File>
+				<File
+					RelativePath=".\Ogg\OggOutStream.h">
+				</File>
+				<File
 					RelativePath=".\Ogg\OggStream.cpp">
 				</File>
 				<File
@@ -383,6 +392,40 @@
 				</File>
 				<File
 					RelativePath=".\Encoder\TheoraThread.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="Decoder"
+				Filter="">
+				<File
+					RelativePath=".\Decoder\AudioDecoderThread.cpp">
+				</File>
+				<File
+					RelativePath=".\Decoder\AudioDecoderThread.h">
+				</File>
+				<File
+					RelativePath=".\Decoder\Decoder.cpp">
+				</File>
+				<File
+					RelativePath=".\Decoder\Decoder.h">
+				</File>
+				<File
+					RelativePath=".\Decoder\SpeexDecoder.cpp">
+				</File>
+				<File
+					RelativePath=".\Decoder\SpeexDecoder.h">
+				</File>
+				<File
+					RelativePath=".\Decoder\TheoraDecoder.cpp">
+				</File>
+				<File
+					RelativePath=".\Decoder\TheoraDecoder.h">
+				</File>
+				<File
+					RelativePath=".\Decoder\VideoDecoderThread.cpp">
+				</File>
+				<File
+					RelativePath=".\Decoder\VideoDecoderThread.h">
 				</File>
 			</Filter>
 		</Filter>

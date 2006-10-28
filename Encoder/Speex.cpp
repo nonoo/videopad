@@ -30,7 +30,7 @@ void CSpeex::GenerateHeader()
 	m_Op.bytes = nPacketSize;
 	m_Op.granulepos = 0;
 
-	m_pOggStream->PacketIn( &m_Op );
+	m_pOggOutStream->PacketIn( &m_Op );
 	free( m_Op.packet );
 }
 
@@ -52,13 +52,13 @@ void CSpeex::GenerateComment()
 
 	m_Op.bytes = nPacketSize;
 
-	m_pOggStream->PacketIn( &m_Op );
+	m_pOggOutStream->PacketIn( &m_Op );
 	free( m_Op.packet );
 }
 
-CSpeex::CSpeex( COggStream* pOggStream, DWORD dwSampleRate, WORD wBitsPerSecond, WORD wChannels )
+CSpeex::CSpeex( COggOutStream* pOggOutStream, DWORD dwSampleRate, WORD wBitsPerSecond, WORD wChannels )
 {
-	m_pOggStream = pOggStream;
+	m_pOggOutStream = pOggOutStream;
 	m_dwSampleRate = dwSampleRate;
 	m_wBitsPerSecond = wBitsPerSecond;
 	m_wChannels = wChannels;
@@ -126,7 +126,7 @@ void CSpeex::FeedSample( BYTE* pBuffer, UINT nBufferSize )
 		m_Op.b_o_s = 0;
 		m_Op.e_o_s = 0;
 		m_Op.granulepos = ++m_nGranulePos;
-		m_pOggStream->PacketIn( &m_Op );
+		m_pOggOutStream->PacketIn( &m_Op );
 	}
 }
 

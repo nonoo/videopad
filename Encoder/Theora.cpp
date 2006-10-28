@@ -17,9 +17,9 @@
 #include "stdafx.h"
 #include "Theora.h"
 
-CTheora::CTheora( COggStream* pOggStream, UINT frame_x, UINT frame_y, UINT fps )
+CTheora::CTheora( COggOutStream* pOggOutStream, UINT frame_x, UINT frame_y, UINT fps )
 {
-	m_pOggStream = pOggStream;
+	m_pOggOutStream = pOggOutStream;
 
 	m_frame_x = frame_x;
 	m_frame_y = frame_y;
@@ -90,17 +90,17 @@ CTheora::CTheora( COggStream* pOggStream, UINT frame_x, UINT frame_y, UINT fps )
 	// header packet
 	//
 	theora_encode_header( &td, m_pOggPacket );
-	m_pOggStream->PacketIn( m_pOggPacket );
+	m_pOggOutStream->PacketIn( m_pOggPacket );
 
 	theora_comment_init( &tc );
 	theora_encode_comment( &tc, m_pOggPacket );
 	m_pOggPacket->granulepos = 0;
-	m_pOggStream->PacketIn( m_pOggPacket );
+	m_pOggOutStream->PacketIn( m_pOggPacket );
 	free( m_pOggPacket->packet ); // needed because theora_encode_comment does not free it's internal buffer
 
 	theora_encode_tables( &td, m_pOggPacket );
 	m_pOggPacket->granulepos = 0;
-	m_pOggStream->PacketIn( m_pOggPacket );
+	m_pOggOutStream->PacketIn( m_pOggPacket );
 }
 
 // feeds a frame to the ogg theora encoder stream
@@ -130,7 +130,7 @@ void CTheora::FeedFrame( BYTE* pData, UINT lBufferSize )
 	//
 	theora_encode_packetout( &td, 0, m_pOggPacket );
 
-	m_pOggStream->PacketIn( m_pOggPacket );
+	m_pOggOutStream->PacketIn( m_pOggPacket );
 }
 
 CTheora::~CTheora()

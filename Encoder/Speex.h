@@ -19,7 +19,7 @@
 class CSpeex
 {
 public:
-	CSpeex( COggStream* pOggStream, DWORD dwSampleRate, WORD wBitsPerSecond, WORD wChannels );
+	CSpeex( COggOutStream* pOggOutStream, DWORD dwSampleRate, WORD wBitsPerSecond, WORD wChannels );
 	~CSpeex();
 
 	void		FeedSample( BYTE* pBuffer, UINT nBufferSize );
@@ -36,7 +36,7 @@ private:
 	WORD		m_wBitsPerSecond;
 	WORD		m_wChannels;
 
-	COggStream*	m_pOggStream;
+	COggOutStream*	m_pOggOutStream;
 
 				// holds the state of the encoder
 	void*		m_pState;

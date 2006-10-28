@@ -16,24 +16,16 @@
 
 #pragma once
 
-class CSpeex;
-class CSpeexThread;
-
-// this class manages the audio encoder
-// grabs samples from the audiograph and feeds them
-// to the encoder
-//
-class CSpeexEncoder
+class CTheoraDecoder : public CDecoder
 {
 public:
-	CSpeexEncoder( COggOutStream* pOggOutStream, CAudioGraph* pAudioGraph );
-	~CSpeexEncoder();
+	CTheoraDecoder();
+	~CTheoraDecoder();
 
-	void				Start();
-	void				Stop();
-	bool				IsRunning();
+	HRESULT					PreProcess( ogg_packet* pOggPacket );
 
 private:
-	CSpeex*				m_pSpeex;
-	CSpeexThread*		m_pSpeexThread;
+	theora_state			m_TheoraState;
+	theora_info				m_TheoraInfo;
+	theora_comment			m_TheoraComment;
 };

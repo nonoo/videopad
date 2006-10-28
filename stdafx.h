@@ -73,6 +73,7 @@
 #include <mtype.h>
 
 #include <map>
+#include <queue>
 using namespace std;
 
 // user defined messages
@@ -84,6 +85,8 @@ using namespace std;
 
 // max length of one line sent to the control port
 #define MAXMESSAGELENGTH 1024
+// how many bytes to read from a data connection in one step
+#define MAXDATAREAD 5000
 
 #include "CommonDefines.h"
 
@@ -101,6 +104,7 @@ using namespace std;
 
 #include "Ogg/OggDecoder.h"
 #include "Ogg/OggStream.h"
+#include "Ogg/OggOutStream.h"
 #include "Ogg/SerialMapper.h"
 
 #include "Utils/Server/Server.h"
@@ -127,3 +131,9 @@ using namespace std;
 #include "Encoder/SpeexEncoder.h"
 #include "Encoder/Speex.h"
 #include "Encoder/SpeexThread.h"
+
+#include "Decoder/Decoder.h"
+#include "Decoder/TheoraDecoder.h"
+#include "Decoder/SpeexDecoder.h"
+#include "Decoder/VideoDecoderThread.h"
+#include "Decoder/AudioDecoderThread.h"

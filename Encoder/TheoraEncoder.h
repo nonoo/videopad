@@ -26,7 +26,7 @@ class CTheoraThread;
 class CTheoraEncoder
 {
 public:
-	CTheoraEncoder( COggStream* pOggStream, CVideoGraph* pVideoGraph, UINT nEncoderFPS );
+	CTheoraEncoder( COggOutStream* pOggOutStream, CVideoGraph* pVideoGraph, UINT nEncoderFPS );
 	~CTheoraEncoder();
 
 	void				Start();

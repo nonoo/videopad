@@ -23,7 +23,7 @@ class CTheora
 public:
 	// the encoder outputs encoded data to the given ogg stream
 	//
-	CTheora( COggStream* pOggStream, UINT frame_x, UINT frame_y, UINT fps );
+	CTheora( COggOutStream* pOggOutStream, UINT frame_x, UINT frame_y, UINT fps );
 	~CTheora();
 
 	// encodes given image and puts into the ogg stream
@@ -33,25 +33,25 @@ public:
 private:
 	void ConvertImageRGB2YUV420( BYTE* pData, BYTE* pYData, BYTE* pUData, BYTE* pVData, UINT nWidth, UINT nHeight );
 
-	COggStream*		m_pOggStream;
+	COggOutStream*		m_pOggOutStream;
 
-	ogg_packet*		m_pOggPacket;
+	ogg_packet*			m_pOggPacket;
 
-	theora_state	td;
-	theora_info		ti;
-	theora_comment	tc;
+	theora_state		td;
+	theora_info			ti;
+	theora_comment		tc;
 
-	int				m_video_x;	// video size
-	int				m_video_y;
-	int				m_frame_x;	// input frame size
-	int				m_frame_y;
-	int				m_frame_x_offset;
-	int				m_frame_y_offset;
-	int				m_fps;
+	int					m_video_x;	// video size
+	int					m_video_y;
+	int					m_frame_x;	// input frame size
+	int					m_frame_y;
+	int					m_frame_x_offset;
+	int					m_frame_y_offset;
+	int					m_fps;
 
-	BYTE*			m_pImageDataY;
-	BYTE*			m_pImageDataU;
-	BYTE*			m_pImageDataV;
+	BYTE*				m_pImageDataY;
+	BYTE*				m_pImageDataU;
+	BYTE*				m_pImageDataV;
 
-	UINT			m_nImageDataSize;
+	UINT				m_nImageDataSize;
 };

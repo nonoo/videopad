@@ -26,6 +26,11 @@ public:
     CClient*		GetClient( const unsigned int& nSerial );
     COggStream*		GetOggStream( const unsigned int& nSerial );
 
+
+					// frees all streams in serial map
+	void			DestroyStreams();
+	void			DestroyStream( COggStream*& pOggStream );
+
 private:
     typedef map< unsigned int, pair< CClient*, COggStream* > > tSerialMap;
     tSerialMap		m_SerialMap;

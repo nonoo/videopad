@@ -16,45 +16,30 @@
 
 #pragma once
 
-class CTCPConnection;
-class CUDPConnection;
+class CDecoder;
 
 class COggStream
 {
 public:
 						COggStream( UINT nSerial );
-						~COggStream();
+						virtual ~COggStream();
 
-						// this OggStream implementation is a PacketIn-only one
-						// you add packets and the class generates pages for
-						// every packet and sends them using the given connections
-						//
-						void PacketIn( ogg_packet* pOggPacket );
+						// returns 0 if page has been successfully processed
+	HRESULT				FeedPage( ogg_page& OggPage );
 
-						// header packets always sent over TCP
-						// other packets can be transmitted over UDP (faster)
-						//
-	void				SetTCPDataConnection( CTCPConnection* pTCPConnection );
-	void				SetUDPDataConnection( CUDPConnection* pUDPConnection );
+	const UINT&			GetSerial();
 
-						// sets if every packet should be sent over TCP, not just only
-						// header packets
-						//
-	void				SetTCPOnly( bool bState );
-
-private:
+protected:
 	bool				IsHeaderPacket( ogg_packet* pOggPacket );
 
 	UINT				m_nSerial;
 
 	ogg_stream_state*	m_pStreamState;
-	ogg_page			m_Page;
+	ogg_page			m_OggPage;
+	ogg_packet*			m_pOggPacket;
 
-	CTCPConnection*		m_pTCPConnection;
-	CUDPConnection*		m_pUDPConnection;
+						// the decoder to use for processing incoming packets
+	CDecoder*			m_pDecoder;
 
-	char*				m_pData;
-	long				m_lDataSize;
-
-	bool				m_bTCPOnly;
+	bool				m_bInitialized;
 };

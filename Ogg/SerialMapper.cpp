@@ -25,13 +25,12 @@ void CSerialMapper::AddSerial( unsigned int nSerial, CClient* pClient, COggStrea
 
 void CSerialMapper::DeleteClientSerials( CClient* pClient )
 {
-    for( tSerialMap::iterator it = m_SerialMap.begin();
-	it != m_SerialMap.end(); it++ )
+    for( tSerialMap::iterator it = m_SerialMap.begin();	it != m_SerialMap.end(); it++ )
     {
-	if( it->second.first == pClient )
-	{
-	    m_SerialMap.erase( it );
-	}
+		if( it->second.first == pClient )
+		{
+			m_SerialMap.erase( it );
+		}
     }
 }
 
@@ -43,4 +42,18 @@ CClient* CSerialMapper::GetClient( const unsigned int& nSerial )
 COggStream* CSerialMapper::GetOggStream( const unsigned int& nSerial )
 {
     return m_SerialMap[nSerial].second;
+}
+
+void CSerialMapper::DestroyStreams()
+{
+	for( tSerialMap::iterator it = m_SerialMap.begin();	it != m_SerialMap.end(); it++ )
+	{
+		SAFE_DELETE( it->second.second );
+	}
+}
+
+void CSerialMapper::DestroyStream( COggStream*& pOggStream )
+{
+	m_SerialMap.erase( m_SerialMap.find( pOggStream->GetSerial() ) );
+	SAFE_DELETE( pOggStream );
 }

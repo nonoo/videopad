@@ -16,24 +16,13 @@
 
 #pragma once
 
-class CSpeex;
-class CSpeexThread;
-
-// this class manages the audio encoder
-// grabs samples from the audiograph and feeds them
-// to the encoder
-//
-class CSpeexEncoder
+class CAudioDecoderThread : public CWinThread
 {
+	DECLARE_DYNCREATE(CAudioDecoderThread)
+
 public:
-	CSpeexEncoder( COggOutStream* pOggOutStream, CAudioGraph* pAudioGraph );
-	~CSpeexEncoder();
+	virtual BOOL InitInstance();
+	virtual int ExitInstance();
 
-	void				Start();
-	void				Stop();
-	bool				IsRunning();
-
-private:
-	CSpeex*				m_pSpeex;
-	CSpeexThread*		m_pSpeexThread;
+	DECLARE_MESSAGE_MAP()
 };

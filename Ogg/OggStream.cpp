@@ -17,69 +17,22 @@
 #include "stdafx.h"
 #include "OggStream.h"
 
-static bool	g_bOggLock = false;
-
 COggStream::COggStream( UINT nSerial )
 {
 	m_nSerial = nSerial;
-	m_pTCPConnection = NULL;
-	m_pUDPConnection = NULL;
-
-	m_bTCPOnly = false;
-
-	m_pData = NULL;
-	m_lDataSize = 0;
 
 	m_pStreamState = (ogg_stream_state *) malloc( sizeof( ogg_stream_state ) );
 
 	ogg_stream_init( m_pStreamState, nSerial );
+	m_pOggPacket = (ogg_packet *) malloc( sizeof( ogg_packet ) );
+
+	m_bInitialized = false;
+	m_pDecoder = NULL;
 }
 
 COggStream::~COggStream()
 {
 	ogg_stream_destroy( m_pStreamState );
-	SAFE_DELETE_ARRAY( m_pData );
-}
-
-void COggStream::PacketIn( ogg_packet* pOggPacket )
-{
-	ogg_stream_packetin( m_pStreamState, pOggPacket );
-
-	// generating a page for this packet (1 packet/page)
-	//
-	ogg_stream_flush( m_pStreamState, &m_Page );
-
-	if( m_lDataSize < m_Page.body_len+m_Page.header_len )
-	{
-		SAFE_DELETE_ARRAY( m_pData );
-		m_lDataSize = 0;
-	}
-
-	if( !m_pData )
-	{
-		m_lDataSize = m_Page.body_len+m_Page.header_len;
-		m_pData = new char[m_lDataSize];
-	}
-
-	memcpy( m_pData, m_Page.header, m_Page.header_len );
-	memcpy( m_pData+m_Page.header_len, m_Page.body, m_Page.body_len );
-
-	// header packets are sent over TCP, everything else via UDP
-	//
-	if( ( IsHeaderPacket( pOggPacket ) ) || ( m_bTCPOnly == true ) )
-	{
-		if( m_pTCPConnection != NULL )
-		{
-			m_pTCPConnection->SendData( m_pData, m_lDataSize );
-		}
-	}
-	else
-	{
-		if( m_pUDPConnection != NULL )
-		{
-			m_pUDPConnection->SendData( m_pData, m_lDataSize );
-		}
-	}
 }
 
 bool COggStream::IsHeaderPacket( ogg_packet* pOggPacket )
@@ -87,17 +40,55 @@ bool COggStream::IsHeaderPacket( ogg_packet* pOggPacket )
 	return ( pOggPacket->granulepos == 0 ) ? 1 : 0;
 }
 
-void COggStream::SetTCPDataConnection( CTCPConnection* pTCPConnection )
+HRESULT COggStream::FeedPage( ogg_page& OggPage )
 {
-	m_pTCPConnection = pTCPConnection;
+	ogg_stream_pagein( m_pStreamState, &OggPage );
+	memset( m_pOggPacket, 0, sizeof( ogg_packet ) );
+	m_pOggPacket->granulepos = 1; // because packetout doesn't fill out this
+	ogg_stream_packetout( m_pStreamState, m_pOggPacket );
+
+	if( m_pDecoder == NULL ) // we don't have a decoder associated with this stream yet
+	{
+		if( !IsHeaderPacket( m_pOggPacket ) )
+		{
+			// we don't care about non-header packets
+			//
+			return -1;
+		}
+
+		CTheoraDecoder* pTheoraDecoder = new CTheoraDecoder;
+		CSpeexDecoder* pSpeexDecoder = new CSpeexDecoder;
+		if( SUCCEEDED( pTheoraDecoder->PreProcess( m_pOggPacket ) ) )
+		{
+			// this is a theora stream
+			//
+			m_pDecoder = pTheoraDecoder;
+			SAFE_DELETE( pSpeexDecoder );
+		}
+
+		if( pSpeexDecoder != NULL )
+		{
+			if( SUCCEEDED( pSpeexDecoder->PreProcess( m_pOggPacket ) ) )
+			{
+				// this is a speex stream
+				//
+				m_pDecoder = pSpeexDecoder;
+				SAFE_DELETE( pTheoraDecoder );
+			}
+		}
+
+		if( m_pDecoder == NULL ) // identifying the decoder of this stream has failed
+		{
+			return -1;
+		}
+		return 0;
+	}
+
+	m_pDecoder->PreProcess( m_pOggPacket );
+	return 0;
 }
 
-void COggStream::SetUDPDataConnection( CUDPConnection* pUDPConnection )
+const UINT& COggStream::GetSerial()
 {
-	m_pUDPConnection = pUDPConnection;
-}
-
-void COggStream::SetTCPOnly( bool bState )
-{
-	m_bTCPOnly = bState;
+	return m_nSerial;
 }

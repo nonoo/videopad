@@ -17,9 +17,9 @@
 #include "stdafx.h"
 #include "SpeexEncoder.h"
 
-CSpeexEncoder::CSpeexEncoder( COggStream* pOggStream, CAudioGraph* pAudioGraph )
+CSpeexEncoder::CSpeexEncoder( COggOutStream* pOggOutStream, CAudioGraph* pAudioGraph )
 {
-	m_pSpeex = new CSpeex( pOggStream, pAudioGraph->GetSamplesPerSec(), pAudioGraph->GetBitsPerSample(),
+	m_pSpeex = new CSpeex( pOggOutStream, pAudioGraph->GetSamplesPerSec(), pAudioGraph->GetBitsPerSample(),
 		pAudioGraph->GetChannels() );
 
 	// starting encoder feeder thread

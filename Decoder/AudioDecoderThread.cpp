@@ -15,56 +15,14 @@
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "stdafx.h"
-#include "Client.h"
+#include "AudioDecoderThread.h"
 
-
-CClient::CClient()
+BOOL CAudioDecoderThread::InitInstance()
 {
-	m_pdlgVideo = NULL;
+	return TRUE;
 }
 
-CClient::~CClient()
+int CAudioDecoderThread::ExitInstance()
 {
-	SAFE_DELETE( m_pdlgVideo );
-}
-
-void CClient::Create( CString szNick )
-{
-	m_szNick = szNick;
-}
-
-void CClient::SetNick( CString szNick )
-{
-	m_szNick = szNick;
-}
-
-const CString& CClient::GetNick()
-{
-	return m_szNick;
-}
-
-void CClient::AddChannel( CChannel* pChannel )
-{
-	m_apChannels.Add( pChannel );
-}
-
-void CClient::RemoveChannel( CChannel* pChannel )
-{
-	for( int i = 0; i < m_apChannels.GetCount(); i++ )
-	{
-		if( m_apChannels[i] == pChannel )
-		{
-			m_apChannels.RemoveAt( i, 1 );
-		}
-	}
-}
-
-INT_PTR CClient::GetChannelNum()
-{
-	return m_apChannels.GetCount();
-}
-
-const CArray< CChannel* >& CClient::GetChannels()
-{
-	return m_apChannels;
+	return CWinThread::ExitInstance();
 }

@@ -14,57 +14,31 @@
 //  along with VideoPad; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#include "stdafx.h"
-#include "Client.h"
+#pragma once
 
-
-CClient::CClient()
+// interface class
+//
+class CDecoder
 {
-	m_pdlgVideo = NULL;
-}
+public:
+	CDecoder();
+	virtual ~CDecoder();
 
-CClient::~CClient()
-{
-	SAFE_DELETE( m_pdlgVideo );
-}
+								// PreProcess() returns 0 when pOggPacket is a valid packet to decode
+								// and initializes stream with the packet if it hasn't been initialized
+								//
+								// after init is completed, PreProcess() just puts the packet into the
+								// packet queue for further processing by VideoDecoderThread/AudioDecoderThread
+								//
+	virtual HRESULT				PreProcess( ogg_packet* pOggPacket );
 
-void CClient::Create( CString szNick )
-{
-	m_szNick = szNick;
-}
+protected:
+	void						AddToPacketQueue( ogg_packet* pOggPacket );
 
-void CClient::SetNick( CString szNick )
-{
-	m_szNick = szNick;
-}
 
-const CString& CClient::GetNick()
-{
-	return m_szNick;
-}
 
-void CClient::AddChannel( CChannel* pChannel )
-{
-	m_apChannels.Add( pChannel );
-}
+	int							m_nHeaderCount;
+	bool						m_bInitialized;
 
-void CClient::RemoveChannel( CChannel* pChannel )
-{
-	for( int i = 0; i < m_apChannels.GetCount(); i++ )
-	{
-		if( m_apChannels[i] == pChannel )
-		{
-			m_apChannels.RemoveAt( i, 1 );
-		}
-	}
-}
-
-INT_PTR CClient::GetChannelNum()
-{
-	return m_apChannels.GetCount();
-}
-
-const CArray< CChannel* >& CClient::GetChannels()
-{
-	return m_apChannels;
-}
+	queue<ogg_packet*>			m_qPacketQueue;
+};

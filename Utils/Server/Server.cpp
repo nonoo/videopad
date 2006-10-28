@@ -46,6 +46,8 @@ CServer::~CServer()
 	{
 		SAFE_DELETE( it->second );
 	}
+
+	m_SerialMapper.DestroyStreams();
 }
 
 void CServer::Connect( CString szHost, CString szPort, CString szNick )
@@ -164,6 +166,12 @@ LRESULT CServer::OnDataSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			break;
 		}
 
+		case FD_READ:
+		{
+			ProcessIncomingData();
+			break;
+		}
+
 		case FD_CLOSE:
 		{
 			AddText( "Data socket disconnected.\r\n" );
@@ -218,6 +226,7 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			if( res <= 0 )
 			{
 				AddText( "Disconnected.\r\n" );
+				Disconnect();
 				break;
 			}
 

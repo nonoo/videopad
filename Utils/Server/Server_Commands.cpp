@@ -136,7 +136,7 @@ void CServer::StartBroadcast()
 		{
 			// initializing theora encoder
 			//
-			COggStream* pVideoStream = new COggStream( m_nVideoStreamSerial );
+			COggOutStream* pVideoStream = new COggOutStream( m_nVideoStreamSerial );
 			pVideoStream->SetTCPDataConnection( m_pTCPDataConnection );
 			pVideoStream->SetUDPDataConnection( m_pUDPDataConnection );
 			pTheoraEncoder = new CTheoraEncoder(
@@ -157,7 +157,7 @@ void CServer::StartBroadcast()
 		{
 			// initializing speex encoder
 			//
-			COggStream* pAudioStream = new COggStream( m_nAudioStreamSerial );
+			COggOutStream* pAudioStream = new COggOutStream( m_nAudioStreamSerial );
 			pAudioStream->SetTCPDataConnection( m_pTCPDataConnection );
 			pAudioStream->SetUDPDataConnection( m_pUDPDataConnection );
 			pSpeexEncoder = new CSpeexEncoder( pAudioStream, pDirectShow->GetAudioGraph() );
