@@ -93,6 +93,16 @@ using namespace std;
 #include "Dialogs/VideoDialog.h"
 #include "Dialogs/ChatDialog.h"
 
+#include "ogg/ogg.h"
+#include "theora/theora.h"
+#include "speex/speex.h"
+#include "speex/speex_preprocess.h"
+#include "speex/speex_header.h"
+
+#include "Ogg/OggDecoder.h"
+#include "Ogg/OggStream.h"
+#include "Ogg/SerialMapper.h"
+
 #include "Utils/Server/Server.h"
 #include "Utils/Channel.h"
 #include "Utils/SettingsFile.h"
@@ -110,14 +120,6 @@ using namespace std;
 #include "DirectShow/GrabberCallBack.h"
 #include "DirectShow/VideoCaptureDevice.h"
 #include "DirectShow/VideoGraph.h"
-
-#include "ogg/ogg.h"
-#include "theora/theora.h"
-#include "speex/speex.h"
-#include "speex/speex_preprocess.h"
-#include "speex/speex_header.h"
-
-#include "Ogg/OggStream.h"
 
 #include "Encoder/TheoraEncoder.h"
 #include "Encoder/Theora.h"

@@ -16,6 +16,9 @@
 
 #pragma once
 
+class CTCPConnection;
+class CUDPConnection;
+
 class COggStream
 {
 public:

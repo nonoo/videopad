@@ -87,6 +87,9 @@ private:
 	CEdit			m_editMessages;
 	CEdit			m_editMessage;
 
+	COggDecoder		OggDecoder;
+	CSerialMapper	SerialMapper;
+
 	virtual void	DoDataExchange( CDataExchange* pDX );
 	virtual BOOL	PreTranslateMessage( MSG* pMsg );
 	virtual void	OnOK();

@@ -327,10 +327,22 @@
 				Name="Ogg"
 				Filter="">
 				<File
+					RelativePath=".\Ogg\OggDecoder.cpp">
+				</File>
+				<File
+					RelativePath=".\Ogg\OggDecoder.h">
+				</File>
+				<File
 					RelativePath=".\Ogg\OggStream.cpp">
 				</File>
 				<File
 					RelativePath=".\Ogg\OggStream.h">
+				</File>
+				<File
+					RelativePath=".\Ogg\SerialMapper.cpp">
+				</File>
+				<File
+					RelativePath=".\Ogg\SerialMapper.h">
 				</File>
 			</Filter>
 			<Filter
