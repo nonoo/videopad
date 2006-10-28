@@ -26,6 +26,7 @@ public:
 
 private:
 	CComboBox		m_comboServerName;
+	CEdit			m_editNick;
 	CString			m_szSelectedServer;
 	CString			m_szSelectedNick;
 

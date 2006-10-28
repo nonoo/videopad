@@ -28,10 +28,9 @@ public:
 	CMainFrame();
 	virtual ~CMainFrame();
 	
-public:
 	virtual BOOL		PreCreateWindow( CREATESTRUCT& cs );
 	virtual BOOL		OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo );
-	
+
 #ifdef _DEBUG
 	virtual void		AssertValid() const;
 	virtual void		Dump( CDumpContext& dc ) const;

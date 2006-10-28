@@ -139,7 +139,7 @@ void CVideoPadApp::Connect()
 	CString szNick;
 	if ( m_dlgConnecting.DoModalGetServer( szServerHost, szServerPort, szNick ) == IDOK )
 	{
-		SAFE_DELETE( m_pActiveServer );
+		Disconnect();
 		m_pActiveServer = new CServer;
 
 		// trying to connect to the selected host:port
@@ -150,6 +150,7 @@ void CVideoPadApp::Connect()
 
 void CVideoPadApp::Disconnect()
 {
+	SetConnected( false );
 	SAFE_DELETE( m_pActiveServer );
 }
 

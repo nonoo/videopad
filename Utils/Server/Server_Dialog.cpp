@@ -61,7 +61,7 @@ void CServer::DoDataExchange( CDataExchange* pDX )
 void CServer::OnClose()
 {
 	ShowWindow( false );
-	theApp.SetConnected( false );	
+	Disconnect();
 }
 
 void CServer::OnOK()

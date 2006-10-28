@@ -104,6 +104,11 @@ void CServer::AddIntoRecentServerList( CString szServer )
 	{
 		if( theApp.GetSettingsFile()->Get( "RecentServers", i, "" ) == szServer )
 		{
+			// moving the server to the first place in the list
+			//
+			CString szFirstServer = theApp.GetSettingsFile()->Get( "RecentServers", 1, "" );
+			theApp.GetSettingsFile()->Set( "RecentServers", 1, szServer );
+			theApp.GetSettingsFile()->Set( "RecentServers", i, szFirstServer );
 			return;
 		}
 	}
@@ -192,6 +197,7 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			theApp.SetConnected( true );
 
 			// saving server name to the recent server list
+			//
 			if( m_szPort != "62320" )
 			{
 				AddIntoRecentServerList( m_szHost + ":" + m_szPort );
@@ -200,6 +206,7 @@ LRESULT CServer::OnControlSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 			{
 				AddIntoRecentServerList( m_szHost );
 			}
+			theApp.GetSettingsFile()->Set( "Settings", "Nick", m_szNick );
 
 			AddText( " connected\r\n\r\n" );
 			break;

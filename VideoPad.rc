@@ -132,6 +132,8 @@ BEGIN
     COMBOBOX        IDC_COMBO_CONNECT_SERVERNAME,7,18,200,64,CBS_SIMPLE | 
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "Server:",IDC_STATIC,7,7,114,8
+    LTEXT           "Nick:",IDC_STATIC,214,49,16,8
+    EDITTEXT        IDC_CONNECT_NICK,213,61,87,12,ES_AUTOHSCROLL
 END
 
 IDD_DIALOG_VIDEO DIALOGEX 0, 0, 157, 111
@@ -240,7 +242,6 @@ BEGIN
     BEGIN
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
-    MENUITEM "&Edit",                       ID_EDIT
 END
 
 
