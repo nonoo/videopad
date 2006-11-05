@@ -41,33 +41,33 @@ private:
 public:
 	CVideoPadApp();
 	~CVideoPadApp();
-	virtual BOOL	InitInstance();
+	virtual BOOL		InitInstance();
 
-	void			Connect();
-	void			Disconnect();
+	void				Connect();
+	void				Disconnect();
 
-	void			SetConnected( bool bConnected );
-	const bool&		GetConnected();
+	void				SetConnected( bool bConnected );
+	const bool&			GetConnected();
 
-	CServer*		GetActiveServer();
-	CSettingsFile*	GetSettingsFile();
+	CServer*			GetActiveServer();
+	CSettingsFile*		GetSettingsFile();
 
-	CDirectShow*	GetDirectShow();
-	COggStream*		GetVideoStream();
-	COggStream*		GetAudioStream();
-	CTheoraEncoder*	GetTheoraEncoder();
-	CSpeexEncoder*	GetSpeexEncoder();
+	CDirectShow*		GetDirectShow();
+	COggStream*			GetVideoStream();
+	COggStream*			GetAudioStream();
+	CTheoraEncoder*		GetTheoraEncoder();
+	CSpeexEncoder*		GetSpeexEncoder();
 
-	void			SetVideoStream( COggStream* pVideoStream );
-	void			SetAudioStream( COggStream* pAudioStream );
-	void			SetTheoraEncoder( CTheoraEncoder* pTheoraEncoder );
-	void			SetSpeexEncoder( CSpeexEncoder* pSpeexEncoder );
+	void				SetVideoStream( COggStream* pVideoStream );
+	void				SetAudioStream( COggStream* pAudioStream );
+	void				SetTheoraEncoder( CTheoraEncoder* pTheoraEncoder );
+	void				SetSpeexEncoder( CSpeexEncoder* pSpeexEncoder );
 
 	//	CMainFrame*		GetMainFrame();
 	
 private:
-	void			OnPressConnect();
-	void			OnPressChannel();
+	void				OnPressConnect();
+	void				OnPressChannel();
 
 	DECLARE_MESSAGE_MAP()
 };

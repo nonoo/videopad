@@ -18,6 +18,14 @@
 
 class CSpeexDecoder : public CDecoder
 {
+	DECLARE_DYNCREATE(CSpeexDecoder)
+
 public:
+	virtual BOOL			InitInstance();
+	virtual int				ExitInstance();
+
+
 	HRESULT					PreProcess( ogg_packet* pOggPacket );
+
+	DECLARE_MESSAGE_MAP()
 };

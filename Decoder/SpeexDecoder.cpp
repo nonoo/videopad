@@ -17,6 +17,21 @@
 #include "stdafx.h"
 #include "SpeexDecoder.h"
 
+IMPLEMENT_DYNCREATE(CSpeexDecoder, CWinThread)
+
+BEGIN_MESSAGE_MAP(CSpeexDecoder, CWinThread)
+END_MESSAGE_MAP()
+
+BOOL CSpeexDecoder::InitInstance()
+{
+	return TRUE;
+}
+
+int CSpeexDecoder::ExitInstance()
+{
+	return CWinThread::ExitInstance();
+}
+
 HRESULT CSpeexDecoder::PreProcess( ogg_packet* pOggPacket )
 {
 	return -1;

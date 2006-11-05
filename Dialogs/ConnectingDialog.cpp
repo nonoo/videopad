@@ -68,6 +68,7 @@ void CConnectingDialog::OnShowWindow( BOOL bShow, UINT /*nStatus*/ )
 		{
 			m_comboServerName.AddString( theApp.GetSettingsFile()->Get( "RecentServers", i+1, "" ) );
 		}
+		m_comboServerName.SetWindowText( theApp.GetSettingsFile()->Get( "RecentServers", "1", "" ) );
 		
 		m_comboServerName.SetFocus();
 	}

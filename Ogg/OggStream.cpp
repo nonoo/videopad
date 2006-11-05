@@ -32,7 +32,16 @@ COggStream::COggStream( UINT nSerial )
 
 COggStream::~COggStream()
 {
+	if( m_pDecoder != NULL )
+	{
+		m_pDecoder->PostThreadMessage( WM_QUIT, 0, 0 );
+		WaitForSingleObject( m_pDecoder->m_hThread, INFINITE );
+		SAFE_DELETE( m_pDecoder );
+	}
+
 	ogg_stream_destroy( m_pStreamState );
+
+	free( m_pOggPacket );
 }
 
 bool COggStream::IsHeaderPacket( ogg_packet* pOggPacket )
@@ -56,13 +65,25 @@ HRESULT COggStream::FeedPage( ogg_page& OggPage )
 			return -1;
 		}
 
-		CTheoraDecoder* pTheoraDecoder = new CTheoraDecoder;
-		CSpeexDecoder* pSpeexDecoder = new CSpeexDecoder;
+		CTheoraDecoder* pTheoraDecoder = (CTheoraDecoder *)AfxBeginThread( RUNTIME_CLASS(CTheoraDecoder), THREAD_PRIORITY_BELOW_NORMAL, 0, CREATE_SUSPENDED );
+		pTheoraDecoder->m_bAutoDelete = false;
+		pTheoraDecoder->ResumeThread();
+
+		CSpeexDecoder* pSpeexDecoder = (CSpeexDecoder *)AfxBeginThread( RUNTIME_CLASS(CSpeexDecoder), THREAD_PRIORITY_BELOW_NORMAL, 0, CREATE_SUSPENDED );
+		pSpeexDecoder->m_bAutoDelete = false;
+		pSpeexDecoder->ResumeThread();
+
 		if( SUCCEEDED( pTheoraDecoder->PreProcess( m_pOggPacket ) ) )
 		{
 			// this is a theora stream
 			//
 			m_pDecoder = pTheoraDecoder;
+
+			// deleting speex thread, because the theora thread will handle this
+			// stream
+			//
+			pSpeexDecoder->PostThreadMessage( WM_QUIT, 0, 0 );
+			WaitForSingleObject( pSpeexDecoder->m_hThread, INFINITE );
 			SAFE_DELETE( pSpeexDecoder );
 		}
 
@@ -73,6 +94,12 @@ HRESULT COggStream::FeedPage( ogg_page& OggPage )
 				// this is a speex stream
 				//
 				m_pDecoder = pSpeexDecoder;
+
+				// deleting theora thread, because the speex thread will handle this
+				// stream
+				//
+				pTheoraDecoder->PostThreadMessage( WM_QUIT, 0, 0 );
+				WaitForSingleObject( pTheoraDecoder->m_hThread, INFINITE );
 				SAFE_DELETE( pTheoraDecoder );
 			}
 		}

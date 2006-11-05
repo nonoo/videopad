@@ -227,15 +227,30 @@ void CVideoGraph::Destroy()
 
 const UINT& CVideoGraph::GetVideoHeight()
 {
+	if( m_pVideoCaptureDevice == NULL )
+	{
+		return 0;
+	}
+
 	return m_pVideoCaptureDevice->GetVideoHeight();
 }
 
 const UINT& CVideoGraph::GetVideoWidth()
 {
+	if( m_pVideoCaptureDevice == NULL )
+	{
+		return 0;
+	}
+
 	return m_pVideoCaptureDevice->GetVideoWidth();
 }
 
 const REFERENCE_TIME& CVideoGraph::GetVideoFPS()
 {
+	if( m_pVideoCaptureDevice == NULL )
+	{
+		return 0;
+	}
+
 	return m_pVideoCaptureDevice->GetVideoFPS();
 }

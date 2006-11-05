@@ -42,7 +42,7 @@ void CServer::ProcessIncomingData()
 			m_pdlgVideo->Create( IDD_DIALOG_VIDEO );
 			m_pdlgVideo->SetWindowText( m_szNick );
 			m_pdlgVideo->ShowWindow( SW_SHOW );*/
-			COggStream* pOggStream = new COggStream( nCurrentPageSerial );
+			pOggStream = new COggStream( nCurrentPageSerial );
 			m_SerialMapper.AddSerial( nCurrentPageSerial, NULL, pOggStream );
 		}
 

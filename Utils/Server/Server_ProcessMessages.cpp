@@ -98,6 +98,7 @@ void CServer::ProcessServerMessage( CString szLine )
 	{
 		m_nVideoStreamSerial = atoi( szTokens[1] );
 		m_nAudioStreamSerial = atoi( szTokens[2] );
+		AddText( "Our unique video serial: " + szTokens[1] + "   audio serial: " + szTokens[2] + "\r\n" );
 		return;
 	}
 

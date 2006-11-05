@@ -31,14 +31,22 @@ HRESULT CCaptureDevice::Create( CString szName )
 
 	if ( !pEm )
 	{
-		// no video capture device found
-		return -1;
+		// video input device can't be found with the given id
+		// trying to find an audio input device
+		//
+		pCreateDevEnum->CreateClassEnumerator( CLSID_AudioInputDeviceCategory, &pEm, 0);
+
+		if ( !pEm )
+		{
+			// no capture device found with the given id
+			return -1;
+		}
 	}
 
 	pEm->Reset();
 
 	IBindCtx* pBindCtx;
-	hr = ::CreateBindCtx (0, &pBindCtx);
+	hr = ::CreateBindCtx( 0, &pBindCtx );
 
 	if( hr != S_OK )
 	{

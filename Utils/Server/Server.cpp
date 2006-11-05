@@ -168,7 +168,7 @@ LRESULT CServer::OnDataSocketEvent( WPARAM /*wParam*/, LPARAM lParam )
 
 		case FD_READ:
 		{
-			ProcessIncomingData();
+			//ProcessIncomingData();
 			break;
 		}
 

@@ -17,20 +17,40 @@
 #include "stdafx.h"
 #include "TheoraDecoder.h"
 
+IMPLEMENT_DYNCREATE(CTheoraDecoder, CWinThread)
+
+BEGIN_MESSAGE_MAP(CTheoraDecoder, CWinThread)
+	ON_THREAD_MESSAGE( WM_TIMER, OnTimer )
+END_MESSAGE_MAP()
+
 CTheoraDecoder::CTheoraDecoder()
 {
 	theora_info_init( &m_TheoraInfo );
 	theora_comment_init( &m_TheoraComment );
+
+	m_nTimer = 0;
 }
 
 CTheoraDecoder::~CTheoraDecoder()
 {
+	KillTimer( NULL, m_nTimer );
+
 	theora_comment_clear( &m_TheoraComment );
 	theora_info_clear( &m_TheoraInfo );
 	if( m_bInitialized )
 	{
 		theora_clear( &m_TheoraState );
 	}
+}
+
+BOOL CTheoraDecoder::InitInstance()
+{
+	return TRUE;
+}
+
+int CTheoraDecoder::ExitInstance()
+{
+	return CWinThread::ExitInstance();
 }
 
 HRESULT CTheoraDecoder::PreProcess( ogg_packet* pOggPacket )
@@ -50,6 +70,10 @@ HRESULT CTheoraDecoder::PreProcess( ogg_packet* pOggPacket )
 				m_bInitialized = true;
 
 				theora_decode_init( &m_TheoraState, &m_TheoraInfo );
+
+				// starting decoder loop
+				//
+				PostThreadMessage( WM_TIMER, 0, 0 );
 			}
 		}
 		return res;
@@ -58,4 +82,23 @@ HRESULT CTheoraDecoder::PreProcess( ogg_packet* pOggPacket )
 	AddToPacketQueue( pOggPacket );
 
 	return 0;
+}
+
+void CTheoraDecoder::OnTimer( WPARAM, LPARAM )
+{
+	if( !m_nTimer )
+	{
+		m_nTimer = SetTimer( NULL, 0, 1000/(m_TheoraInfo.fps_numerator/m_TheoraInfo.fps_denominator), NULL );
+		return;
+	}
+
+	if( !m_qPacketQueue.empty() )
+	{
+		Beep(500,10);
+		ogg_packet* pak = m_qPacketQueue.front();
+		m_qPacketQueue.pop();
+		//DecodeAndDisplay( pak );
+		ogg_packet_clear( pak );
+		free( pak );
+	}
 }

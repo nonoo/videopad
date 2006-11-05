@@ -30,6 +30,11 @@ public:
 	CDirectShow();
 	~CDirectShow();
 
+
+	void			Create();
+	void			Destroy();
+
+
 	HRESULT			SetVideoFormat( UINT nPreferredVideoWidth, UINT nPreferredVideoHeight, REFERENCE_TIME rtPreferredVideoFPS );
 	void			StartVideo();
 	void			StopVideo();
@@ -47,7 +52,6 @@ private:
 	void			AutoDetectVideoCaptureDevice( CString& szVideoCaptureDeviceID );
 	void			AutoDetectAudioCaptureDevice( CString& szVideoCaptureDeviceID );
 
-	void			InitCaptureDevices();
 
 
 

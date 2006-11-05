@@ -18,7 +18,7 @@
 
 // interface class
 //
-class CDecoder
+class CDecoder : public CWinThread
 {
 public:
 	CDecoder();

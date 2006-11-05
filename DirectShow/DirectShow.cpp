@@ -24,22 +24,17 @@ CDirectShow::CDirectShow()
 	//
 	m_pDirectShowGraph = new CDirectShowGraph;
 
-	m_pVideoGraph = new CVideoGraph;
-	m_pAudioGraph = new CAudioGraph;
+	m_pVideoGraph = NULL;
+	m_pAudioGraph = NULL;
 
 	m_pVideoCaptureDevice = NULL;
 	m_pAudioCaptureDevice = NULL;
-
-	InitCaptureDevices();
 }
 
 CDirectShow::~CDirectShow()
 {
+	Destroy();
 	SAFE_DELETE( m_pDirectShowGraph );
-	SAFE_DELETE( m_pVideoGraph );
-	SAFE_DELETE( m_pAudioGraph );
-	SAFE_DELETE( m_pVideoCaptureDevice );
-	SAFE_DELETE( m_pAudioCaptureDevice );
 }
 
 void CDirectShow::AutoDetectVideoCaptureDevice( CString& szVideoCaptureDeviceID )
@@ -74,8 +69,19 @@ void CDirectShow::AutoDetectAudioCaptureDevice( CString& szAudioCaptureDeviceID 
 	}
 }
 
-void CDirectShow::InitCaptureDevices()
+void CDirectShow::Destroy()
 {
+	SAFE_DELETE( m_pVideoGraph );
+	SAFE_DELETE( m_pAudioGraph );
+	SAFE_DELETE( m_pVideoCaptureDevice );
+	SAFE_DELETE( m_pAudioCaptureDevice );
+}
+
+void CDirectShow::Create()
+{
+	m_pVideoGraph = new CVideoGraph;
+	m_pAudioGraph = new CAudioGraph;
+
 	m_pVideoCaptureDevice = new CVideoCaptureDevice;
 	m_pAudioCaptureDevice = new CAudioCaptureDevice;
 
@@ -95,6 +101,7 @@ void CDirectShow::InitCaptureDevices()
 		{
 			// no video capture device
 			SAFE_DELETE( m_pVideoCaptureDevice );
+			SAFE_DELETE( m_pVideoGraph );
 		}
 	}
 	if( m_pVideoCaptureDevice )
@@ -131,6 +138,7 @@ void CDirectShow::InitCaptureDevices()
 		{
 			// no audio capture device
 			SAFE_DELETE( m_pAudioCaptureDevice );
+			SAFE_DELETE( m_pAudioGraph );
 		}
 	}
 	if( m_pAudioCaptureDevice )

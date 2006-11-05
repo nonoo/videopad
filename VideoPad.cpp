@@ -97,6 +97,7 @@ BOOL CVideoPadApp::InitInstance()
 	pFrame->UpdateWindow();
 
 	m_pDirectShow = new CDirectShow;
+	m_pDirectShow->Create();
 
 	return TRUE;
 }

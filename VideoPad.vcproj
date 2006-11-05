@@ -398,12 +398,6 @@
 				Name="Decoder"
 				Filter="">
 				<File
-					RelativePath=".\Decoder\AudioDecoderThread.cpp">
-				</File>
-				<File
-					RelativePath=".\Decoder\AudioDecoderThread.h">
-				</File>
-				<File
 					RelativePath=".\Decoder\Decoder.cpp">
 				</File>
 				<File
@@ -420,12 +414,6 @@
 				</File>
 				<File
 					RelativePath=".\Decoder\TheoraDecoder.h">
-				</File>
-				<File
-					RelativePath=".\Decoder\VideoDecoderThread.cpp">
-				</File>
-				<File
-					RelativePath=".\Decoder\VideoDecoderThread.h">
 				</File>
 			</Filter>
 		</Filter>

@@ -62,6 +62,7 @@ void COggOutStream::PacketIn( ogg_packet* pOggPacket )
 
 	// header packets are sent over TCP, everything else via UDP
 	//
+	m_bTCPOnly = true;
 	if( ( IsHeaderPacket( pOggPacket ) ) || ( m_bTCPOnly == true ) )
 	{
 		if( m_pTCPConnection != NULL )

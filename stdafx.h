@@ -107,6 +107,10 @@ using namespace std;
 #include "Ogg/OggOutStream.h"
 #include "Ogg/SerialMapper.h"
 
+#include "Decoder/Decoder.h"
+#include "Decoder/TheoraDecoder.h"
+#include "Decoder/SpeexDecoder.h"
+
 #include "Utils/Server/Server.h"
 #include "Utils/Channel.h"
 #include "Utils/SettingsFile.h"
@@ -131,9 +135,3 @@ using namespace std;
 #include "Encoder/SpeexEncoder.h"
 #include "Encoder/Speex.h"
 #include "Encoder/SpeexThread.h"
-
-#include "Decoder/Decoder.h"
-#include "Decoder/TheoraDecoder.h"
-#include "Decoder/SpeexDecoder.h"
-#include "Decoder/VideoDecoderThread.h"
-#include "Decoder/AudioDecoderThread.h"

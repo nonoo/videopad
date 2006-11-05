@@ -18,14 +18,29 @@
 
 class CTheoraDecoder : public CDecoder
 {
+	DECLARE_DYNCREATE(CTheoraDecoder)
+
 public:
 	CTheoraDecoder();
 	~CTheoraDecoder();
 
+	virtual BOOL			InitInstance();
+	virtual int				ExitInstance();
+
+
 	HRESULT					PreProcess( ogg_packet* pOggPacket );
 
 private:
+	afx_msg void			OnTimer( WPARAM, LPARAM );
+
+
+
 	theora_state			m_TheoraState;
 	theora_info				m_TheoraInfo;
 	theora_comment			m_TheoraComment;
+
+	UINT_PTR				m_nTimer;
+	int						m_nFPS;
+
+	DECLARE_MESSAGE_MAP()
 };
